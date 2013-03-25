@@ -8,23 +8,23 @@ int Cblmr::ci(METHOD met, bool output, double *bounds)
 // check whether {theta  such that  sig. level  > SL}  is contiguous
 // return number of contiguous segments, and start and finish boundary points for each segment
 {
-	int k =0;
+	int numr =0;
 	double *bds;
 	bds = new double[2*ns];
 
-	if (met==GEO || met==GEO2) k = ci_geo(met,bds);
-	if (met==AF || met==AF2) k = ci_af(met,bds);
+	if (met==GEO || met==GEO2) numr = ci_geo(met,bds);
+	if (met==AF || met==AF2) numr = ci_af(met,bds);
 
 	if (output) {
 		Rcout << _( "confidence level,  confidence interval for theta,  and  method:" ) << endl;
 		Rcout << "  " << 1-SL << "    ";
-		for (int i=0;i<2*k;i+=2) {
+		for (int i=0;i<2*numr;i+=2) {
 			Rcout << "[ ";
 			if(bds[i]==-inf) Rcout << "-inf"; else Rcout << bds[i];
 			Rcout  << ", ";
 			if(bds[i+1]==inf) Rcout << "inf"; else Rcout << bds[i+1];
 			Rcout << " ]";
-			if (i+2<2*k) Rcout << ",  ";
+			if (i+2<2*numr) Rcout << ",  ";
 		}
 		Rcout << "    ";
 		if (met==GEO) Rcout << "CLR";
@@ -33,9 +33,9 @@ int Cblmr::ci(METHOD met, bool output, double *bounds)
 		Rcout << endl << endl;
 	}
 
-	if (bounds != 0)  for (int i=0;i<2*k;i+=2)  {bounds[i] = bds[i]; bounds[i+1] = bds[i+1];}
+	if(bounds != 0)  for (int i=0;i<2*numr;i+=2)  {bounds[i] = bds[i]; bounds[i+1] = bds[i+1];}
 	delete[] bds;
-	return k;
+	return numr;
 }
 
 
@@ -44,20 +44,63 @@ int Cblmr::ci(METHOD met, bool output, double *bounds)
 int Cblmr::ci_geo( METHOD met, double *bds )
 // using Knowles, Siegmund and Zhang's geometric formula to calculate significance level
 {
-	double th, sl_th;
-	int k, numi=0, ind=0;	// ind = indicator = 0 if sl_geo was below SL, 1 above
+	double th, sl_th, thold;
+	int k, numi=0, ind=0;	// ind = indicator = {0 if sl_geo was below SL, 1 if above}
 
 // if model=M1, treat regions before x[0] and after x[n-1] as two seperate regions
 
-// check region before Xs[0]
+// start with point  Xs[0]-1.
 	th = Xs[0] - 1.;
 	sl_th = sl(th,met,false);
 	if (sl_th > SL) {
-		bds[numi++] =-inf;
+		bds[numi++] = -inf;
 		ind=1;
 	}
+	thold=Xs[0] - 1.;
 
-// check first end interval
+
+// when met==GEO2, in M2, scan below Xs[0] because 2-parameter CLR SL's 
+// along ridge are not constant there
+
+	if(met==GEO2 && model==M2) {
+// check region before Xs[0]
+		if(model==M2) {
+			double inc = 1./(subints+0.5);
+			for (th=Xs[0] - 1.+inc;th<Xs[0];th+=inc) {
+				sl_th = sl(th,met,false);
+				if (sl_th > SL && ind==0) {
+					bds[numi++] = bisect_sl(thold,th,met,-acc_xb);
+					ind=1;
+				}
+				if (sl_th < SL && ind==1) {
+					bds[numi++] = bisect_sl(thold,th,met,-acc_xb);
+					ind=0;
+				}
+				thold = th;
+			}
+		}
+
+// scan first end interval
+		if (model==M1) {
+			double inc = (Xs[1]-Xs[0])/(subints+0.5);
+			for (th=Xs[0];th<Xs[1];th+=inc) {
+				sl_th = sl(th,met,false);
+				if (sl_th > SL && ind==0) {
+					bds[numi++] = bisect_sl(thold,th,met,-acc_xb);
+					ind=1;
+				}
+				if (sl_th < SL && ind==1) {
+					bds[numi++] = bisect_sl(thold,th,met,-acc_xb);
+					ind=0;
+				}
+				thold = th;
+			}
+		}
+	}
+
+
+
+// check first end interval in M1
 	if (model==M1) {
 		th = (Xs[1]+Xs[0])/2.; 
 		sl_th = sl(th,met,false);
@@ -72,10 +115,10 @@ int Cblmr::ci_geo( METHOD met, double *bds )
 	}
 
 
-// two grid searches, before and after thmle
+// two grid searches, before and after 'thmle'
 
 	double thmle = mle(false);
-	double thold = Xs[k1];
+	thold = Xs[k1];		// k1 = { 1 in M1, 0 in M2 }
 
 	int kmle = 0;
 	bool thmle_eq_datapt = false;
@@ -93,7 +136,7 @@ int Cblmr::ci_geo( METHOD met, double *bds )
 		for (k=k1;k<ns-1;k++) cpts[k-k1] = Xs[k]; 
 		num_cpts = ns-1-k1;
 	} else {
-		for (k=k1;k<=kmle;k++) cpts[k-k1] = Xs[k];
+		for (k=k1;k<kmle+1;k++) cpts[k-k1] = Xs[k];
 		cpts[k-k1] = thmle;
 		for (k=kmle+1;k<ns-1;k++) cpts[k-k1+1] = Xs[k];
 		num_cpts = ns-k1;

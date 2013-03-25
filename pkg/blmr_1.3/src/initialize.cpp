@@ -87,7 +87,7 @@ void Cblmr::initialize( const double *Xdata, const double *Ydata, const double *
 
 //printout
 	Rcout << setprecision(6);
-	rel_print_eps = 0.0002;
+	rel_print_eps = 0.00001;
 
 	int i,j,n_model;
 	if(model==M1) n_model=1; else n_model=2;

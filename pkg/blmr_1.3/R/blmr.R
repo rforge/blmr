@@ -38,7 +38,7 @@
 
      } else { 
 
-		if (!is.numeric(S)) stop ("'S' must be numeric")
+		if (!is.numeric(S)) stop ("'S' must be a numeric vector or matrix")
 
 		if ( is.matrix(S) )  {
 		   if (nrow(S)!=ncol(S) || nrow(S)!=length(x))  

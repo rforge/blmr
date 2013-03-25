@@ -9,7 +9,7 @@
 void  Cblmr::set_alpha0(double a_0, METHOD met)
 // precalculate numbers and vectors based on alpha0, used in routines
 {
-	if ( isinf(a_0) || isnan(a_0) )  stop( _("invalid alpha0 value") );
+	if ( isinf(a_0) || isnan(a_0) )  stop( _("invalid 'alpha0' value") );
 
 	alpha0 = a_0;
 

@@ -30,22 +30,10 @@ double Cblmr::geo_vu_ex(void)
 double Cblmr::geo_vk_ex(double *err)
 // case variance known
 {
+	if(err!=0) *err = 0;
 
-	double sl, er=0, *per = &er;
-	sl = 2*integrate( w, max(aex,2*w), &Cblmr::ipr_ex, 1, per);
-
-	if(err!=0) *err = acc_sl_abs/2 + *per;
-
-	return sl;
+	return  2*( Rf_pnorm5(-w, 0,1,1,0) + Lgamma/sqrt(2*PI) * Rf_dnorm4(w, 0,1,0) );
 }
 
-
-
-double Cblmr::ipr_ex(double s, int k)
-// integrand for significance level for theta0 outside data range, variance known
-{
-	if (s < w+zero_eq) return 0.;
-	return  ( 2*F(m-1,-w/s) + pow(1.-w*w/s/s,m*0.5-1)*Lgamma/PI ) * Rf_dchisq(s*s,m ,0) * s ;
-}
 
 

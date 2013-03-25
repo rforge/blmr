@@ -17,7 +17,8 @@
 }
 
 \note{
-  The pre-multiplied vector is more convenient as input during simulation tests.  This vector is simply the y-vector if S is the identity matrix.
+The pre-multiplied vector is more convenient as input during simulation tests.  This vector is simply the y-vector if S is the identity matrix.
+\cr The square-root of 'S' is the matrix 'rS' such that rS*rS = S (not such that rS*transpose(rS) = S).
 }
 
 

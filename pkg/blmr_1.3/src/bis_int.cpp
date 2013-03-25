@@ -10,8 +10,8 @@ double Cblmr::bisect(double x1, double x2, double (Cblmr::*fn)(double,int), int 
 {
 	double  f1 = (this->*fn)(x1,k) - value,  f2 = (this->*fn)(x2,k) - value;
 	if (f1*f2>0 || f1==f2 || isnan(f1*f2)) {
-		Rcout << _("input to 'bisect' routine are the boundary points  x1, x2, f(x1), f(x2) = ") << endl; 
-		Rcout << x1 << " " << x2 << " " << f1 << " " << f2 << endl;
+		Rcout << _("'bisect' to find x such that f(x)=0 starting from input values:") << endl;
+		Rcout << "x1, x2, f(x1), f(x2) =  " << x1 << " " << x2 << " " << f1 << " " << f2 << endl;
 		stop( _("'bisect' cannot find interim point from starting values") );
 	}
 	int iteration=0;
@@ -21,6 +21,7 @@ double Cblmr::bisect(double x1, double x2, double (Cblmr::*fn)(double,int), int 
 		iteration++;
 	}
 	if(iteration==50)  Rf_warning( _("'bisect' failed to reach tolerance after 50 iterations") );
+if(iteration==50)  stop("debug");
 	if (crit<0) { if (f1 <= 0) return x1; else return x2; }
 		else  { if (f1 >= 0) return x1; else return x2; }
 }
@@ -36,8 +37,8 @@ double Cblmr::bisect_sl(double x1, double x2, METHOD mode, double crit)
 	if( fabs(f1)<zero_eq && fabs(f1-f2)<zero_eq) return (x1+x2)/2.;
 	double p12 = f1*f2;
 	if (p12>0 || f1==f2 || fabs(p12)>1 || isnan(p12)) {
-		Rcout << _("input to 'bisect_sl' routine are the boundary points  x1, x2, sl(x1), sl(x2) =") << endl;
-		Rcout << x1 << " " << x2 << " " << f1+SL << " " << f2+SL << endl;
+		Rcout << _("'bisect_sl' to find x such that sl(x) = critical SL, starting from input values:") << endl;
+		Rcout << "x1, x2, sl(x1), sl(x2) =  " << x1 << " " << x2 << " " << f1+SL << " " << f2+SL << endl;
 		stop( _("'bisect_sl' cannot find interim point from starting values") );
 	}
 	int iteration=0;
@@ -47,6 +48,7 @@ double Cblmr::bisect_sl(double x1, double x2, METHOD mode, double crit)
 		iteration++;
 	}
 	if(iteration==50)  Rf_warning( _("'bisect_sl' failed to reach tolerance after 50 iterations") );
+if(iteration==50) stop("debug");
 	if (crit<0) { if (f1 <= 0) return x1; else return x2; }
 		else  { if (f1 >= 0) return x1; else return x2; }
 }
@@ -86,7 +88,9 @@ double Cblmr::integrate(double x1, double x2, double (Cblmr::*fn)(double, int), 
 		error = fabs(estimate - prev_estimate)/8.;
 	}
 
-	if(intervals==512) Rf_warning( _("'integrate' failed to reach tolerance after maximum iterations") );
+	if(error > abs_error  &&  fabs(error/estimate) > rel_error) 
+		Rf_warning( _("'integrate' failed to reach tolerance after maximum iterations") );
+if(error > abs_error  &&  fabs(error/estimate) > rel_error) stop("debug");
 
 	if (er != 0) *er= error;
 
@@ -106,11 +110,11 @@ double rescale_error (double err, const double result_abs, const double result_a
 
 
 double Cblmr::integrate2(double par_a, double par_b, double (Cblmr::*fn)(double, double*), double *err2)
-//  estimate integral of fn(x)dx for  x = x1 to x2  by Gauss-Konrod 21, 43 or 87 point rule 
+//  Estimate integral of fn(x)dx for  x = x1 to x2  by Gauss-Konrod 21, 43 or 87 point rule 
 //  or, if that fails to reach tolerance, by adaptive Gauss-Konrod 21 point rule.
-//  The following routine modifies the GNU Scientific Library "gsl_integration_qng" 2007 Brian Gough
+//       The following routine modifies the GNU Scientific Library "gsl_integration_qng" (2007) Brian Gough
 //  which is a C-language translation of the QUADPACK  "QNG" and "QAG"  Fortran routines by Piessens et al.
-//  Here in the R package "blmr", this routine integrates another numerical integral, so it adds
+//  Here in the R-package "blmr", this routine integrates another numerical integral, so it adds
 //  the average error estimate of the integrand to the error estimate of the numeric integral.
 {
   double a =min(par_a,par_b), b =max(par_a,par_b), epsabs =acc_sl_abs, epsrel = acc_sl_rel, ferr =0, er=0., *per=&er;
@@ -133,7 +137,6 @@ double Cblmr::integrate2(double par_a, double par_b, double (Cblmr::*fn)(double,
   const double center = 0.5 * (b + a);
   const double f_center = (this->*fn)(center,per);
 			ferr += *per;
-
 
 // Compute the integral using the 10- and 21-point formula. 
 
@@ -261,7 +264,7 @@ double Cblmr::integrate2(double par_a, double par_b, double (Cblmr::*fn)(double,
 
 //limit= maximum number of subintervals to be integrated
 //ablist, intg, errs = lists of interval endpoints, integral values, and max. error estimates
-  const int  limit=20;			
+  const int  limit=40;			
   double ablist[limit+1], intg[limit], errs[limit];	
   double intgsum=result_kronrod;
 
@@ -271,7 +274,7 @@ double Cblmr::integrate2(double par_a, double par_b, double (Cblmr::*fn)(double,
   errs[0]=err;
 
 
-// while loop:  bisect interval with largest error and integrate subintervals
+// while loop:  bisect interval with largest error and integrate these two subintervals
 // repeat until error fits condition or until reached maximum subintervals
 
   int numi=1;
@@ -305,10 +308,10 @@ double Cblmr::integrate2(double par_a, double par_b, double (Cblmr::*fn)(double,
 	  return intgsum ;
 	}
 
-  Rf_warning( _("'integrate2' failed to reach tolerance with highest-order rule nor with adaptive rule") );
-
+  Rf_warning( _("'integrate2' failed to reach tolerance with highest-order composite rule or adaptive rule") );
+stop("debug");
   if (err2 != 0) *err2= err;
-  return result_kronrod ;
+  return  intgsum ;
 }
 
 

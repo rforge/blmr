@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: blmr 1.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-16 11:07-0400\n"
+"POT-Creation-Date: 2013-03-25 14:14-0400\n"
 "PO-Revision-Date: 2013-03-18 13:17-0500\n"
 "Last-Translator: Marc Adams <blmrpkg@gmail.com>\n"
 "Language-Team: Marc Adams <blmrpkg@gmail.com>\n"
@@ -37,63 +37,67 @@ msgid "y vector has wrong dimension"
 msgstr "longueur du vecteur 'y' est incorrect"
 
 #: bis_int.c:13
-msgid ""
-"input to 'bisect' routine are the boundary points  x1, x2, f(x1), f(x2) = "
+msgid "'bisect' to find x such that f(x)=0 starting from input values:"
 msgstr ""
-"valeurs fournies pour routine 'bisect' sont les points limites  x1, x2, f"
-"(x1), f(x2) = "
+"'bisect' doit trouvé x tel que f(x)=0 dès que ces valeurs fournies:"
 
 #: bis_int.c:15
 msgid "'bisect' cannot find interim point from starting values"
 msgstr ""
-"routine 'bisect' ne peut pas trouvée un point à l'intérieur des valeurs "
-"initiales"
+"'bisect' ne peut pas trouvé un point à l'intérieur des valeurs initiales"
 
 #: bis_int.c:23
 msgid "'bisect' failed to reach tolerance after 50 iterations"
 msgstr "'bisect' nombre limite d'iterations est atteint"
 
-#: bis_int.c:39
+#: bis_int.c:40
 msgid ""
-"input to 'bisect_sl' routine are the boundary points  x1, x2, sl(x1), sl(x2) "
-"="
+"'bisect_sl' to find x such that sl(x) = critical SL, starting from input "
+"values:"
 msgstr ""
-"valeurs fournies pour routine 'bisect_sl' sont les points limites  x1, x2, sl"
-"(x1), sl(x2) ="
+"'bisect_sl' doit trouvé x tel que sl(x)=SL dès que ces valeurs fournies:"
 
-#: bis_int.c:41
+#: bis_int.c:42
 msgid "'bisect_sl' cannot find interim point from starting values"
 msgstr ""
-"routine 'bisect_sl' ne peut pas trouvée un point à l'intérieur des valeurs "
+"'bisect_sl' ne peut pas trouvé un point à l'intérieur des valeurs "
 "initiales"
 
-#: bis_int.c:49
+#: bis_int.c:50
 msgid "'bisect_sl' failed to reach tolerance after 50 iterations"
 msgstr "'bisect_sl'  nombre limite d'iterations est atteint"
 
-#: bis_int.c:89
+#: bis_int.c:92
 msgid "'integrate' failed to reach tolerance after maximum iterations"
-msgstr "'integrate' hors seuil de tolérance après nombre maximum d'itérations"
+msgstr "'integrate' hors tolérance après nombre maximum d'itérations"
 
-#: bis_int.c:308
+#: bis_int.c:311
 msgid ""
-"'integrate2' failed to reach tolerance with highest-order rule nor with "
+"'integrate2' failed to reach tolerance with highest-order composite rule or "
 "adaptive rule"
 msgstr ""
-"'integrate2' hors seuil de tolérance après nombre maximum d'itérations "
-"composite et après nombre maximum d'itérations adaptives"
+"'integrate2' hors tolérance après nombre maximum d'itérations composites ou "
+"adaptives"
 
 #: ci.c:19
 msgid "confidence level,  confidence interval for theta,  and  method:"
 msgstr "niveau de confiance,  interval de confiance pour theta,  et  méthode:"
 
-#: cr.c:27
+#: cr.c:28
 msgid "getting theta-boundaries..."
 msgstr "cherchant les limites pour theta..."
 
-#: cr.c:49
+#: cr.c:50
+msgid "getting alpha-boundaries..."
+msgstr "cherchant les limites pour alpha..."
+
+#: cr.c:171
 msgid "-percent joint confidence region for  (theta, alpha)  by method  "
 msgstr "-pourcent région de confiance jointe pour (theta, alpha) par méthode "
+
+#: cr.c:204
+msgid "'a_sl' initial point below critical SL"
+msgstr "'a_sl' point initial a SL moin le niveau critical"
 
 #: get_matrix.c:134
 msgid "gam(th0)=0, so cannot get matrix M"
@@ -175,7 +179,7 @@ msgid "invalid 'acc' value"
 msgstr "valeur de 'acc' incorrecte"
 
 #: set_alpha0.c:12
-msgid "invalid alpha0 value"
+msgid "invalid 'alpha0' value"
 msgstr "valeur de 'alpha0' incorrecte"
 
 #: set_sy.c:11
@@ -202,7 +206,7 @@ msgstr ""
 
 #: set_x.c:46
 msgid "suggest combining these data into two observations at a repeat x value"
-msgstr "suggère d'affecter ces observations à un seul valeur de 'x' repeté"
+msgstr "suggère d'affecter ces observations à une seul valeur de 'x' répétée"
 
 #: set_x.c:47
 msgid "x values too close for reliable computations"
@@ -246,3 +250,5 @@ msgstr ""
 #: sl_mc.c:69
 msgid "),  target accuracy = "
 msgstr "),  précision de cible = "
+
+

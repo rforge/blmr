@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: blmr 1.2\n"
+"Project-Id-Version: blmr 1.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-16 11:07-0400\n"
+"POT-Creation-Date: 2013-03-25 14:14-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,8 +35,7 @@ msgid "y vector has wrong dimension"
 msgstr ""
 
 #: bis_int.c:13
-msgid ""
-"input to 'bisect' routine are the boundary points  x1, x2, f(x1), f(x2) = "
+msgid "'bisect' to find x such that f(x)=0 starting from input values:"
 msgstr ""
 
 #: bis_int.c:15
@@ -47,27 +46,27 @@ msgstr ""
 msgid "'bisect' failed to reach tolerance after 50 iterations"
 msgstr ""
 
-#: bis_int.c:39
+#: bis_int.c:40
 msgid ""
-"input to 'bisect_sl' routine are the boundary points  x1, x2, sl(x1), sl(x2) "
-"="
+"'bisect_sl' to find x such that sl(x) = critical SL, starting from input "
+"values:"
 msgstr ""
 
-#: bis_int.c:41
+#: bis_int.c:42
 msgid "'bisect_sl' cannot find interim point from starting values"
 msgstr ""
 
-#: bis_int.c:49
+#: bis_int.c:50
 msgid "'bisect_sl' failed to reach tolerance after 50 iterations"
 msgstr ""
 
-#: bis_int.c:89
+#: bis_int.c:92
 msgid "'integrate' failed to reach tolerance after maximum iterations"
 msgstr ""
 
-#: bis_int.c:308
+#: bis_int.c:311
 msgid ""
-"'integrate2' failed to reach tolerance with highest-order rule nor with "
+"'integrate2' failed to reach tolerance with highest-order composite rule or "
 "adaptive rule"
 msgstr ""
 
@@ -75,12 +74,20 @@ msgstr ""
 msgid "confidence level,  confidence interval for theta,  and  method:"
 msgstr ""
 
-#: cr.c:27
+#: cr.c:28
 msgid "getting theta-boundaries..."
 msgstr ""
 
-#: cr.c:49
+#: cr.c:50
+msgid "getting alpha-boundaries..."
+msgstr ""
+
+#: cr.c:171
 msgid "-percent joint confidence region for  (theta, alpha)  by method  "
+msgstr ""
+
+#: cr.c:204
+msgid "'a_sl' initial point below critical SL"
 msgstr ""
 
 #: get_matrix.c:134
@@ -157,7 +164,7 @@ msgid "invalid 'acc' value"
 msgstr ""
 
 #: set_alpha0.c:12
-msgid "invalid alpha0 value"
+msgid "invalid 'alpha0' value"
 msgstr ""
 
 #: set_sy.c:11

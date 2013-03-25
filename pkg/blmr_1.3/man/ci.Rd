@@ -18,7 +18,7 @@
 }
 
 \details{
-This method scans to determine the postulate values of theta that have significance levels greater than 1-CL.
+This subroutine scans to determine the postulate values of theta that have significance levels greater than 1-CL.
 }
 
 \examples{

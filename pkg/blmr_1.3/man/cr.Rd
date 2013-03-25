@@ -19,7 +19,7 @@
 }
 
 \details{
-This method scans to determine the postulate values of (theta,alpha) that have significance levels greater than 1-CL.  It scans first along the (theta, alpha-MLE) ridge to determine theta boundaries.
+This subroutine scans to determine the postulate values of (theta,alpha) that have significance levels greater than 1-CL.  It scans first along the (theta, alpha-MLE) ridge to determine theta boundaries.
 }
 
 \examples{

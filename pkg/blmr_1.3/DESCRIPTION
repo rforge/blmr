@@ -12,4 +12,4 @@ Description: Exact confidence regions for the changepoint in broken line regress
 License: GPL (>= 2)
 Depends: R(>= 2.15.1), methods, Rcpp (>= 0.10.2)
 LinkingTo: Rcpp
-Packaged: 2013-03-18 19:40:53 UTC; Marc
+Packaged: 2013-03-25 18:29:28 UTC; Marc

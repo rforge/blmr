@@ -80,12 +80,11 @@ private:
 	double ahigh(METHOD met, double th);
 	double sl_a(double alpha, int k);
 
-//in file geo
+//in files geo_ex and geo
 	double geo(double th2, double *err);
 	double geo_ex(double *err);
 	double geo_vu_ex(void);
 	double geo_vk_ex(double *err);
-	double ipr_ex(double s, int k);
 	double geo_vu_D(const double th2, double *err);
 	double geo_vu_ND(const double th2, double *err);
 	double geo_vu_covNDab(int k, double a, double b, int lo, double *er);
