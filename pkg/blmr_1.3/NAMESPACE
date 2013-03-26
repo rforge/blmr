@@ -1,0 +1,5 @@
+useDynLib(blmr)
+exportPattern("^[[:alpha:]]+")
+import( Rcpp )
+export( blmr )
+
