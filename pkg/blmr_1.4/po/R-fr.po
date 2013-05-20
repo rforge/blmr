@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: R 2.15.2\n"
 "Report-Msgid-Bugs-To: bugs.r-project.org\n"
-"POT-Creation-Date: 2013-03-23 09:43\n"
+"POT-Creation-Date: 2013-05-19 22:43\n"
 "PO-Revision-Date: 2013-03-14 09:55-0500\n"
 "Last-Translator: Marc Adams <blmrpkg@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,18 +21,19 @@ msgstr "'y' doit être un vecteur numérique"
 msgid "'x' and 'y' must have same length"
 msgstr "'x' et 'y' doivent avoir la même longueur"
 
-msgid "'S' must be a numeric vector or matrix"
-msgstr "'S' doit être un vecteur ou matrice numérique"
-
 msgid "'model' must be 1, 2 or -2"
 msgstr "'model' doit être 1, 2 ou -2"
 
 msgid "'var_known' must be TRUE, FALSE, 1 or 0"
 msgstr "'var_known' doit être TRUE, FALSE, 1 ou 0"
 
-msgid "matrix 'S' must be n x n where n=length(x)"
-msgstr "le matrice 'S' doit être de dimension  n par n,  où  n = length(x)"
+msgid "'weights' must be a numeric vector or matrix"
+msgstr "'weights' doit être un vecteur ou matrice numérique"
 
-msgid "vector 'S' must have same length as 'x'"
-msgstr "le vecteur 'S' doit avoir la même longueur que 'x'"
+msgid "matrix 'weights' must be  n x n  where  n = length(x)"
+msgstr ""
+"le matrice 'weights' doit être de dimension  n par n,  où  n = length(x)"
+
+msgid "vector 'weights' must have same length as 'x'"
+msgstr "le vecteur 'weights' doit avoir la même longueur que 'x'"
 

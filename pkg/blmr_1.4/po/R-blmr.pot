@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: blmr 1.3\n"
-"POT-Creation-Date: 2013-03-23 09:43\n"
+"Project-Id-Version: blmr 1.4\n"
+"POT-Creation-Date: 2013-05-19 22:43\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,17 +19,17 @@ msgstr ""
 msgid "'x' and 'y' must have same length"
 msgstr ""
 
-msgid "'S' must be a numeric vector or matrix"
-msgstr ""
-
 msgid "'model' must be 1, 2 or -2"
 msgstr ""
 
 msgid "'var_known' must be TRUE, FALSE, 1 or 0"
 msgstr ""
 
-msgid "matrix 'S' must be n x n where n=length(x)"
+msgid "'weights' must be a numeric vector or matrix"
 msgstr ""
 
-msgid "vector 'S' must have same length as 'x'"
+msgid "matrix 'weights' must be  n x n  where  n = length(x)"
+msgstr ""
+
+msgid "vector 'weights' must have same length as 'x'"
 msgstr ""

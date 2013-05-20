@@ -9,30 +9,27 @@
 }
 
 \usage{
-\S4method{sety}{Cblmr}( irSy )
+\S4method{sety}{Cblmr}( irWy )
 }
 
 \arguments{
-\item{irSy}{vector of y-values, pre-multiplied by the inverse-square-root of S}
+\item{irWy}{vector of y-values, pre-multiplied by the inverse of the square-root of 'weights'}
 }
 
 \note{
-The pre-multiplied vector is more convenient as input during simulation tests.  This vector is simply the y-vector if S is the identity matrix.
-\cr The square-root of 'S' is the matrix 'rS' such that rS*rS = S (not such that rS*transpose(rS) = S).
+The pre-multiplied vector is more convenient as input during simulation tests.  This vector is simply the y-vector if 'weights' is the default identity-matrix.  The square-root of a matrix 'W' here is the matrix 'rW' such that rW*rW = W (not such that rW*transpose(rW) = W).
 }
 
 
 \examples{
-## Data for Patient B from Smith and Cook (1980):
-
-x= c(1., 2., 3., 4., 5., 6., 7., 8., 9., 10.)
+##  Data for Patient B from Smith and Cook (1980):
 y= c(36.0, 45.5, 50.0, 60.0, 73.3, 71.0, 66.7, 60.0, 30.5, 18.3)
-sc <- blmr(x,y)
+x= 1:10
+sc <- blmr(y,x)
 sc$ci()
 newy= c(37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4)
 sc$sety(newy)
 sc$ci()
-
 
 
 ## An example simulation test:
@@ -40,7 +37,7 @@ sc$ci()
 simtest <- function( x, theta, alpha, Bp, B, var, N =10000) {
 
    y <- x
-   mod <- blmr(x,y)     ## construct a Cblmr object with arbitrary y values.
+   mod <- blmr(y,x)     ## construct a 'blmr' object with arbitrary y values.
 
    cat("\n   Monte Carlo simulation test:\n")
    cat("for model   theta=",theta," alpha=",alpha," B'=",Bp," B=",B," var=",var,"\n")
@@ -54,7 +51,6 @@ simtest <- function( x, theta, alpha, Bp, B, var, N =10000) {
    countCLR = countAF = 0
 
    for( i in seq(1,N) ) {
-
       err <- rnorm(n,0,sigma)
       for( j in seq(1,n) )
          y[j] = alpha + Bp*min(x[j]-theta,0) + B*max(x[j]-theta,0) + err[j]
@@ -71,13 +67,11 @@ simtest <- function( x, theta, alpha, Bp, B, var, N =10000) {
          flush.console()
       }
    }
-
    cat("\n")
 }
 
 
 x = c( 1.0, 1.1, 1.3, 1.7, 2.4, 3.9, 5.7, 7.6, 8.4, 8.6 )
-
 simtest(x,3,0,-1,0.5,1)
 
 

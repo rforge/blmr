@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: blmr 1.3\n"
+"Project-Id-Version: blmr 1.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-04-04 18:01-0400\n"
+"POT-Creation-Date: 2013-05-19 20:16-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,10 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+#: Fm_fm.cpp:66
+msgid "'sF': invalid input"
+msgstr ""
 
 #: Rinterface.cpp:5
 msgid "confidence level must be between 0 and 1"
@@ -30,133 +34,146 @@ msgid ""
 "'method' must be \"clr\", \"mc\" or \"af\",  example:  sl( 5.8, \"af\" )"
 msgstr ""
 
-#: Rinterface.cpp:277
-msgid "y vector has wrong dimension"
+#: Rinterface.cpp:295
+msgid "'irSy' vector has wrong dimension"
 msgstr ""
 
-#: bis_int.cpp:13
+#: Rinterface.cpp:299 blmr.cpp:44 blmr.cpp:97 ci.cpp:16 ci.cpp:134 cr.cpp:28
+#: cr.cpp:39 cr.cpp:68 get_matrix.cpp:18 get_matrix.cpp:152 initialize.cpp:59
+#: initialize.cpp:86 initialize.cpp:100 initialize.cpp:126 set_theta0.cpp:54
+#: set_x.cpp:145
+msgid "message: "
+msgstr ""
+
+#: Rinterface.cpp:300 blmr.cpp:45 blmr.cpp:98 ci.cpp:17 ci.cpp:135 cr.cpp:29
+#: cr.cpp:40 cr.cpp:69 get_matrix.cpp:19 get_matrix.cpp:153 initialize.cpp:60
+#: initialize.cpp:87 initialize.cpp:101 initialize.cpp:127 set_theta0.cpp:55
+#: set_x.cpp:146
+msgid "memory allocation failed"
+msgstr ""
+
+#: bis_int.cpp:15 bis_int.cpp:38
 msgid "'bisect' to find x such that f(x)=0 starting from input values:"
 msgstr ""
 
-#: bis_int.cpp:15
+#: bis_int.cpp:17 bis_int.cpp:40
 msgid "'bisect' cannot find interim point from starting values"
 msgstr ""
 
-#: bis_int.cpp:23
-msgid "'bisect' failed to reach tolerance after 50 iterations"
+#: bis_int.cpp:25 bis_int.cpp:48
+msgid "'bisect' failed to reach tolerance after maximum number of iterations"
 msgstr ""
 
-#: bis_int.cpp:40
+#: bis_int.cpp:65
 msgid ""
 "'bisect_sl' to find x such that sl(x) = critical SL, starting from input "
 "values:"
 msgstr ""
 
-#: bis_int.cpp:42
+#: bis_int.cpp:67
 msgid "'bisect_sl' cannot find interim point from starting values"
 msgstr ""
 
-#: bis_int.cpp:50
-msgid "'bisect_sl' failed to reach tolerance after 50 iterations"
+#: bis_int.cpp:75
+msgid ""
+"'bisect_sl' failed to reach tolerance after maximum number of iterations"
 msgstr ""
 
-#: bis_int.cpp:92
+#: bis_int.cpp:116
 msgid "'integrate' failed to reach tolerance after maximum iterations"
 msgstr ""
 
-#: bis_int.cpp:311
+#: bis_int.cpp:341
 msgid ""
-"'integrate2' failed to reach tolerance with highest-order composite rule or "
-"adaptive rule"
+"'integrate2' did not reach tolerance after highest-order composite rule nor "
+"highest-order adaptive rule"
 msgstr ""
 
-#: ci.cpp:19
+#: ci.cpp:38
 msgid "confidence level,  confidence interval for theta,  and  method:"
 msgstr ""
 
-#: cr.cpp:28
+#: cr.cpp:24
 msgid "getting theta-boundaries..."
 msgstr ""
 
-#: cr.cpp:50
+#: cr.cpp:91
 msgid "getting alpha-boundaries..."
 msgstr ""
 
-#: cr.cpp:179
+#: cr.cpp:213
 msgid "-percent joint confidence region for  (theta, alpha)  by method  "
 msgstr ""
 
-#: cr.cpp:212
+#: cr.cpp:254
 msgid "'a_sl' initial point below critical SL"
 msgstr ""
 
-#: get_matrix.cpp:134
-msgid "gam(th0)=0, so cannot get matrix M"
+#: get_matrix.cpp:50
+msgid "'get_Q' failed"
 msgstr ""
 
 #: get_matrix.cpp:164
-msgid "'get_M' failed"
+msgid "gam(th0) is the zero vector, so cannot get matrix M"
 msgstr ""
 
-#: initialize.cpp:24
-msgid ""
-"number of data observations must be at least 4 in model 1, or 3 in model 2 "
-"or -2"
+#: get_matrix.cpp:187 get_matrix.cpp:201 get_matrix.cpp:209 get_matrix.cpp:210
+msgid "'get_M' failed"
 msgstr ""
 
 #: initialize.cpp:28
 msgid "initializing:"
 msgstr ""
 
-#: initialize.cpp:93
+#: initialize.cpp:29
 msgid "model "
 msgstr ""
 
-#: initialize.cpp:94
+#: initialize.cpp:30
 msgid "  with variance unknown"
 msgstr ""
 
-#: initialize.cpp:94
+#: initialize.cpp:30
 msgid "  with variance known"
 msgstr ""
 
-#: initialize.cpp:99
-msgid "weights = "
+#: initialize.cpp:35
+msgid "weights:  "
 msgstr ""
 
-#: initialize.cpp:100
-msgid "variances = "
+#: initialize.cpp:36
+msgid "variances:  "
 msgstr ""
 
-#: initialize.cpp:107
-msgid "weights matrix = "
+#: initialize.cpp:41
+msgid "weights matrix:  "
 msgstr ""
 
-#: initialize.cpp:107
-msgid "variance-covariance matrix = "
+#: initialize.cpp:41
+msgid "variance-covariance matrix:  "
 msgstr ""
 
-#: mle.cpp:63
+#: mle.cpp:89
 msgid "maximum likelihood estimates of parameters"
 msgstr ""
 
-#: rho_etc.cpp:87
-msgid "'rho_inv' routine called for  rho, interval, radicand = "
+#: rho_etc.cpp:103
+msgid "'rho_inv' routine called for  interval, rho, radicand = "
 msgstr ""
 
-#: rho_etc.cpp:89
-msgid "no inverse-rho for given rho value in given data interval"
+#: rho_etc.cpp:105
+msgid "no inverse-rho for given 'rho' value in given data interval"
 msgstr ""
 
 #: set_SL.cpp:14
-msgid "invalid SL value"
+msgid "invalid 'SL' value"
 msgstr ""
 
-#: set_Sigma.cpp:35
+#: set_Sigma.cpp:17
 msgid "weights or covariance matrix has invalid entries"
 msgstr ""
 
-#: set_Sigma.cpp:40
+#: set_Sigma.cpp:22
 msgid "weights or covariance matrix is not positive-definite"
 msgstr ""
 
@@ -169,48 +186,47 @@ msgid "invalid 'alpha0' value"
 msgstr ""
 
 #: set_sy.cpp:11
-msgid "invalid value in irSy vector"
+msgid "invalid value in 'irSy' vector"
 msgstr ""
 
 #: set_theta0.cpp:10
-msgid "invalid theta0 value"
+msgid "invalid 'theta0' value"
 msgstr ""
 
-#: set_x.cpp:19
-msgid "invalid x value"
+#: set_x.cpp:21
+msgid "invalid 'x' value"
 msgstr ""
 
-#: set_x.cpp:20
-msgid "x values must be non-decreasing"
+#: set_x.cpp:22
+msgid "'x' values must be non-decreasing"
 msgstr ""
 
 #: set_x.cpp:25
 msgid ""
-"number of seperate x values must be at least 4 in model 1, or 3 in model 2 "
-"or -2"
+"suggest combining these data into two observations at a repeat 'x' value:"
 msgstr ""
 
-#: set_x.cpp:44
-msgid "suggest combining these data into two observations at a repeat x value:"
+#: set_x.cpp:27
+msgid "'x' values too close for reliable computations"
 msgstr ""
 
-#: set_x.cpp:46
-msgid "x values too close for reliable computations"
+#: set_x.cpp:54
+msgid "number of 'x' values less than minimum"
 msgstr ""
 
-#: set_y.cpp:10
+#: set_y.cpp:11
 msgid "invalid y value"
 msgstr ""
 
-#: sl.cpp:24
+#: sl.cpp:17 sl.cpp:19 sl.cpp:40 sl.cpp:42
 msgid "  for theta0= "
 msgstr ""
 
-#: sl.cpp:24 sl.cpp:49
+#: sl.cpp:40 sl.cpp:42 sl.cpp:89 sl.cpp:91
 msgid "  by method "
 msgstr ""
 
-#: sl.cpp:49
+#: sl.cpp:73 sl.cpp:75 sl.cpp:89 sl.cpp:91
 msgid " for (th0,a0)= ( "
 msgstr ""
 
@@ -218,18 +234,18 @@ msgstr ""
 msgid "MC evaluation of conditional likelihood-ratio SL"
 msgstr ""
 
-#: sl_mc.cpp:16
+#: sl_mc.cpp:17 sl_mc.cpp:19
 msgid "for theta0= "
 msgstr ""
 
-#: sl_mc.cpp:16
+#: sl_mc.cpp:17 sl_mc.cpp:19
 msgid ",  target accuracy =  "
 msgstr ""
 
-#: sl_mc.cpp:67
+#: sl_mc.cpp:74 sl_mc.cpp:77
 msgid "MC evaluation of conditional likelihood-ratio SL for (th0,a0)= ("
 msgstr ""
 
-#: sl_mc.cpp:68
+#: sl_mc.cpp:75 sl_mc.cpp:78
 msgid "),  target accuracy = "
 msgstr ""

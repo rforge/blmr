@@ -1,5 +1,5 @@
 //
-//  includes and global variable definitions for class Cblmr
+//  "includes" and global variable definitions for class Cblmr
 
 
 #if !defined Cblmr_g		//prevents compiler from repeating this code in other files
@@ -7,19 +7,21 @@
 
 #define R_NO_REMAP
 
+#include <new>
+#include <iomanip>
+#include <algorithm>
+#include <limits>
+#include <math.h>
+
+#include <R.h>
+
+#include <Rcpp.h>
+
 #include "jama125/jama_eig.h"
 #include "jama125/jama_cholesky.h"
 #include "jama125/jama_lu.h"
 #include "jama125/tnt.h"
 
-#include <Rcpp.h>
-
-#include <R.h>
-
-#include <iomanip>
-#include <algorithm>
-#include <limits>
-#include <math.h>
 
 #ifdef ENABLE_NLS
    #include <libintl.h>
@@ -36,7 +38,7 @@ using Rcpp::Rcout;
 using Rcpp::stop;
 
 
-enum MODEL{ M1, M2 };
+enum MODEL{ M1, M2, M3 };
 enum METHOD { GEO, GEO2, AF, AF2, MC, INIT };
 const double zero_eq = ldexp(1.,-40);
 const double inf = numeric_limits<double>::infinity();     

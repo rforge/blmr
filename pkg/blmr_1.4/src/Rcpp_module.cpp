@@ -45,8 +45,7 @@ RCPP_MODULE(Cblmr){
 	class_<Cblmr>( "Cblmr" )
 	
 	    // expose the constructor
-	    .constructor< NumericVector, NumericVector, int, bool >()    
-	    .constructor< NumericVector, NumericVector, NumericMatrix, int, bool >()    
+	    .constructor< NumericVector, NumericVector, int, bool, NumericMatrix >()    
 
 		// expose methods
 		.method( "sl", sl1 , "significance level for theta0 by default method CLR-GEO" )
@@ -67,9 +66,7 @@ RCPP_MODULE(Cblmr){
 		.method( "mle", &Cblmr::MLE , "maximum likelihood estimates of parameters" )
 		.method( "sety", &Cblmr::SET_irSy , 
 			"set new values for inverse-root of Sigma matrix times y-vector" )
-
 	;
-
 
 }                     
 

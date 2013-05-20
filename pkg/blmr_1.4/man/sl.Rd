@@ -16,8 +16,8 @@ sl( theta0, alpha0,  method ="clr", accuracy =0.001, output =TRUE )
 \arguments{
   \item{theta0}{postulate value for theta, the changepoint's x-coordinate }
   \item{alpha0}{postulate value for alpha, the changepoint's y-coordinate }
-  \item{method}{"clr", "mc" or "af" which stand for conditional likelihood-ratio, conditional likelihood-ratio by Monte Carlo, or approximate-F}
-  \item{accuracy}{maximum absolute error in numerical integration by the "clr" method, or in Monte Carlo evaluation by the "mc" method, has no effect in AF evaluation}
+  \item{method}{"clr", "mc" or "af" which stand for conditional likelihood-ratio, conditional likelihood-ratio by Monte Carlo, or approximate-F, details below}
+  \item{accuracy}{maximum absolute error in numerical integration by the "clr" method, or in Monte Carlo evaluation by the "mc" method, has no effect for the "af" method}
   \item{output}{TRUE or FALSE}
 }
 
@@ -40,11 +40,10 @@ Returns the numerical significance level if 'output' is set explicitly to TRUE o
 }
 
 \examples{
-## Data for Patient B from Smith and Cook (1980):
-
-x=c(1., 2., 3., 4., 5., 6., 7., 8., 9., 10.)
-y=c(37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4)
-sc <- blmr(x,y)
+##  Data for Patient B from Smith and Cook (1980):
+y = c(37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4)
+x = 1:10
+sc <- blmr(y,x)
 
 sc$sl(6.1)
 sc$sl(6.1,"af")
