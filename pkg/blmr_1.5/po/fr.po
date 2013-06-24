@@ -1,0 +1,271 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: blmr 1.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-24 11:26-0400\n"
+"PO-Revision-Date: 2013-05-07 11:13-0500\n"
+"Last-Translator: Marc Adams <blmrpkg@gmail.com>\n"
+"Language-Team: Marc Adams <blmrpkg@gmail.com>\n"
+"Language: French\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.5\n"
+
+#: Fm_fm.cpp:67
+msgid "'sF': invalid input"
+msgstr "'sF': valeurs fournies incorrectes"
+
+#: Rinterface.cpp:5
+msgid "confidence level must be between 0 and 1"
+msgstr "niveau de confiance doit être compris entre 0 et 1"
+
+#: Rinterface.cpp:6
+msgid "'method' must be \"clr\" or \"af\",  example:  ci( 0.99, \"af\" )"
+msgstr ""
+"'méthode' doit être \"clr\" ou \"af\",  par example:  ci( 0.99, \"af\" )"
+
+#: Rinterface.cpp:7
+msgid ""
+"'method' must be \"clr\", \"mc\" or \"af\",  example:  sl( 5.8, \"af\" )"
+msgstr ""
+"'méthode' doit être \"clr\", \"mc\" ou \"af\",  par example:  sl( 5.8, \"af"
+"\" )"
+
+#: Rinterface.cpp:8
+msgid "not applicable for this model"
+msgstr "pas applicable pour cet modèle"
+
+#: Rinterface.cpp:308
+msgid "'irSy' vector has wrong dimension"
+msgstr "longueur du vecteur 'irSy' est incorrect"
+
+#: Rinterface.cpp:312 blmr.cpp:47 blmr.cpp:103 ci.cpp:16 ci.cpp:170 cr.cpp:28
+#: cr.cpp:39 cr.cpp:68 get_matrix.cpp:28 get_matrix.cpp:162 initialize.cpp:64
+#: initialize.cpp:93 initialize.cpp:108 initialize.cpp:139 set_x.cpp:154
+msgid "message: "
+msgstr "message: "
+
+#: Rinterface.cpp:313 blmr.cpp:48 blmr.cpp:104 ci.cpp:17 ci.cpp:171 cr.cpp:29
+#: cr.cpp:40 cr.cpp:69 get_matrix.cpp:29 get_matrix.cpp:163 initialize.cpp:65
+#: initialize.cpp:94 initialize.cpp:109 initialize.cpp:140 set_x.cpp:155
+msgid "memory allocation failed"
+msgstr "allocation de mémoire a échoué"
+
+#: bisect.cpp:18 bisect.cpp:43
+msgid "'bisect' to find x such that f(x)=0 starting from input values:"
+msgstr "'bisect' doit trouvé x tel que f(x)=0 dès ces valeurs fournies:"
+
+#: bisect.cpp:20
+msgid "'bisect' cannot find interim point from starting values"
+msgstr ""
+"'bisect' ne peut pas trouvé un point à l'intérieur des valeurs initiales"
+
+#: bisect.cpp:29
+msgid "'bisect' failed to reach tolerance after maximum number of iterations"
+msgstr "'bisect' hors tolérance après nombre maximum d'itérations"
+
+#: bisect.cpp:46
+msgid "'bisect' const  cannot find interim point from starting values"
+msgstr ""
+"'bisect' 'const' ne peut pas trouvé un point à l'intérieur des valeurs initiales"
+
+#: bisect.cpp:55
+msgid ""
+"'bisect' const  failed to reach tolerance after maximum number of iterations"
+msgstr "'bisect' 'const' hors tolérance après nombre maximum d'itérations"
+
+#: bisect.cpp:73
+msgid ""
+"'bisect_sl' to find x such that sl(x) = critical SL, starting from input "
+"values:"
+msgstr "'bisect_sl' doit trouvé x tel que sl(x)=SL dès ces valeurs fournies:"
+
+#: bisect.cpp:75
+msgid "'bisect_sl' cannot find interim point from starting values"
+msgstr ""
+"'bisect_sl' ne peut pas trouvé un point à l'intérieur des valeurs initiales"
+
+#: bisect.cpp:83
+msgid ""
+"'bisect_sl' failed to reach tolerance after maximum number of iterations"
+msgstr "'bisect_sl' hors tolérance après nombre maximum d'itérations"
+
+#: ci.cpp:38
+msgid "confidence level,  confidence interval for theta,  and  method:"
+msgstr "niveau de confiance,  interval de confiance pour theta,  et  méthode:"
+
+#: cr.cpp:24
+msgid "getting theta-boundaries..."
+msgstr "cherchant les limites pour theta..."
+
+#: cr.cpp:91
+msgid "getting alpha-boundaries..."
+msgstr "cherchant les limites pour alpha..."
+
+#: cr.cpp:213
+msgid "-percent joint confidence region for  (theta, alpha)  by method  "
+msgstr "-pourcent région de confiance jointe pour (theta, alpha) par méthode "
+
+#: cr.cpp:254
+msgid "'a_sl' initial point below critical SL"
+msgstr "'a_sl' point initial a SL moin le niveau critical"
+
+#: geo.cpp:117 geo.cpp:131 geo.cpp:146 geo.cpp:310 geo.cpp:324 geo.cpp:339
+#: geo.cpp:418 geo.cpp:432 geo.cpp:458 geo.cpp:604 geo.cpp:618 geo.cpp:646
+msgid "integration flag"
+msgstr "avis du routine d'intégration"
+
+#: get_matrix.cpp:56
+msgid "'get_Q' failed"
+msgstr "routine  'get_Q'  a échoué"
+
+#: get_matrix.cpp:133
+msgid "weights matrix ill-conditioned for 'clr' method"
+msgstr "matrice 'weights' mal formée pout la méthode 'clr'"
+
+#: get_matrix.cpp:183
+msgid "gam(th0) is the zero vector, so cannot get matrix M"
+msgstr ""
+"gam(th0) est le vecteur zéro, alors 'get_M' ne peut pas construire la "
+"matrice 'M'"
+
+#: get_matrix.cpp:201 get_matrix.cpp:216 get_matrix.cpp:225 get_matrix.cpp:226
+msgid "'get_M' failed"
+msgstr "routine  'get_M'  a échoué"
+
+#: initialize.cpp:28
+msgid "initializing:"
+msgstr "initialisation:"
+
+#: initialize.cpp:29
+msgid "model "
+msgstr "modèle "
+
+#: initialize.cpp:30
+msgid "  with variance unknown"
+msgstr "  avec variance inconnue"
+
+#: initialize.cpp:30
+msgid "  with variance known"
+msgstr "  avec variance connue"
+
+#: initialize.cpp:35
+msgid "weights:  "
+msgstr "poids:  "
+
+#: initialize.cpp:36
+msgid "variances:  "
+msgstr "variances:   "
+
+#: initialize.cpp:41
+msgid "weights matrix:  "
+msgstr "matrice de poids:  "
+
+#: initialize.cpp:41
+msgid "variance-covariance matrix:  "
+msgstr "matrice de variances et covariances:  "
+
+#: mle.cpp:119
+msgid "maximum likelihood estimates of parameters"
+msgstr "estimations de vraisemblance maximum pour les paramètres"
+
+#: rho_etc.cpp:241
+msgid "'rho_inv' no inverse for given 'rho' in data interval"
+msgstr ""
+"'rho-inv' ne trouve pas d'inverse pour le valeur de 'rho' et l'interval "
+"d'observation fournis"
+
+#: set_SL.cpp:14
+msgid "invalid 'SL' value"
+msgstr "valeur de 'SL' incorrecte"
+
+#: set_Sigma.cpp:17
+msgid "weights or covariance matrix has invalid entries"
+msgstr "matrice de poids ou covariances a des éléments incorrects"
+
+#: set_Sigma.cpp:22
+msgid "weights or covariance matrix is not positive-definite"
+msgstr "matrice de poids ou covariances n'est pas définie positive"
+
+#: set_acc.cpp:14
+msgid "invalid 'acc' value"
+msgstr "valeur de 'acc' incorrecte"
+
+#: set_alpha0.cpp:12
+msgid "invalid 'alpha0' value"
+msgstr "valeur de 'alpha0' incorrecte"
+
+#: set_sy.cpp:11
+msgid "invalid value in 'irSy' vector"
+msgstr "élément incorrect dans le vecteur 'irSy'"
+
+#: set_theta0.cpp:10
+msgid "invalid 'theta0' value"
+msgstr "valeur de 'theta0' incorrecte"
+
+#: set_x.cpp:21
+msgid "invalid 'x' value"
+msgstr "valeur de 'x' incorrecte"
+
+#: set_x.cpp:22
+msgid "'x' values must be non-decreasing"
+msgstr "valeurs de 'x' doit être non-décroissantes"
+
+#: set_x.cpp:25
+msgid ""
+"suggest combining these data into two observations at a repeat 'x' value:"
+msgstr "suggère d'affecter ces observations à une seul valeur de 'x' répétée:"
+
+#: set_x.cpp:27
+msgid "'x' values too close for reliable computations"
+msgstr "valeurs de 'x' trop proches pour calculs fiables"
+
+#: set_x.cpp:57
+msgid "number of 'x' values less than minimum"
+msgstr "nombre de valeurs de 'x' est moin que le minimum"
+
+#: set_y.cpp:11
+msgid "invalid y value"
+msgstr "valeur de 'y' incorrect"
+
+#: sl.cpp:18 sl.cpp:20 sl.cpp:44 sl.cpp:46
+msgid "  for theta0= "
+msgstr "  pour theta0= "
+
+#: sl.cpp:44 sl.cpp:46 sl.cpp:100 sl.cpp:102
+msgid "  by method "
+msgstr "  par la méthode "
+
+#: sl.cpp:81 sl.cpp:83 sl.cpp:100 sl.cpp:102
+msgid " for (th0,a0)= ( "
+msgstr " pour (th0,a0)= ( "
+
+#: sl_mc.cpp:15
+msgid "MC evaluation of conditional likelihood-ratio SL"
+msgstr ""
+"évaluation Monte Carlo, de SL par ratio-de-vraisemblance conditionelle,"
+
+#: sl_mc.cpp:16
+msgid "for theta0= "
+msgstr "pour theta0= "
+
+#: sl_mc.cpp:16
+msgid ",  target accuracy =  "
+msgstr ",  précision de cible =  "
+
+#: sl_mc.cpp:72
+msgid "MC evaluation of conditional likelihood-ratio SL for (th0,a0)= ("
+msgstr ""
+"évaluation Monte Carlo, de SL par ratio-de-vraisemblance conditionelle, pour "
+"(th0,a0)= ("
+
+#: sl_mc.cpp:73
+msgid "),  target accuracy = "
+msgstr "),  précision de cible = "
+
+
