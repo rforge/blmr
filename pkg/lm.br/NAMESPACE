@@ -1,0 +1,5 @@
+useDynLib( lm.br )
+exportPattern( "^[[:alpha:]]+" )
+import( Rcpp )
+export( lm.br )
+
