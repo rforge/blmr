@@ -17,13 +17,13 @@
 }
 
 \details{
-This method changes the y-values for the accessor functions 'sl', 'ci', 'cr' and 'mle'.  The output list of '$coefficients' and '$fitted' and so on, however, retains its values from the original call.
+This method changes the y-values for the accessor functions 'sl', 'ci', 'cr' and 'mle'.  But the output list of 'coefficients' and 'fitted.values' and so on retains its values from the original call.
 }
 
 \note{
 The pre-multiplied vector is more convenient as input during simulation tests.  This vector is simply the y-vector if 'weights' is omitted.  
 
-The square-root of a vector 'W' is the vector with the square root of each element.  The square-root of a matrix 'W' here is the matrix 'rW' such that rW*rW = W (a stricter definition than  rW*transpose(rW) = W).
+The square-root of a vector 'w' is the vector of the square roots of elements.  The square-root of a matrix 'W' here is the matrix 'rW' such that rW*rW = W (a stricter definition than  rW*transpose(rW) = W).
 }
 
 

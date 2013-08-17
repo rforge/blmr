@@ -56,6 +56,7 @@ void Clmbr::set_x( void )
 	for (i=0;i<m;i++) for (j=0;j<n;j++) if (fabs(QS[i][j])<zero_eq) QS[i][j]=0.;
 	for (i=0;i<m1;i++) for (j=0;j<n;j++) if (fabs(Q1S[i][j])<zero_eq) Q1S[i][j]=0.;
 
+
 	const Vector<double>  v1(n,1.), dummy_m1(m1,0.), dummy_m(m,0.); 
 	Vector<double>  s1(m1), sx(m1);
 
@@ -215,9 +216,19 @@ void Clmbr::set_x( void )
 
 	
 	Lgamma = 0.;
-	if(k1== -1) Lgamma += acos( gam(-Inf,0)*gam(xs[0],0) );
-	for (i=max(k1,0);i<ns-2;i++)  Lgamma += acos( gam(xs[i],i)*gam(xs[i+1],i+1) );
-
+	double gg;
+	if(k1== -1)  {
+		gg = gam(-Inf,0)*gam(xs[0],0);
+		gg = min( 1., gg);
+		gg = max( -1., gg);
+		Lgamma += acos( gg );
+	}
+	for (i=max(k1,0);i<ns-2;i++)  {
+		gg = gam(xs[i],i)*gam(xs[i+1],i+1);
+		gg = min( 1., gg);
+		gg = max( -1., gg);
+		Lgamma += acos( gg );
+	}
 
 	if ( py != NULL )   set_y();
 

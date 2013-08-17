@@ -35,7 +35,7 @@ void  Clmbr::get_Q(void)  const
 // first, reduce columns of X to identify significant rows
 	double maxrows[xrank];
 	for(j=0;j<xrank;j++) {
-		int  maxi, maxk;
+		int  maxi=0, maxk=0;
 		double  maxX= 0.;
 		for(k=j;k<xrank;k++)  for(i=0;i<n;i++) 
 				if( fabs(X[i][k]) > maxX ) { maxX= fabs(X[i][k]); maxi= i; maxk= k; }
@@ -138,9 +138,9 @@ void  Clmbr::get_rS_irS(void)  const
 			double Di= *(S_in+i*n+i);
 			if( model_in < 0 )  Di= *( S_in + (n-1-i)*n + (n-1-i) );
 			if( inverse )
-				rSd[i][i] = sqrt( Di ),  irSd[i][i] = 1./rSd[i][i];
+				{ rSd[i][i] = sqrt( Di );  irSd[i][i] = 1./rSd[i][i]; }
 			else
-				irSd[i][i] = sqrt( Di ),  rSd[i][i] = 1./irSd[i][i];
+				{ irSd[i][i] = sqrt( Di );  rSd[i][i] = 1./irSd[i][i]; }
 			if( Di > maxD )  maxD= Di;
 			if( Di < minD )  minD= Di;
 		}
@@ -159,6 +159,8 @@ void  Clmbr::get_rS_irS(void)  const
 			S2D[i][j] = Sij;
 		}
 
+		for (i=0;i<n-1;i++) for (j=i+1;j<n;j++)  if( fabs(S2D[i][j] - S2D[j][i]) < zero_eq )   S2D[i][j] = S2D[j][i];
+
 		Eigenvalue<double> Seig(S2D);
 
 		Seig.getV(Se2D);
@@ -170,9 +172,9 @@ void  Clmbr::get_rS_irS(void)  const
 		for (i=0;i<n;i++) {
 			double  Di= Sd2D[i][i];
 			if( inverse )
-				rSd[i][i] = sqrt(Di),  irSd[i][i] = 1./rSd[i][i];
+				{ rSd[i][i] = sqrt(Di);  irSd[i][i] = 1./rSd[i][i]; }
 			else
-				irSd[i][i] = sqrt(Di),  rSd[i][i] = 1./irSd[i][i];
+				{ irSd[i][i] = sqrt(Di);  rSd[i][i] = 1./irSd[i][i]; }
 			if( Di > maxD )  maxD= Di;
 			if( Di < minD )  minD= Di;
 		}

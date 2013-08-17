@@ -48,16 +48,23 @@ void Clmbr::initialize( void )
 		Rcout << endl;
 	}
 
-	if(model_in==1)  Model= M1;  else  {
+
+	if(model_in==1)  Model= M1;  else 
 		if(model_in==2 || model_in== -2)  Model= M2;		// treat Model -2 as Model 2 internally
 			else  if(model_in== 3 || model_in== -3)  Model= M3;
-	}
+
 
 	if(Model==M1)  { m= n-2-(xrank-2);  m1= m+2;  k1= 1; } 
 	if(Model==M2)  { m= n-1-(xrank-2);  m1= m+1;  k1= 0; }
 	if(Model==M3)  { m= n-(xrank-1);  m1= m;  k1= -1; }
 
+// set cov_matrix flags to 'non-diagonal' for multivariate models
+	if( m1 < n )  {
+		cov_matrix_I = false;
+		cov_matrix_diagonal = false;
+	}
 Rcout << "i here1" << endl;
+
 	try {
 		prS = new (Matrix<double>[n*n]);
 		pirS = new (Matrix<double>[n*n]);
@@ -136,13 +143,13 @@ Rcout << "i here8" << endl;
 
 
 	try{
-		C = new double[4];
+		C = new double[3];
 
 	} catch( bad_alloc &ex ) {
 		Rcout << _("message: ") << 7 << " " << ex.what() << endl;
 		stop( _("memory allocation failed") );
 	}
-	C[0]= get_C(n-1); C[1]= get_C(n-2); C[2]= get_C(n-3); C[3]= get_C(n-4);
+	C[0]= get_C(m-2); C[1]= get_C(m-1); C[2]= get_C(m); 
 
 
 	old_th = prev_th =  Inf; 

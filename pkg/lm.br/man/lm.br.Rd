@@ -2,85 +2,136 @@
 \name{lm.br}
 \alias{lm.br-package}
 \alias{lm.br}
+\alias{print.lm.br}
+
 
 \docType{package}
 
 \title{ Fit Linear Model with a single coefficient Breakpoint }
 
 \description{
-Exact significance tests for a single coefficient changepoint in linear or multivariate linear regression, assuming continuity.  Confidence intervals and confidence regions with exact coverage probabilities for the changepoint.
+Exact significance tests for a single coefficient changepoint in
+linear or multivariate linear regression, assuming continuity.
+Confidence intervals and confidence regions with exact coverage
+probabilities for the changepoint.
 }
 
 
 \usage{
-lm.br( formula, breaktype = "LL", data, subset, weights, inverse = FALSE, var.known = FALSE, 
-	na.action, method = "qr", model = TRUE, x = FALSE, y = FALSE, singular.ok = TRUE, 
-	contrasts = NULL, offset, ... )
+lm.br( formula, type = "LL", data, subset, weights, inverse =FALSE, 
+var.known = FALSE, na.action, method = "qr", model = TRUE, 
+x = FALSE, y = FALSE, contrasts = NULL, offset, ... )
 }
 
 
 \arguments{
-All of the arguments of 'lm' plus
-  \item{breaktype}{ 'LL', 'LT' or 'TL' which stand for line-line, line-threshold or threshold-line, defined below }
+  \item{formula}{a formula expression as for regression models, of
+the form \code{response ~ predictors}, see \code{formula} for more}
+  \item{type}{ 'LL', 'LT' or 'TL' which stand for line-line,
+line-threshold or threshold-line, defined below }
+  \item{data}{an optional data frame that defines variables in
+\code{formula} }
+  \item{subset}{expression saying which subset of the data to use}
   \item{weights}{vector or positive-definite matrix}
-  \item{inverse}{if true ‘weights’ specifies the inverse of the weight vector or matrix, which would be the case for a variance matrix}
+  \item{inverse}{if TRUE, 'weights' specifies the inverse of the
+weight vector or matrix, as for a variance matrix}
   \item{var.known}{TRUE or FALSE}
+  \item{na.action}{a function to filter missing data}
+  \item{method}{method to be used by \code{\link{lm.fit}} or
+\code{\link{lm.wfit}} }
+  \item{model}{should the model frame be returned?}
+  \item{x}{should the design matrix be returned?}
+  \item{y}{should the response be returned?}
+  \item{contrasts}{an optional list, see the \code{contrasts} argument
+of \code{\link{model.matrix.default}} }
+  \item{offset}{a known component of the linear predictor, see
+\code{\link{model.offset}} }
+  \item{\dots}{ additional arguments to \code{\link{lm.fit}} or
+\code{\link{lm.wfit}} }
+
 }
 
 
 \details{
-A broken-line model consists of two straight lines joined at a changepoint.  The versions supported here are
+A broken-line model consists of two straight lines joined at a
+changepoint.  The versions supported here are
 
-LL:   y = alpha +  B * min( x-theta , 0 ) + B'* max( x-theta, 0 ) + e
+LL:   y = alpha +  B * min( x-theta , 0 ) + B'* max( x-theta, 0 )
++ e
 
 LT:   y = alpha +  B * min( x-theta , 0 ) + e
 
 TL:   y = alpha +  B'* max( x-theta , 0 ) + e
 
-where  e ~ N( 0 , var * inv(weights) ).  All parameters are unknown except for 'weights'.  The 'LT' and 'TL' models can also omit 'alpha' by a formula without intercept such as 'y~x+0'.  
+where  e ~ N( 0 , var * inv(weights) ).  All parameters are
+unknown except for 'weights'.  The 'LT' and 'TL' models can also
+omit 'alpha' by a formula with no intercept term such as 'y~x+0'.
 
-Exact inferences about the changepoint  'theta'  or  '(theta,alpha)'  are based on the distribution of its likelihood-ratio statistic, conditional on sufficient statistics for the other parameters.  
+The same models apply for a multivariate formula such as  \cr'y ~
+x1 + x2 + ... + xn'  where 'alpha' becomes the coefficient of the
+"Intercept" term, or "1"-vector, and 'theta' the changepoint
+for the cofficient of the first 'x' term, 'x1'.
 
-The same models apply for a multivariate formula such as  \cr'y ~ x1 + x2 + ... + xn'  where 'alpha' becomes the coefficient of the "Intercept" term, or "1"-vector, and 'theta' is the changepoint for the cofficient of the first 'x' term, 'x1'.  
+Test for the presence of a changepoint by the significance level
+of a postulate value for 'theta' outside of the x-values.  Thus,
+'sl( min(x1)-1 )'  gives the significance level of the null
+hypothesis "single line" versus the alternate hypothesis
+"broken line".  In the 'LT' model, use  'sl(max(x1)+1)'.
 
-Test for the presence of a changepoint by the significance level of a postulate value for 'theta' outside of the x-values.  Thus,  'sl( min(x1)-1 )'  gives the exact significance level of the null hypothesis H0:"single line" versus the alternate hypothesis H1:"broken line".  In the 'TL' model use  'sl(max(x1)+1)'.
+Exact inferences about the changepoint  'theta'  or
+'(theta,alpha)'  are based on the distribution of its 
+likelihood-ratio statistic, conditional on sufficient statistics 
+for the other parameters.
 
 }
 
+
 \value{
-'lm.br' returns a list that includes a data+model C++ object.  
+'lm.br' returns a list that includes a data+model C++ object.
 
-Accessor function 'ci' gets confidence intervals, 'cr' confidence regions, and 'sl' significance levels for the changepoint's x-coordinate or (x,y)-coordinates.
+Accessor functions 'ci' gets confidence intervals, 'cr' confidence
+regions, and 'sl' significance levels for the changepoint's 
+x-coordinate or (x,y)-coordinates.
 
-Other accessor function 'mle' gets maximum likelihood estimates and 'sety' sets new y-values.
+Other accessor functions 'mle' gets maximum likelihood estimates
+and 'sety' sets new y-values.
 
-The output list also contains all the components of an 'lm' output list including
+The returned list also contains all the components of an 'lm' list
+including
 
   \item{coefficients}{a named vector of coefficients}
   \item{fitted.values}{the fitted mean values}
-  \item{residuals}{the residuals, that is responses minus fitted values.}
+  \item{residuals}{responses minus fitted values.}
 
 }
 
+
 \note{
-If variance is known,  'weights'  is the inverse of the variances vector or variance-covariance matrix, and  'var'=1  in the algebraic expressions of the model above.
+If variance is known,  'weights'  is the inverse of the variances
+vector or variance-covariance matrix, and  'var'=1  in the
+algebraic expressions of the model above.
 }
 
 
 \references{
-Siegmund, D. and Zhang, H.P. (1994),  "Confidence regions in broken line regression,"  in  _Change-point Problems_,  IMS Lecture Notes -- Monograph Series, vol. 23,  eds. E. Carlstein, H. Muller and D. Siegmund,  Hayward, CA: Institute of Mathematical Statistics,  pp. 292-316.
+Siegmund, D. and Zhang, H.P. (1994),  "Confidence regions in
+broken line regression,"  in  _Change-point Problems_,  IMS
+Lecture Notes -- Monograph Series, vol. 23,  eds. E. Carlstein, H.
+Muller and D. Siegmund,  Hayward, CA: Institute of Mathematical
+Statistics,  pp. 292-316.
 }
 
 \keyword{ package }
 
 \seealso{
-The accessor fuctions, 'ci', 'cr', 'mle', 'sety', and 'sl'.  
+The accessor fuctions, 'ci', 'cr', 'mle', 'sety', and 'sl'.
 
-The 'sl' help page gives details about the different evaluation methods.
+The 'sl' help page gives details about the different evaluation
+methods.
 
 The 'sety' help page gives an example simulations test.
 
-'lm' describes the other arguments and output values.
+'lm' describes the arguments and other output values.
 }
 
 \examples{
@@ -99,7 +150,7 @@ sc$mle()
 
 
 
-##  An example with variance known in the Normal approximations
+##  An example with variance known, for the Normal approximations
 ##  of binomial random variables.
 ##       Drinking-and-driving yearly surveys by TIRF, Ottawa,
 ##  with seasonal adjustment based on monthly surveys by CAMH, Toronto,
@@ -125,7 +176,7 @@ tirf_camh$ci(.95,'af')
 
 
 
-##  A 'TL' model example, from figure 1 of Chiu et al.(2006),
+##  A 'TL' example, from figure 1 of Chiu et al. (2006),
 ##  log(salmon abundance) vs year:
 salmon = c( 2.50, 2.93, 2.94, 2.83, 2.43, 2.84, 3.06, 2.97, 2.94, 2.65, 2.92,
  2.71, 2.93, 2.60, 2.12, 2.08, 1.81, 2.45, 1.71, 0.55, 1.30 )
@@ -135,13 +186,13 @@ chiu$ci(0.90)
 
 
 
-#  An 'LT' example with repeat observations, from Robbins, Saxton and Southern (2006). 
-#  pig weight-gain in grams-per-day  versus   % dietary isoleucine :
+#  An 'LT' example with repeat observations, from Robbins, Saxton and Southern (2006).
+#  pig weight-gain in grams-per-day  versus   % dietary isoleucine:
 wt = c( 533, 452, 433, 418,   686, 543, 648, 530,
        819, 657, 561, 712,   757, 743, 560, 721,
        691, 757, 657, 809,   667, 721, 651, 862  )
-iso = c( 0.38, 0.38, 0.38, 0.38,  0.42, 0.42, 0.42, 0.42, 
-       0.46, 0.46, 0.46, 0.46,  0.50, 0.50, 0.50, 0.50, 
+iso = c( 0.38, 0.38, 0.38, 0.38,  0.42, 0.42, 0.42, 0.42,
+       0.46, 0.46, 0.46, 0.46,  0.50, 0.50, 0.50, 0.50,
        0.54, 0.54, 0.54, 0.54,  0.58, 0.58, 0.58, 0.58 )
 
 rss <- lm.br( wt ~ iso, 'LT' )
@@ -149,7 +200,7 @@ rss$ci()
 
 
 
-##  An example that shows different confidence regions 
+##  An example that shows different confidence regions
 ##  by conditional likelihood-ratio inference and by approximate-F inference:
 y = c( 1.55, 3.2, 6.3, 4.8, 4.3, 4.0, 3.5, 1.8 )
 x = 1:8

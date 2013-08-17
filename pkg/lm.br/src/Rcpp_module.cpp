@@ -64,7 +64,7 @@ RCPP_MODULE(Clmbr){
 		.method( "cr", cr4 , "confidence region for (theta,alpha) at default confidence level" )
 		.method( "mle", &Clmbr::MLE , "printout maximum likelihood estimates of parameters" )
 		.method( "param", &Clmbr::PARAM , "return maximum likelihood estimates of parameters" )
-		.method( "sety", &Clmbr::SET_irSy , 
+		.method( "sety", &Clmbr::SET_rWy , 
 			"set new values for inverse-root of Sigma matrix times y-vector" )
 	;
 

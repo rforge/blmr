@@ -1,27 +1,23 @@
 
 
-print.lm.br.version <- function()
-{ 
+
+
+.onAttach <- function(...) { 
   library(help=lm.br)$info[[1]] -> version
   version <- version[pmatch("Version",version)]
   um <- strsplit(version," ")[[1]]
   version <- um[nchar(um)>0][2]
-  hello <- paste( " lm.br  version ", version, ",  type '?lm.br' for help.", sep="" )
+  hello <- paste( " lm.br  version ", version, ",  \"?lm.br\" starts help", sep="" )
   packageStartupMessage( hello )
 }
 
 
-.onAttach <- function(...) { 
-  print.lm.br.version()
-}
 
 
 
 
-
-
-lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse = FALSE, var.known = FALSE,
-    na.action, method = "qr", model = TRUE, x = FALSE, y = FALSE, singular.ok = TRUE, contrasts = NULL, offset, ... ) 
+lm.br  <-  function  ( formula, type = "LL", data, subset, weights, inverse = FALSE, var.known = FALSE,
+    na.action, method = "qr", model = TRUE, x = FALSE, y = FALSE, contrasts = NULL, offset, ... ) 
 {
     ret.x <- x
     ret.y <- y
@@ -84,26 +80,30 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 		if( xint )  x1 <- as.vector( x[,2] )  else  x1 <- as.vector( x[,1] )
 		dn1 <- c( " ", dn )
 		if( xint )  x1nm <- dn[2]  else  x1nm <- dn[1]
+		if( xint ) dn1[1] <- "1-vector"
 
 		x <- as.matrix( x[ order(x1), ] )
 		y <- if(is.matrix(y)) y[ order(x1), ]  else  y[ order(x1) ]
 		if(!is.null(w))  w <- if(is.matrix(w)) w[ order(x1), order(x1) ]  else  w[ order(x1) ]
 
-		b <- breaktype
+		b <- type
 		if( b=='LL' ) {
 			if( xint ) {  
 				model_no=1
 				p = 4
 			}  else
-				stop("'alpha'=0 is not supported for breaktype 'LL'")
+				stop("'alpha'=0 is not supported for broken line type 'LL'")
 		} else {
 			if( b=='TL' ) {
-				if( xint )  { model_no=2; p=3 }  else  { model_no=3; p=2 }
+				if( xint )  
+					{ model_no=2; p=3 }  
+				else  
+					{ model_no=3; p=2 }
 			}  else  {
 				if( b=='LT' ) {
 					if( xint )  { model_no=-2; p=3 }  else  { model_no=-3; p=2 } 
 				}  else  
-					stop(gettextf("breaktype = '%s' is not supported",b), domain = NA)
+					stop(gettextf("type = '%s' is not supported",b), domain = NA)
 			}
 		}
         if (is.null(w)) {
@@ -129,10 +129,10 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 			}
 		}
 
-## drop x-columns that are not independent per default tolerance
+## drop 'x'-columns that are not independent
 		nc <- ncol(x)
 		xdrop <- FALSE
-		if( qr(x)$rank < nc ) {
+		if( qr( x, ... )$rank < nc ) {
 			xdrop <- TRUE
 			ndrop <- nc - qr(x)$rank
 			cdrop <- qr(x)$pivot[ (nc-ndrop+1):nc ]
@@ -149,7 +149,7 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 		    }
 			class(z) <- "lm.br"
 		    z$call <- cl
-			z$breaktype <- breaktype
+			z$type <- type
 			return(z)
 		}
 		if(xdrop) if( xint && any(cdrop==2) || !xint && any(cdrop==1) )  stop("'x' invalid")
@@ -202,15 +202,14 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 					xb <- x
 				}  else  {
 					cp <- as( round(par[1],2), "character" )
-					xb[ ,xb1] <- pmin( x1 - par[1], 0 )
-					xb[ ,xb1+1] <- pmax( x1 - par[1], 0 )
+					xb[ ,xb1] <- if( b=='TL' )  0  else  pmin( x1 - par[1], 0 )
+					xb[ ,xb1+1] <- if( b=='LT' )  0  else  pmax( x1 - par[1], 0 )
 					bnm <- paste( "   ", x1nm, "<", cp )	
 					bpnm <- paste( "   ", cp, "<", x1nm )
 					if( xint ) { 
-						dn1[1]<-dn[1]; dn1[2]<-bnm; dn1[3]<-bpnm;
+						dn1[2]<-bnm; dn1[3]<-bpnm;
 					}  else  {
 						if( is.infinite(par[1]) ) {
-							dn1[1] <- "(Intercept)"
 							xb[ ,xb1] <- 1
 							xb[ ,xb1+1] <- 0
 							if( par[1] > 0 )  dn1[2] <- bnm  else  dn1[2] <- bpnm
@@ -221,19 +220,21 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 				yi <- as.matrix( y[ , i ] )
 
 				if (is.null(w)) 
-				    zi <- lm.fit(xb, yi, offset = offset, singular.ok = singular.ok, ... )
+				    zi <- lm.fit(xb, yi, offset = offset, method = method, ... )
 				else 
 					if(is.vector(w)) 
-						zi <- lm.wfit(xb, yi, w, offset = offset, singular.ok = singular.ok, ... )
+						zi <- lm.wfit(xb, yi, w, offset = offset, method = method, ... )
 					else  {
 						if ( !is.null(offset) )  yi <- yi - offset
-						zi <- lm.fit(A %*% xb, A %*% yi, singular.ok = singular.ok, ... )
+						zi <- lm.fit(A %*% xb, A %*% yi, method = method, ... )
 						zi$residuals <- drop(Ainv %*% zi$residuals)
 						zi$fitted.values <- drop(Ainv %*% zi$fitted.values)
 						if ( !is.null(offset) )  zi$fitted.values <- zi$fitted.values + offset
 					}
 
 				if( is.infinite(par[1]) ) zi$coefficients[2] <- 0
+				if( b=='TL' )  zi$coefficients[xb1] <- 0
+				if( b=='LT' )  zi$coefficients[xb1+1] <- 0
 				z$coefficients[[i]] <- zi$coefficients
 				if( !is.nan(par[1]) )  names( z$coefficients[[i]] ) <- dn1
 				z$fitted.values[[i]] <- zi$fitted.values 
@@ -251,15 +252,14 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 				xb <- x
 			}  else  {
 				cp <- as( round(par[1],2), "character" )
-				xb[ ,xb1] <- pmin( x1 - par[1], 0 )
-				xb[ ,xb1+1] <- pmax( x1 - par[1], 0 )
+				xb[ ,xb1] <- if( b=='TL' )  0  else  pmin( x1 - par[1], 0 )
+				xb[ ,xb1+1] <- if( b=='LT' )  0  else  pmax( x1 - par[1], 0 )
 				bnm <- paste( "   ", x1nm, "<", cp )	
 				bpnm <- paste( "   ", cp, "<", x1nm )
 				if( xint ) { 
-					dn1[1]<-dn[1]; dn1[2]<-bnm; dn1[3]<-bpnm;
+					dn1[2]<-bnm; dn1[3]<-bpnm;
 				}  else  {
 					if( is.infinite(par[1]) ) {
-						dn1[1] <- "(Intercept)"
 						xb[ ,xb1] <- 1
 						xb[ ,xb1+1] <- 0
 						if( par[1] > 0 )  dn1[2] <- bnm  else  dn1[2] <- bpnm
@@ -268,13 +268,13 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 				}
 			}
 		    if (is.null(w)) 
-		        z <- lm.fit(xb, y, offset = offset, singular.ok = singular.ok, ... )
+		        z <- lm.fit(xb, y, offset = offset, method = method, ... )
 		    else 
 				if(is.vector(w)) 
-					z <- lm.wfit(xb, y, w, offset = offset, singular.ok = singular.ok, ... )
+					z <- lm.wfit(xb, y, w, offset = offset, method = method, ... )
 				else  {
 					if ( !is.null(offset) )  y <- y - offset
-					z <- lm.fit(A %*% xb, A %*% y, method = method, ...)
+					z <- lm.fit(A %*% xb, A %*% y, method = method, ... )
 					z$residuals <- drop(Ainv %*% z$residuals)
 					z$fitted.values <- drop(Ainv %*% z$fitted.values)
 					if ( !is.null(offset) )  z$fitted.values <- z$fitted.values + offset
@@ -282,6 +282,8 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 		
 			if( !is.nan(par[1]) )  names( z$coefficients ) <- dn1
 			if( is.infinite(par[1]) ) z$coefficients[2] <- 0
+			if( b=='TL' )  z$coefficients[xb1] <- 0
+			if( b=='LT' )  z$coefficients[xb1+1] <- 0
 		}
 
 		z$Cpp_obj  <-  if(is.matrix(y))  objs  else  obj
@@ -315,8 +317,11 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 							}
 						}  else  (z$Cpp_obj)$mle(...)
 
-		z$sety <- function(...)  if( NCOL(y) > 1 )  stop("matrix 'y' not supported for 'sety'")
-									else  (z$Cpp_obj)$sety(...)
+		z$sety <- function( rWy ) {
+							if( NCOL(y) > 1 )  stop("matrix 'y' not supported for 'sety'")
+							rWysort <- rWy[ order(z$x1) ]
+							(z$Cpp_obj)$sety( rWysort )
+						}
 
 
 ##      return 'rank' and 'df' for 'theta' within 'x1' domain, and not perfect line,
@@ -326,12 +331,12 @@ lm.br  <-  function  ( formula, breaktype = "LL", data, subset, weights, inverse
 		z$rank <- p
 		z$df.residual <- n - p		
 		if( is.vector(w) ) z$df.residual = z$df.residual - sum( w==0 )
-		z$x1 <- x1
 		z$xint <- xint
+		z$x1 <- x1
     }
 	
     class(z) <- "lm.br"
-	z$breaktype <- breaktype
+	z$type <- type
     z$na.action <- attr(mf, "na.action")
 	z$weights <- model.weights(mf)
     z$offset <- offset
@@ -355,10 +360,10 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
 {
     cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"), 
         "\n\n", sep = "")
-	b <- x$b
-	cat( "Breaktype:  ", b, "\n\n" )
+	b <- x$type
+	cat( "Broken line type:  ", b, "\n\n" )
     if (length(coef(x))) {
-		cat("Significance level for hypothesis 'no changepoint' versus h. 'single changepoint':\n")
+		cat("Significance Level of hypothesis \"no changepoint\" versus h. \"single changepoint\":\n")
 		if( (b=='LT' && x$xint) || (b=='TL' && !x$xint) )
 			x$sl( max( x$x1 ) + 1.5 )
 		else
@@ -366,7 +371,7 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
         cat("Coefficients:\n")
 		print.default( x$coef )
 		cat("\n")
-		x$ci()
+		if( length( x$x1 ) < 30 )  x$ci()  else  x$ci(0.95,'af')
     }
     else  cat("No coefficients\n")
     cat("\n")

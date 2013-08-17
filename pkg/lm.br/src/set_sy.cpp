@@ -5,17 +5,16 @@
 
 
 void  Clmbr::set_sy(double *const irsy, const METHOD met)
-// precalculate numbers and vectors based on  irS*y  values 
+// recalculate numbers and vectors based on  rW*y = irS*y  values 
 {
 	for (int i=0;i<n;i++)
-		if ( isinf(irsy[i]) || isnan(irsy[i]) )  stop( _("invalid value in 'irSy' vector") );
-
+		if ( isinf(irsy[i]) || isnan(irsy[i]) )  stop( _("invalid value in 'rWy' vector") );
 
 
 	Vector<double> virsy(n);
 	for (int i=0;i<n;i++)  if( model_in > 0 )  virsy[i] = irsy[i];  else  virsy[i] = irsy[n-1-i];
-	*psy = *pQ1*virsy;
 
+	*psy = *pQ1*virsy;
 
 	*py = *prS*virsy;
 

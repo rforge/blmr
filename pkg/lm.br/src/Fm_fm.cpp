@@ -49,7 +49,7 @@ double Clmbr::fk(const int k, const double arg)  const
 // calculate the f() function defined in K,S&Z eq.(13)
 {
 	double gv = 0.;
-	if ( fabs(arg) < 1. )  gv = C[n-1-k]*pow( 1.- arg*arg, k/2. - 1.);
+	if ( fabs(arg) < 1. )  gv = C[k-(m-2)]*pow( 1.- arg*arg, k/2. - 1.);
 	return gv;
 }
 

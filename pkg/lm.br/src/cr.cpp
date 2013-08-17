@@ -7,12 +7,12 @@
 int Clmbr::cr(const METHOD met, const double inc, const bool output, double *const bounds)
 //
 //      Checks whether { (theta,alpha)  such that  sig. level  > SL}  is contiguous.
-// Returns N = number of rows for array "bounds[N][3]" = (th, min_alpha, max_alpha) values.
+// Returns N = number of rows for array 'bounds[N][3]' = (th, min_alpha, max_alpha) values.
 // If (met==GEO) using Knowles, Siegmund and Zhang's geometric formula to calculate  sig. levels;
 // if (met==AF) using Approximate-F method.
 //
-//	     Use the 'ci' subroutine to check the 2-parameter significance levels along 
-//	the  ( theta0, MLE-alpha(theta0) )  ridge,  then finds the alpha-boundaries
+//	     Uses the 'ci' subroutine to check the 2-parameter significance levels along 
+//	the  ( theta0, alphaMLE(theta0) )  ridge,  then finds the alpha-boundaries
 //	at increments of theta0.  SL has a single alpha-maxima for a given theta0, 
 //  in the broken line model.
 //
@@ -21,7 +21,7 @@ int Clmbr::cr(const METHOD met, const double inc, const bool output, double *con
 // get theta-boundaries of confidence region(s)
 
 	Rcpp::Function Rflush("flush.console");
-	if(output) if(met==GEO) { Rcout << "   " << _("getting theta-boundaries...") << endl;  Rflush(); }
+	if(output) if(met==GEO) { Rcout << "   " << _("getting theta-boundaries...   ");  Rflush(); }
 
 	double *const  tmp= new (nothrow) double[2*ns];
 	if(tmp==NULL) {
@@ -44,6 +44,8 @@ int Clmbr::cr(const METHOD met, const double inc, const bool output, double *con
 	int i;
 	for (i=0;i<2*numr;i++)  th_bds[i] = tmp[i];
 	delete[] tmp;
+
+	if(output) if(met==GEO)  Rcout << endl;
 
 
 	const double th_min= xs[0]-1, th_max= xs[ns-1]+1;
@@ -85,14 +87,12 @@ int Clmbr::cr(const METHOD met, const double inc, const bool output, double *con
 		double  th= 0;
 
 
-		double min_th=0, max_th=0, mid_th=0;
-		bool msg1= false, msg2= false, msg3= false;
+		double  min_th=0,  max_th=0;
+		double  tstart= time(NULL), tfinish= tstart, elapsed= 0;
 		if(output) if(met==GEO) { 
-			Rcout << "   " << _("getting alpha-boundaries...");  Rflush();
+			Rcout << "   " << _("getting alpha-boundaries...   ");  Rflush();
 			if(Model==M1)  min_th = max(th_bds[0],xs[0]);  else  min_th = th_bds[0];
 			max_th = min(th_bds[2*numr-1],xs[ns-1]);
-			mid_th = (min_th + max_th)/2.;
-			msg1 = msg2 = msg3 = true;
 		}
 
 
@@ -170,12 +170,20 @@ int Clmbr::cr(const METHOD met, const double inc, const bool output, double *con
 
 					*(bds+N*3+0) =th; *(bds+N*3+1) =a_sl(met,th,-1); *(bds+N*3+2) =a_sl(met,th,1); N++; 
 
+					if(output) if(met==GEO) { 
+						tfinish = time( NULL );
+						elapsed = tfinish - tstart;
+						if( elapsed > 10 ) {
+							const double  progress = floor( 100*(th-min_th)/(max_th-min_th) );
+							Rcout << progress << "%...   ";   Rflush();
+							tstart= tfinish;
+						}
+					}
+
 				}
 
 
-				if(msg1) if(th>(min_th + mid_th)/2) { Rcout << "  25%...";  Rflush();  msg1 = false;  }
-				if(msg2) if(th>mid_th)				{ Rcout << "  50%...";  Rflush();  msg2 = false;  }
-				if(msg3) if(th>(mid_th + max_th)/2) { Rcout << "  75%...";  Rflush();  msg3 = false;  }
+
 			}
 
 
@@ -256,6 +264,8 @@ double Clmbr::a_sl(const METHOD met, const double th, const int high_low)
 		double guess = a_af(th, high_low);
 		if ( isnan(guess) || (guess-ah)*high_low < zero_eq) guess = ah+incr;
 		double guess2 = ah;
+
+
 
 
 		while ( sl(th,guess,met,false) > SL) { 

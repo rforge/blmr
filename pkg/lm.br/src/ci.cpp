@@ -83,6 +83,7 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 {
 	int  numi=0, ind=0;		// ind = indicator = {0 if sl_geo was below SL, 1 if above}
 	double th, sl_th =2, thold;
+	Rcpp::Function Rflush("flush.console");
 
 	if( Model==M3 )  {
 
@@ -181,6 +182,8 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 
 //Rcout << "ncp " << ncp << endl;
 //for(k = 0; k < ncp; k++) Rcout << "k cpt  " << k << " " << cpts[k] << endl;
+	bool msg= false;
+	double  tstart= time(NULL);
 
 // grid search
 	for (k = 0; k < ncp - 1; k++) {
@@ -214,9 +217,18 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 				ind= 0;
 			}
 			thold = th;
-		}
-	}
 
+			double  tfinish = time( NULL ),  elapsed = tfinish - tstart;
+			if( elapsed > 10 ) {
+				const double  progress = floor( 100*(th-cpts[0])/(cpts[ncp-1]-cpts[0]) );
+				if(!msg) { msg=true; if(met==GEO) Rcout << "   progress:   "; }
+				Rcout << progress << "%...   ";  Rflush();
+				tstart= tfinish;
+			}
+		}
+
+	}
+	if(msg && met==GEO) Rcout << endl << endl;
 
 // check boundary of final end-interval
 	th = cpts[k];

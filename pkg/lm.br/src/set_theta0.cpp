@@ -88,9 +88,9 @@ void  Clmbr::set_theta0( const double th_0, const METHOD met)
 
 	if (met==MC || met==INIT) {	
 
-		Matrix<double>   M(m,m,0.),  *const pM = &M;
+		Matrix<double>   M(m,m,0.);
 
-		if (th0ex)  { for(int i=0;i<m;i++) M[i][i] =1.; }  else  get_M( pM );
+		if (th0ex)  { for(int i=0;i<m;i++) M[i][i] =1.; }  else  get_M( &M );
 
 		for (int k=0; k < ns + 1; k++)  {
 			pmq1[k] = M*pq1[k];  

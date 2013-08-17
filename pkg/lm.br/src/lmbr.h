@@ -169,7 +169,7 @@ public:
 	void crR(void);
 	void MLE(void) const;
 	NumericVector PARAM(void) const;
-	void SET_irSy(NumericVector irSy);
+	void SET_rWy(NumericVector rWy);
 
 
 // friend functions, in files  geo  and  sl_geo

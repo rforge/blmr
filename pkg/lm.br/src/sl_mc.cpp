@@ -166,11 +166,28 @@ bool Clmbr::m_ge_w(const double wsq, const Vector<double> &s)  const
 
 		const double  sa = sx*qx1[k] - s1*qxx[k],  sb = sx*q11[k] - s1*qx1[k],  thk = sa/sb;
 
-		if(k>0) {
-			if( xs[k-1] < thk  &&  thk < xs[k] )   mk = (sx*sb - s1*sa)/ck[k];   else   mk = sf*sf/qff[k];
-		} else {
-			if(  thk < xs[k]  )  mk = (sx*sb - s1*sa)/ck[k];  else  mk= ( (s*(*pm1h)) * (s*(*pm1h)) );		// lim sup
+		if( k > 0 )  {
+			if( xs[k-1] < thk  &&  thk < xs[k] )  mk = (sx*sb - s1*sa)/ck[k];  else  mk = sf*sf/qff[k];
+		}  else  {
+			if( thk < xs[k] )  mk = (sx*sb - s1*sa)/ck[k];  else  mk= (s*(*pm1h)) * (s*(*pm1h)) ;		// lim sup
 		}
+
+/*
+mk=0.;
+		if( k > 0 )  {
+			if( xs[k-1] < thk  &&  thk < xs[k] )  {
+				if(k==2) mk = (sx*sb - s1*sa)/ck[k];  
+			}  else  {
+				if(k==2||k==3) mk = sf*sf/qff[k];
+			}
+		}  else  {
+			if( thk < xs[k] )  {
+				mk = (sx*sb - s1*sa)/ck[k];  
+			}  else  {
+				mk= (s*(*pm1h)) * (s*(*pm1h)) ;		// lim sup
+			}
+		}
+*/
 
 		if ( mk >= wsq )  return true;
 	}

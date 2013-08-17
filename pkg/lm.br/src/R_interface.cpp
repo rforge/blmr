@@ -347,10 +347,10 @@ NumericVector  Clmbr::PARAM( void )  const
 
 
 
-void Clmbr::SET_irSy(const NumericVector irSy)  {
+void Clmbr::SET_rWy(const NumericVector rWy)  {
 
-	const int yn =irSy.size();
-	if(yn!=n) stop( _("'irSy' vector has wrong dimension") );
+	const int yn =rWy.size();
+	if(yn!=n) stop( _("'rWy' vector has wrong dimension") );
 
 	double *const  Ytmp= new (nothrow) double[n];
 	if(Ytmp==NULL) {
@@ -358,7 +358,7 @@ void Clmbr::SET_irSy(const NumericVector irSy)  {
 		stop( _("memory allocation failed") );
 	}
 	
-	for (int i=0;i<n;i++) Ytmp[i] = irSy[i];
+	for (int i=0;i<n;i++) Ytmp[i] = rWy[i];
 
 	set_sy( Ytmp, GEO2 );
 
