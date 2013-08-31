@@ -9,7 +9,7 @@ double Clmbr::sl_mc(void)  const
 // calculate significance level by CLR, Monte Carlo evaluation method
 {
 	const double  acc= acc_sl_abs;
-	double th0print = th0;   if(model_in  < 0 ) th0print = -th0;
+	double  th0print = th0;   if(model_in  < 0 ) th0print = -th0;
 	Rcpp::Function Rflush("flush.console");
 
 	Rcout << endl << _("MC evaluation of conditional likelihood-ratio SL") << endl;
@@ -19,6 +19,7 @@ double Clmbr::sl_mc(void)  const
 
 
 	const double  tstart= time(NULL),  wsq= w*w; 
+	double  pstart= tstart;
 
 	double  s0, testw;
 	if (variance_unknown) { s0 = z/sqrt( 1.- z*z );  testw = wsq/(1-z*z); } 
@@ -40,10 +41,12 @@ double Clmbr::sl_mc(void)  const
 		const  Vector<double>&  rs = s;
 		if ( m_ge_w(testw, rs) ) count++;
 
-		if ( it==N/10 || !(it%(N/5)) ) {
+		double  pfinish=  time( NULL ),  ptime= pfinish - pstart;
+		if ( it==N/10 || !(it%(N/5)) || ptime > 10 ) {
 			const double  p = 1.*count/it,  err_est = 2*sqrt( p*(1.-p)/it );
 			Rcout << setw(10) << it << setw(12) << p << setw(15) << err_est << endl; Rflush();
-			if (err_est < acc &&  it >= N/5)  {it++; break;}
+			if ( err_est < acc )  {it++; break;}
+			pstart= pfinish;
 		}
 	}
 	it--;
@@ -83,6 +86,7 @@ double Clmbr::sl_mc2(void)  const
 // generate mock results
 
 	const double  tstart = time( NULL );
+	double  pstart= tstart;
 
 	GetRNGstate();
 	const int  N = 10000000;
@@ -128,13 +132,15 @@ double Clmbr::sl_mc2(void)  const
 		}
 
 
-		if ( it==N/10 || !(it%(N/5)) )  {
+		double  pfinish=  time( NULL ),  ptime= pfinish - pstart;
+		if ( it==N/10 || !(it%(N/5)) || ptime > 10 )  {
 			const double  p = 1.*sum/it,  sd = sqrt( (sumsqs/it - p*p)/it );
 			double err_est = 2*c*sd;
 			if (!variance_unknown)  err_est *= lambda;
 			if (variance_unknown) sL = 2*Fc + 2*c*sum/it; else sL = 2*Fc + lambda*2*c*sum/it;
 			Rcout << setw(10) << it << setw(14) << sL << setw(15) << err_est << endl; Rflush();
-			if ( err_est < acc  &&  it >=N/5 )  {it++; break;}
+			if ( err_est < acc )  {it++; break;}
+			pstart= pfinish;
 		}
 	}
 	it--;
@@ -156,40 +162,49 @@ bool Clmbr::m_ge_w(const double wsq, const Vector<double> &s)  const
 // Check whether  max(<gam(theta).s>^2)  >=  wsq  for some 'theta'.  Use pre-calculated  M*"stump of 1"  vectors 
 // for the dot products of 'gamma' with 's',  by  gamma*u = gamma*(M-transpose*s) = (M*gamma)*s .  
 {
-	double  sf= (xs[ns-1]-xs[ns-2])*(s*pmq1[ns-1]),  mk= sf*sf/qff[ns-1];
-	if ( mk >= wsq )  return true; 
 
-	for ( int k= ns-2; k > k1; k-- ) 
-	{
-		const double  s1 = s*pmq1[k],  sx = sf + s1*xs[k];  
-		if(k>0) sf = sx - s1*xs[k-1];
+	if( th0ex )  {		// if th0ex= TRUE, vectors not pre-multiplied by 'M' matrix
 
-		const double  sa = sx*qx1[k] - s1*qxx[k],  sb = sx*q11[k] - s1*qx1[k],  thk = sa/sb;
+		double  sf= (xs[ns-1]-xs[ns-2])*(s*pq1[ns-1]),  mk= sf*sf/qff[ns-1];
+		if ( mk >= wsq )  return true; 
 
-		if( k > 0 )  {
-			if( xs[k-1] < thk  &&  thk < xs[k] )  mk = (sx*sb - s1*sa)/ck[k];  else  mk = sf*sf/qff[k];
-		}  else  {
-			if( thk < xs[k] )  mk = (sx*sb - s1*sa)/ck[k];  else  mk= (s*(*pm1h)) * (s*(*pm1h)) ;		// lim sup
+		for ( int k= ns-2; k > k1; k-- ) 
+		{
+			const double  s1 = s*pq1[k],  sx = sf + s1*xs[k];  
+			if(k>0) sf = sx - s1*xs[k-1];
+
+			const double  sa = sx*qx1[k] - s1*qxx[k],  sb = sx*q11[k] - s1*qx1[k],  thk = sa/sb;
+
+			if( k > 0 )  {
+				if( xs[k-1] < thk  &&  thk < xs[k] )  mk = (sx*sb - s1*sa)/ck[k];  else  mk = sf*sf/qff[k];
+			}  else  {
+				if( thk < xs[k] )  mk = (sx*sb - s1*sa)/ck[k];  else  mk= (s*(*pv1h)) * (s*(*pv1h)) ;		// lim sup
+			}
+
+			if ( mk >= wsq )  return true;
 		}
 
-/*
-mk=0.;
-		if( k > 0 )  {
-			if( xs[k-1] < thk  &&  thk < xs[k] )  {
-				if(k==2) mk = (sx*sb - s1*sa)/ck[k];  
-			}  else  {
-				if(k==2||k==3) mk = sf*sf/qff[k];
-			}
-		}  else  {
-			if( thk < xs[k] )  {
-				mk = (sx*sb - s1*sa)/ck[k];  
-			}  else  {
-				mk= (s*(*pm1h)) * (s*(*pm1h)) ;		// lim sup
-			}
-		}
-*/
+	}  else  {
 
-		if ( mk >= wsq )  return true;
+		double  sf= (xs[ns-1]-xs[ns-2])*(s*pmq1[ns-1]),  mk= sf*sf/qff[ns-1];
+		if ( mk >= wsq )  return true; 
+
+		for ( int k= ns-2; k > k1; k-- ) 
+		{
+			const double  s1 = s*pmq1[k],  sx = sf + s1*xs[k];  
+			if(k>0) sf = sx - s1*xs[k-1];
+
+			const double  sa = sx*qx1[k] - s1*qxx[k],  sb = sx*q11[k] - s1*qx1[k],  thk = sa/sb;
+
+			if( k > 0 )  {
+				if( xs[k-1] < thk  &&  thk < xs[k] )  mk = (sx*sb - s1*sa)/ck[k];  else  mk = sf*sf/qff[k];
+			}  else  {
+				if( thk < xs[k] )  mk = (sx*sb - s1*sa)/ck[k];  else  mk= (s*(*pm1h)) * (s*(*pm1h)) ;		// lim sup
+			}
+
+			if ( mk >= wsq )  return true;
+		}
+
 	}
 
 	return false;

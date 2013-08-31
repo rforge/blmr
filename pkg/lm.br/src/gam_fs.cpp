@@ -91,10 +91,10 @@ Vector<double> Clmbr::sf(const double th, const int k) const
 }
 
 
- 
+
 Vector<double> Clmbr::sfc(const double th, const int k) const
 {
-	return  psxc[k] - th*ps1c[k];
+	return  (*psigx - psx[k]) - th*(*psig1 - ps1[k]);
 }
 
 

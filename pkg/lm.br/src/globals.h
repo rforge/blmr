@@ -15,7 +15,8 @@
 #include <math.h>
 
 #include <R.h>
-#include <R_ext/Applic.h>		//  for Rdqags and Rdqagi
+#include <R_ext/Applic.h>		//  for 'Rdqags' and 'Rdqagi'
+#include <R_ext/Lapack.h>
 
 #include <Rcpp.h>
 

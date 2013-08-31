@@ -43,8 +43,9 @@ RCPP_MODULE(Clmbr){
 
 	class_<Clmbr>( "Cpp_Clmbr" )
 	
-	    // expose the constructor
+	    // expose the constructors
 	    .constructor< NumericVector, NumericMatrix, int, NumericMatrix, bool, bool >()    
+	    .constructor< NumericVector, NumericMatrix, int, bool >()
 
 		// expose methods
 		.method( "sl", sl1 , "significance level for theta0 by default method CLR-GEO" )

@@ -7,7 +7,7 @@
   version <- version[pmatch("Version",version)]
   um <- strsplit(version," ")[[1]]
   version <- um[nchar(um)>0][2]
-  hello <- paste( " lm.br  version ", version, ",  \"?lm.br\" starts help", sep="" )
+  hello <- paste( " lm.br  version ", version, ",  '?lm.br' starts help", sep="" )
   packageStartupMessage( hello )
 }
 
@@ -106,10 +106,7 @@ lm.br  <-  function  ( formula, type = "LL", data, subset, weights, inverse = FA
 					stop(gettextf("type = '%s' is not supported",b), domain = NA)
 			}
 		}
-        if (is.null(w)) {
-			W <- matrix(0,n,n)
-			diag(W) <- 1	
-        }  else  {
+        if (!is.null(w)) {
 			if(is.vector(w))  {
 				if ( length(w) != n) 
 					stop("incompatible dimensions")
@@ -120,12 +117,10 @@ lm.br  <-  function  ( formula, type = "LL", data, subset, weights, inverse = FA
 				if(is.matrix(y))  y <- y[ok,]  else  y <- y[ok]
 				x <- as.matrix( x[ok,] )
 				n <- length(w)
-				W <- matrix(0,n,n)
-				diag(W) <- w
+				w <- as.matrix(w)
 			}  else  {
 				if (any(dim(w) != c(n, n))) 
 					stop("dim(weights) is not correct")
-				W <- w
 			}
 		}
 
@@ -158,15 +153,22 @@ lm.br  <-  function  ( formula, type = "LL", data, subset, weights, inverse = FA
 			objs <- list()
 			for(i in 1:ny) {
 				yi <- as.vector( y[ , i ] )
-				objs[[i]] <- new( Cpp_Clmbr, yi, x, model_no, W, var.known, inverse )
+				objs[[i]] <- if(is.null(w)) 
+								new( Cpp_Clmbr, yi, x, model_no, var.known )
+							else
+								new( Cpp_Clmbr, yi, x, model_no, w, inverse, var.known )
 			}
 			names(objs) <- colnames(y)
 			objs
 		}  else
-			obj <- new( Cpp_Clmbr, y, x, model_no, W, var.known, inverse )
+			obj <- if(is.null(w)) 
+						new( Cpp_Clmbr, y, x, model_no, var.known )
+					else
+						new( Cpp_Clmbr, y, x, model_no, w, inverse, var.known )
 
 
-# restore input model, but with two new vectors for the two halves of the changepoint term 
+# restore input model, but with two new vectors 
+# for the two halves of the term with coefficient change
 # in order to use 'lm.fit' and 'lm.wfit' to calculate the output list
 		y <- model.response(mf,'numeric')
 		if (is.matrix(y) && ny == 1)  y <- drop(y)
@@ -235,7 +237,7 @@ lm.br  <-  function  ( formula, type = "LL", data, subset, weights, inverse = FA
 				if( is.infinite(par[1]) ) zi$coefficients[2] <- 0
 				if( b=='TL' )  zi$coefficients[xb1] <- 0
 				if( b=='LT' )  zi$coefficients[xb1+1] <- 0
-				z$coefficients[[i]] <- zi$coefficients
+				z$coefficients[[i]] <- round( zi$coefficients, 5 )
 				if( !is.nan(par[1]) )  names( z$coefficients[[i]] ) <- dn1
 				z$fitted.values[[i]] <- zi$fitted.values 
 				z$residuals[[i]] <- zi$residuals  	
@@ -284,6 +286,7 @@ lm.br  <-  function  ( formula, type = "LL", data, subset, weights, inverse = FA
 			if( is.infinite(par[1]) ) z$coefficients[2] <- 0
 			if( b=='TL' )  z$coefficients[xb1] <- 0
 			if( b=='LT' )  z$coefficients[xb1+1] <- 0
+			z$coefficients <- round( z$coefficients, 5 )
 		}
 
 		z$Cpp_obj  <-  if(is.matrix(y))  objs  else  obj
@@ -324,10 +327,10 @@ lm.br  <-  function  ( formula, type = "LL", data, subset, weights, inverse = FA
 						}
 
 
-##      return 'rank' and 'df' for 'theta' within 'x1' domain, and not perfect line,
+##      return 'rank' and 'df' for 'theta' within the 'x1' domain, and not "perfect line",
 ## where domain is  [ min(x1), max(x1) ] in 'LL',  [ min(x1), Inf ] in 'LT',  and  [ -Inf, max(x1) ] in 'TL'
 ## 'rank' and 'df' would be  p-1  and  n-p+1  for 'theta' outside of domain, and 
-## the values of a linear model if perfect line
+## the values of a linear model if case "perfect line"
 		z$rank <- p
 		z$df.residual <- n - p		
 		if( is.vector(w) ) z$df.residual = z$df.residual - sum( w==0 )
@@ -364,14 +367,17 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
 	cat( "Broken line type:  ", b, "\n\n" )
     if (length(coef(x))) {
 		cat("Significance Level of hypothesis \"no changepoint\" versus h. \"single changepoint\":\n")
+		mx1 <- max( x$x1 )
+		mn1 <- min( x$x1 )
+		ai <- (mx1 - mn1)/( length( x$x1 ) - 1 )
 		if( (b=='LT' && x$xint) || (b=='TL' && !x$xint) )
-			x$sl( max( x$x1 ) + 1.5 )
+			x$sl( round( mx1 + ai*1.5, 2) )
 		else
-			x$sl( min( x$x1 ) - 1.5 )
+			x$sl( round( mn1 - ai*1.5, 2) )
         cat("Coefficients:\n")
 		print.default( x$coef )
 		cat("\n")
-		if( length( x$x1 ) < 30 )  x$ci()  else  x$ci(0.95,'af')
+		x$ci()
     }
     else  cat("No coefficients\n")
     cat("\n")

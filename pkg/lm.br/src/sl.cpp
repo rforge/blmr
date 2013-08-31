@@ -45,7 +45,7 @@ double Clmbr::sl(const double th_0, const METHOD met, const bool output)
 			else
 				Rcout << "  SL= " << sL << _("  for theta0 = ") << -th_0 << _("  by method ");
 			if (met==AF)  Rcout << "AF" << endl;  
-			if (met==GEO)  Rcout << "CLR  int.er.< " << err << endl;  
+			if (met==GEO)  if(th0ex)  Rcout << "CLR" << endl;  else  Rcout << "CLR  int.er.< " << err << endl;  
 			if (met==MC)  Rcout << "CLR-MC" << endl;
 			Rcout << endl;
 		}
@@ -54,7 +54,7 @@ double Clmbr::sl(const double th_0, const METHOD met, const bool output)
 if( isinf(sL) || isnan(sL) ) {
   Rcout << "sL= " << sL << endl;
   Rcout << "th0  " << th0 << endl;
-  Rcout << "y  " << *py << endl;
+  Rcout << "irsy  " << *psy << endl;
   stop( "debug" );
 }
 

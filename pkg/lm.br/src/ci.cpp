@@ -12,11 +12,13 @@ int Clmbr::ci(const METHOD met, const double incr, const bool output, double *co
 	int numr = 0;
 
 	double *const bds= new (nothrow) double[2*ns];
-	if(bds==NULL) {
-		Rcout << _("message: ") << 11 << endl;
-		stop( _("memory allocation failed") );
-	}
+	if(bds==NULL)  stop( _("memory allocation failed") );
 
+
+	if (output)  Rcout << _( "Confidence interval for changepoint,  confidence level,  and  method:" ) << endl;
+
+	double  inc;
+	if( incr == -1 )  inc= xinc;  else  inc= incr;
 
 	if(trivial) {
 
@@ -28,14 +30,13 @@ int Clmbr::ci(const METHOD met, const double incr, const bool output, double *co
 
 	}  else  {
 
-		if (met==GEO || met==GEO2)  numr = ci_geo(met,incr,bds);
+		if (met==GEO || met==GEO2)  numr = ci_geo(met,inc,bds);
 		if (met==AF || met==AF2)  numr = ci_af(met,bds);
 
 	}
 
 
 	if (output)  {
-		Rcout << _( "Confidence interval for changepoint,  confidence level,  and  method:" ) << endl;
 		Rcout << "    ";
 		if( model_in > 0 )  {
 			for (int i=0;i<2*numr;i+=2) {
@@ -160,10 +161,7 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 // get critical points
 
 	double *const cpts= new (nothrow) double[ns+2];
-	if( cpts==NULL )  {
-		Rcout << _("message: ") << 12 << endl;
-		stop( _("memory allocation failed") );
-	}
+	if( cpts==NULL )  stop( _("memory allocation failed") );
 
 	const double thmle = mle(false);
 
@@ -183,6 +181,8 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 //Rcout << "ncp " << ncp << endl;
 //for(k = 0; k < ncp; k++) Rcout << "k cpt  " << k << " " << cpts[k] << endl;
 	bool msg= false;
+	double lag;
+	if( met==GEO )  lag = 5;  else  lag = 10;
 	double  tstart= time(NULL);
 
 // grid search
@@ -199,13 +199,17 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 				ind= 0;
 			}
 			thold = th;
+
+// a grid search can miss a small break in a confidence interval
+// to avoid 'cr' finding a break that 'ci' misses
+// setup the starting value and increments to cover the same points as in 'cr' routine
 		double inc= incr;
 		if(Model==M3 && k==0) inc= (cpts[k+1]-cpts[k])/(subints+0.5);
 		while( (cpts[k+1]-cpts[k])/inc < subints + 1 )  inc /= 2.;
 		double  fth= floor(th);
 		while( fth < cpts[k] + acc_xb )  fth += inc;
 //Rcout << "fth inc  " << fth << " " << inc << endl;
-		for (th=fth;th<cpts[k+1];th+=inc) {		// covers the same points as in 'cr' routine
+		for (th=fth;th<cpts[k+1];th+=inc) { 
 			sl_th = sl(th,met,false);
 //Rcout << "th sl ind thold  " << th << " " << sl_th << " " << ind << " " << thold << endl;
 			if (sl_th > SL && ind==0) {
@@ -219,7 +223,7 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 			thold = th;
 
 			double  tfinish = time( NULL ),  elapsed = tfinish - tstart;
-			if( elapsed > 10 ) {
+			if( elapsed > lag ) {
 				const double  progress = floor( 100*(th-cpts[0])/(cpts[ncp-1]-cpts[0]) );
 				if(!msg) { msg=true; if(met==GEO) Rcout << "   progress:   "; }
 				Rcout << progress << "%...   ";  Rflush();

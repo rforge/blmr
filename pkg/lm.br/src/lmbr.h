@@ -21,16 +21,17 @@ private:
 	int model_in, n, m, m1, ns, xrank;
 	bool variance_unknown, inverse;
 
-	bool cov_matrix_I, cov_matrix_diagonal, th0ex, trivial;
+	bool vectorS, matrixS, cov_matrix_diagonal, th0ex, trivial;
 	int k1, k0, subints;
 	double s11, sx1, sxx, n1, se1sq, y1, yx, sysq, qysq, omega, c, th0, alpha0, z, w;
 	double prime_z, g0u1, g0u2, c1, c2, Lgamma, lambdasq, lambda;
 
 	double ah, old_th, prev_th, a_low, a_high, rel_print_eps;
 	double SL, prev_SL, cFex, cCHIex, cF, cCHI, x_vu_ex, x_vk_ex, x_vu, x_vk;
-	double acc_rho, acc_sl_abs, acc_sl_rel, acc_xb, acc_yb, inc_x, inc_y;
+	double acc_rho, acc_sl_abs, acc_sl_rel, acc_xb, acc_yb, inc_x, inc_y, xinc;
 
-	double *X_in, *Y_in, *S_in;
+	double *x_in, *y_in, *w_in;
+	double *rS, *irS, *Q, *tau;
 	int *is;
 	double *xs;
 	double *q11, *qx1, *qxx, *ck, *qff;
@@ -41,7 +42,7 @@ private:
 	Vector<double> *px, *psig1, *psigx, *pv1h, *pxh;
 	Vector<double> *nan_m1, *pnse1, *pnuse1, *pusen;
 	Vector<double> *nan_m, *puqe1, *puqen, *puqx;
-	Vector<double> *ps1, *psx, *ps1c, *psxc;
+	Vector<double> *ps1, *psx;
 	Vector<double> *pq1, *pqx;
 	Vector<double> *pmq1; 
 	Vector<double> *pm1h; 
@@ -49,22 +50,17 @@ private:
 	Vector<double> *py, *psy;
 	Vector<double> *pqy;
 
-	Matrix<double> *prS, *pirS, *pQ, *pQ1;  
-
 
 
 // function prototypes:
 
 //initializing functions
 	void initialize( void );
-	void get_Q(void) const;
-	void get_rS_irS(void) const;
-	void get_M(Matrix<double> *pM) const;
-	void set_theta0(double th_0, METHOD met =INIT);
-	void set_alpha0(double a_0, METHOD met =INIT);
 	void set_Sigma( void );
 	void set_x(void);
 	void set_y(void);
+	void set_theta0(double th_0, METHOD met =INIT);
+	void set_alpha0(double a_0, METHOD met =INIT);
 	void set_SL( double cSL =0.05);
 	void set_acc( double acc =0.001);
 
@@ -79,7 +75,7 @@ private:
 	Vector<double>  sfc(double th, int data_interval) const;
 	double  ff(double th, int data_interval) const;
 
-//in file rho_etc:
+//in file 'rho_etc':
 	double rho(double th) const;
 	double rho(double theta, int data_interval) const;
 	double rhosq(double th, int data_interval) const;
@@ -98,7 +94,7 @@ private:
 	double sl_mc2(void) const;
 	bool m_ge_w(double wsq, const Vector<double> &s) const;
 
-//in files  geo  and  geo_ex
+//in files  'geo'  and  'geo_ex'
 	double geo(double th2, double *err) const;
 	double geo_vu_D(double th2, double *err) const;
 	double geo_vu_ND(double th2, double *err) const;
@@ -110,31 +106,31 @@ private:
 	double geo_vu_ex(void) const;
 	double geo_vk_ex(void) const;
 
-//in file geo_i
+//in file 'geo_i'
 	double amu_by_Omega(double rho_, int data_interval) const;
 	double Emupr(double theta, int data_interval) const;
 	double Emupr_vk(double theta, int data_interval) const;
 
-//in file Fm_fm
+//in file 'Fm_fm'
 	double F(int k, double arg) const;
 	double fk(int k, double arg) const;
 	double get_C(int k) const;
 	double sF(int k, double arg) const;
 
-//in file 'bisect' for bisection routines
+//in file 'bisect'
 	double bisect(double x1, double x2, double (Clmbr::*fn)(double,int), int k, double value, double crit);
 	double bisect(double x1, double x2, double (Clmbr::*fn)(double,int) const, int k, double value, double crit) const;
 	double bisect_sl(double x1, double x2, METHOD met, double crit);
 
-//private versions of interface functions
+//private engines for interface functions
 	double sl(double theta0, METHOD met = GEO, bool output =true);
 	double sl(double theta0, double alpha0, METHOD met = GEO, bool output =true);
-	int ci(METHOD met =GEO, double increments =0.2, bool output =true, double *bounds =0);
-	int cr(METHOD met =GEO, double increments =0.2, bool output =true, double *bounds =0);
+	int ci(METHOD met =GEO, double increments = -1, bool output =true, double *bounds =0);
+	int cr(METHOD met =GEO, double increments = -1, bool output =true, double *bounds =0);
 	double mle( bool output =true, double *max_gamma_dot_Qy_sq =NULL, double *param = NULL ) const;
-	void set_sy(double *irSy, METHOD met =INIT);
+	void set_sy(double *irsy, METHOD met =INIT);
 
-// ci and cr sub-functions
+// 'ci' and 'cr' sub-subroutines
 	int ci_geo( METHOD met, double increments =0.2, double *bounds =0);
 	int ci_af( METHOD met, double *bounds =0);
 	double a_sl(METHOD met, double th, int high_low);
@@ -145,9 +141,10 @@ private:
 
 public:
 // constructors
-	Clmbr(NumericVector yR, NumericMatrix xR, int model =1, NumericMatrix SigmaR =NULL,
-			 bool var_known =false, bool inverse =false);
-	Clmbr(const Clmbr &initM);	// copy constructor
+	Clmbr( NumericVector yR, NumericMatrix xR, int model =1, NumericMatrix wR =NULL,
+			 bool inverse =false, bool var_known =false );
+	Clmbr( NumericVector yR, NumericMatrix xR, int model =1, bool var_known =false );
+	Clmbr( const Clmbr &initM );	// copy constructor
 	~Clmbr();		// destructor
 
 
@@ -172,7 +169,7 @@ public:
 	void SET_rWy(NumericVector rWy);
 
 
-// friend functions, in files  geo  and  sl_geo
+// friend functions, integrands to 'Rdqag' routines in files 'geo' and 'sl_geo'
 	friend void igeo(double *x, const int n, void *const ex);
 	friend void igeo2(double *x, const int n, void *const ex);
 

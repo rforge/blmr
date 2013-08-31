@@ -292,6 +292,8 @@ void Clmbr::crR(const double CL, const string met, const double incr) {
 		}
 	}
 
+	if( incr <= 0 )  stop("'incr' must be positive");
+
 	const double tmp = SL;
 	set_SL(1.-CL);
 	cr(MET,incr); 
@@ -330,10 +332,7 @@ void  Clmbr::MLE( void )  const
 NumericVector  Clmbr::PARAM( void )  const
 { 
 	double  *const  pdummy =NULL,  *const  par= new (nothrow) double[4];
-	if(par==NULL) {
-		Rcout << _("message: ") << 16 << endl;
-		stop( _("memory allocation failed") );
-	}
+	if(par==NULL)  stop( _("memory allocation failed") );
 
 	mle( false, pdummy, par ); 
 
@@ -353,10 +352,7 @@ void Clmbr::SET_rWy(const NumericVector rWy)  {
 	if(yn!=n) stop( _("'rWy' vector has wrong dimension") );
 
 	double *const  Ytmp= new (nothrow) double[n];
-	if(Ytmp==NULL) {
-		Rcout << _("message: ") << 8 << endl;
-		stop( _("memory allocation failed") );
-	}
+	if(Ytmp==NULL)  stop( _("memory allocation failed") );
 	
 	for (int i=0;i<n;i++) Ytmp[i] = rWy[i];
 

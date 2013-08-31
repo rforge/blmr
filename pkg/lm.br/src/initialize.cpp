@@ -9,74 +9,75 @@ void Clmbr::initialize( void )
 // initialize variables, printout 
 // precalculate working variables in the object
 {
-	int i,j;
-
-
-// set  'cov_matrix_I'  and  'cov_matrix_diagonal'  flags
-
-	cov_matrix_I = true;
-	cov_matrix_diagonal = true;
-	for (i=0;i<n;i++) for (j=0;j<n;j++) {
-		const double sij= *(S_in+i*n+j);
-		if (i==j && fabs(sij-1)>zero_eq) cov_matrix_I = false;
-		if (i!=j && fabs(sij)>zero_eq) {cov_matrix_I = false; cov_matrix_diagonal = false;}
-	}
+	int  i, j;
 
 
 // echo input
+	const bool  echo_input = false;
 
-	Rcout << endl << _( "initializing:" ) << endl;
-	Rcout << _( "model " ) << model_in;
-	if (variance_unknown) Rcout << _("  with variance unknown");  else  Rcout << _("  with variance known");
-	Rcout << endl << "y = "; for (i=0;i<n;i++) Rcout << " " << Y_in[i];
-	Rcout << endl << "x matrix:  "; 
-	Matrix<double> X(n,xrank,0.);
-	for (i=0;i<n;i++) for (j=0;j<xrank;j++) X[i][j] = *(X_in+i*xrank+j);
-	Rcout << X;
-	Rcout << endl;
-	if ( cov_matrix_diagonal  &&  !cov_matrix_I ) {
-		if(variance_unknown || !inverse)  Rcout << _("weights vector:  ");  else  Rcout << _("variances:  ");
-		for (i=0;i<n;i++) Rcout << " " << *(S_in+i*n+i);
+	if( echo_input )  {
+		Rcout << endl << _( "initializing:" ) << endl;
+		Rcout << _( "model " ) << model_in;
+		if (variance_unknown)  Rcout << _("  with variance unknown");  else  Rcout << _("  with variance known");
+		Rcout << endl << "y = "; for (i=0;i<n;i++) Rcout << " " << y_in[i];
+		Rcout << endl << "x matrix:  "; 
+		Matrix<double> X(n,xrank,0.);
+		for (i=0;i<n;i++) for (j=0;j<xrank;j++) X[i][j] = *(x_in+j*n+i);
+		Rcout << X;
 		Rcout << endl;
-	} else  {
-		if(!cov_matrix_I ) {
+		if ( vectorS )  {
+			if(variance_unknown || !inverse)  Rcout << _("weights vector:  ");  else  Rcout << _("variances:  ");
+			for (i=0;i<n;i++) Rcout << " " << *(w_in+i);
+			Rcout << endl << endl;
+		} 
+		if ( matrixS )  {
 			if(variance_unknown || !inverse)  Rcout << _("weights matrix:  ");  else  Rcout << _("variance-covariance matrix:  ");
-			Matrix<double> S(n,n,0.);
-			for (i=0;i<n;i++) for (j=0;j<n;j++) S[i][j] = *(S_in+i*n+j);
-			Rcout << S;
+			Matrix<double> W(n,n,0.);
+			for (i=0;i<n;i++) for (j=0;j<n;j++) W[i][j] = *(w_in+j*n+i);
+			Rcout << W;
+			Rcout << endl;
 		}
-		Rcout << endl;
 	}
 
 
 	if(model_in==1)  Model= M1;  else 
-		if(model_in==2 || model_in== -2)  Model= M2;		// treat Model -2 as Model 2 internally
-			else  if(model_in== 3 || model_in== -3)  Model= M3;
+		if(model_in==2 || model_in== -2)  Model= M2;			// treat Model -2 as M2 internally
+			else  if(model_in== 3 || model_in== -3)  Model= M3;	// treat Model -3 as M3 internally
 
 
-	if(Model==M1)  { m= n-2-(xrank-2);  m1= m+2;  k1= 1; } 
-	if(Model==M2)  { m= n-1-(xrank-2);  m1= m+1;  k1= 0; }
-	if(Model==M3)  { m= n-(xrank-1);  m1= m;  k1= -1; }
+	if(Model==M1)  { m= n-2-(xrank-2);  m1= m+2;  k1=  1; } 
+	if(Model==M2)  { m= n-1-(xrank-2);  m1= m+1;  k1=  0; }
+	if(Model==M3)  { m= n-(xrank-1);    m1= m;    k1= -1; }
 
-// set cov_matrix flags to 'non-diagonal' for multivariate models
-	if( m1 < n )  {
-		cov_matrix_I = false;
-		cov_matrix_diagonal = false;
+
+// set cov_matrix flag to 'non-diagonal' for multivariate models 
+// to invoke general routines 
+	if( m1 < n )  cov_matrix_diagonal = false;
+
+
+
+//  'S' = 'Sigma'  is the covariate or covariance matrix,  such that
+//   errors  ~ N( 0, var * Sigma ) ,   Sigma = inverse( 'weights' )
+
+	if( vectorS || matrixS )  {
+
+		try {
+			if(vectorS)  {
+				 rS = new double[n];
+				irS = new double[n];
+			}  else  {
+				 rS = new double[n*n];
+				irS = new double[n*n];
+			}
+
+		} catch( bad_alloc &ex ) {
+			Rcout << _("message: ") << ex.what() << endl;
+			stop( _("memory allocation failed") );
+		}
+
+		set_Sigma();
 	}
-Rcout << "i here1" << endl;
 
-	try {
-		prS = new (Matrix<double>[n*n]);
-		pirS = new (Matrix<double>[n*n]);
-
-	} catch( bad_alloc &ex ) {
-		Rcout << _("message: ") << 3 << " " << ex.what() << endl;
-		stop( _("memory allocation failed") );
-	}
-
-	set_Sigma();
-
-Rcout << "i here2" << endl;
 
 
 	try{
@@ -85,8 +86,8 @@ Rcout << "i here2" << endl;
 		pxh = new (Vector<double>[m1]);
 		psig1 = new (Vector<double>[m1]);
 		psigx = new (Vector<double>[m1]);
-		pQ = new (Matrix<double>[m*n]);
-		pQ1 = new (Matrix<double>[m1*n]);
+		Q = new double[n*xrank];
+		tau = new double[xrank];
 		is = new int[n];
 
 		nan_m1 = new (Vector<double>[m1]);
@@ -97,17 +98,15 @@ Rcout << "i here2" << endl;
 		puqe1 = new (Vector<double>[m]);
 		puqen = new (Vector<double>[m]);
 		puqx = new (Vector<double>[m]);
-		pm1h = new (Vector<double>[m]);
 
 	} catch( bad_alloc &ex ) {
-		Rcout << _("message: ") << 4 << " " << ex.what() << endl;
+		Rcout << _("message: ") << ex.what() << endl;
 		stop( _("memory allocation failed") );
 	}
 
 
 	set_x();		// allocates memory for arrays with size 'ns' or 'ns*m'
 
-Rcout << "i here3" << endl;
 
 	try{
 		py = new (Vector<double>[n]);
@@ -115,38 +114,30 @@ Rcout << "i here3" << endl;
 		pqy = new (Vector<double>[m]);
 
 	} catch( bad_alloc &ex ) {
-		Rcout << _("message: ") << 6 << " " << ex.what() << endl;
+		Rcout << _("message: ") << ex.what() << endl;
 		stop( _("memory allocation failed") );
 	}
 
 	set_y();		// calls 'set_sy'
-Rcout << "i here4" << endl;
 
 	const double th_0 = xs[1];
 	set_theta0(th_0, INIT);	// initializes 'z', 'w'
-Rcout << "i here5" << endl;
 
 	const double a0 = (*py)[ is[1] ];
 	set_alpha0(a0, INIT);
-Rcout << "i here6" << endl;
 
 	prev_SL= -1; 
 	set_SL();
-Rcout << "i here7" << endl;
 
-	const int  digits= 6;
-	Rcout << setprecision( digits );
-	rel_print_eps =  pow( 10., -(digits-1) );
 
 	set_acc();
-Rcout << "i here8" << endl;
 
 
 	try{
 		C = new double[3];
 
 	} catch( bad_alloc &ex ) {
-		Rcout << _("message: ") << 7 << " " << ex.what() << endl;
+		Rcout << _("message: ") << ex.what() << endl;
 		stop( _("memory allocation failed") );
 	}
 	C[0]= get_C(m-2); C[1]= get_C(m-1); C[2]= get_C(m); 
@@ -155,7 +146,6 @@ Rcout << "i here8" << endl;
 	old_th = prev_th =  Inf; 
 	ah = a_low = a_high =  0; 
 
-Rcout << "i here9" << endl;
 
 	return;
 }

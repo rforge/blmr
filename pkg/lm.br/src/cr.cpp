@@ -4,7 +4,7 @@
 
 
 
-int Clmbr::cr(const METHOD met, const double inc, const bool output, double *const bounds)
+int Clmbr::cr(const METHOD met, const double incr, const bool output, double *const bounds)
 //
 //      Checks whether { (theta,alpha)  such that  sig. level  > SL}  is contiguous.
 // Returns N = number of rows for array 'bounds[N][3]' = (th, min_alpha, max_alpha) values.
@@ -17,17 +17,17 @@ int Clmbr::cr(const METHOD met, const double inc, const bool output, double *con
 //  in the broken line model.
 //
 {
+	double inc;
+	if( incr == -1 )  inc= xinc;  else  inc= incr;
+	Rcpp::Function Rflush("flush.console");
+
 
 // get theta-boundaries of confidence region(s)
 
-	Rcpp::Function Rflush("flush.console");
 	if(output) if(met==GEO) { Rcout << "   " << _("getting theta-boundaries...   ");  Rflush(); }
 
 	double *const  tmp= new (nothrow) double[2*ns];
-	if(tmp==NULL) {
-		Rcout << _("message: ") << 13 << endl;
-		stop( _("memory allocation failed") );
-	}
+	if(tmp==NULL)  stop( _("memory allocation failed") );
 
 
 	int numr;
@@ -35,10 +35,7 @@ int Clmbr::cr(const METHOD met, const double inc, const bool output, double *con
 
 
 	double *const  th_bds= new (nothrow) double[2*numr];
-	if(th_bds==NULL) {
-		Rcout << _("message: ") << 14 << endl;
-		stop( _("memory allocation failed") );
-	}
+	if(th_bds==NULL)  stop( _("memory allocation failed") );
 
 
 	int i;
@@ -66,10 +63,7 @@ int Clmbr::cr(const METHOD met, const double inc, const bool output, double *con
 	const int Nmax = width/inc + 1 + ns + 2*numr + 2;
 
 	double *const  bds= new (nothrow) double[3*Nmax];
-	if(bds==NULL) {
-		Rcout << _("message: ") << 15 << endl;
-		stop( _("memory allocation failed") );
-	}
+	if(bds==NULL)  stop( _("memory allocation failed") );
 
 
 

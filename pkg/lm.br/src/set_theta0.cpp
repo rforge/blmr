@@ -23,7 +23,6 @@ void  Clmbr::set_theta0( const double th_0, const METHOD met)
 	if ( (Model==M1 && th0<=xs[0]) || xs[ns-1]<=th0 )  th0ex = true;  else  th0ex = false;
 
 
-
 	double  wsq,  max_gy;
 	mle( false, &max_gy );
 	if (variance_unknown)  wsq = max_gy/qysq;  else  wsq = max_gy;
@@ -65,7 +64,7 @@ void  Clmbr::set_theta0( const double th_0, const METHOD met)
 				f0x[k] = qf0*pqx[k];  if (fabs(f0x[k]) < zero_eq) f0x[k] = 0.;
 
 // calculate B[k]
-				if( ck[k]==0. )  B[k]= 1.;  else  {
+				if( ck[k] == 0 )  B[k]= 1.;  else  {
 
 					if( ( xs[ns-2] <= th0 && th0 < xs[ns-1] )  ||
 							( Model==M1 && xs[0]<th0 && th0<=xs[1] )  ||  
@@ -81,27 +80,65 @@ void  Clmbr::set_theta0( const double th_0, const METHOD met)
 				}
 			}
 		}
+
+
+		if ( met==MC )  {	
+
+// to speed-up Monte Carlo evaluation, pre-multiply vectors by  
+// orthogonal matrix 'M' with first row = gamma(th0) .
+// Use LAPACK routines DGEQRF to generate 'M' and DORMQR to multiply by 'M' .
+ 
+			int  i,  j,  ng =1;
+			double  M[m],  _tau[ng];
+			for(i=0;i<n;i++)  M[i] = g0[i];
+
+			int  lwork = -1,  info;
+			double  tmp[1];
+			{
+				F77_CALL(dgeqrf)( &m, &ng, M, &m, _tau, tmp, &lwork, &info );
+				if( info )  stop( "LAPACK routine 'dgeqrf' failed" );  else  lwork= *tmp; 
+				double  work[lwork];
+				F77_CALL(dgeqrf)( &m, &ng, M, &m, _tau, work, &lwork, &info );
+				if( info )  stop( "LAPACK routine 'dgeqrf' failed" );
+			}
+
+			const int  nCm = ns+2;
+			double  Cm[m*nCm];
+			Vector<double>  cq(m);
+			for(j=0;j<nCm-1;j++)  { cq = pq1[j];  for(i=0;i<m;i++)  *(Cm+j*m+i) = cq[i]; }
+			cq = *pv1h;  for(i=0;i<m;i++)  *(Cm+(nCm-1)*m+i) = cq[i]; 
+
+			{
+				const char  side = 'L',  tp = 'N';
+				lwork= -1;
+				F77_CALL(dormqr)( &side, &tp, &m, &nCm, &ng, M, &m, _tau, Cm, &m, tmp, &lwork, &info );
+				if( info )  stop( "LAPACK routine 'dormqr' failed" );  else  lwork= *tmp; 
+				double  work[lwork];
+				F77_CALL(dormqr)( &side, &tp, &m, &nCm, &ng, M, &m, _tau, Cm, &m, work, &lwork, &info );
+				if( info )  stop( "LAPACK routine 'dormqr' failed" );
+			}
+
+//			if( pmq1 != NULL )  {  delete[] pmq1;  delete[] pm1h;  pmq1 = pm1h = NULL;  }
+
+			if( pmq1 == NULL )  {
+				try{
+					pmq1 = new (Vector<double>[(ns+1)*m]);
+					if(Model==M3)  pm1h = new (Vector<double>[m]);
+
+				} catch( bad_alloc &ex ) {
+					Rcout << _("message: ") << ex.what() << endl;
+					stop( _("memory allocation failed") );
+				}
+			}
+
+			for(j=0;j<nCm-1;j++) { for(i=0;i<m;i++) cq[i]=*(Cm+j*m+i);  pmq1[j]= cq; } 
+			if(Model==M3)  { for(i=0;i<m;i++) cq[i]=*(Cm+(nCm-1)*m+i);  *pm1h= cq; }
+
+		}
+
 	}
 
 	if( fabs( w - fabs(z) ) < zero_eq )  w = fabs(z);
-
-
-	if (met==MC || met==INIT) {	
-
-		Matrix<double>   M(m,m,0.);
-
-		if (th0ex)  { for(int i=0;i<m;i++) M[i][i] =1.; }  else  get_M( &M );
-
-		for (int k=0; k < ns + 1; k++)  {
-			pmq1[k] = M*pq1[k];  
-			for(int i=0;i<m;i++)  if( fabs(pmq1[k][i]) < zero_eq )  pmq1[k][i] = 0.;
-		}
-
-		if(Model==M3) {
-			*pm1h= M*(*pv1h);  
-			for(int i=0;i<m;i++)  if( fabs( (*pm1h)[i] ) < zero_eq )  (*pm1h)[i] = 0.;
-		}
-	}
 
 
 	return;

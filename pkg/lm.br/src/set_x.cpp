@@ -6,19 +6,21 @@
 
 
 void Clmbr::set_x( void )
-// precalculate working variables that depend only on x values
-// and Sigma matrix
+// precalculate working variables that depend only on 'x' values and 'Sigma' matrix
 {
 	int i,j;
 
 
-	Vector<double>  x(n);
+	double  X[n][xrank];
+	for (i=0;i<n;i++)  for (j=0;j<xrank;j++)  
+		if( model_in > 0 )  X[i][j] = *(x_in+j*n+i);  else  X[i][j] = *(x_in+j*n+(n-1-i));
+
 	int xcol;
 	if(Model==M3) xcol=0; else xcol=1;
-	for (i=0;i<n;i++) {
-		if( model_in > 0 )  x[i]= *( X_in + i*xrank + xcol );  else  x[i]= *( X_in + (n-1-i)*xrank + xcol )*(-1.); 
-	}
+	if( model_in < 0 )  for (i=0;i<n;i++)  X[i][xcol] *= -1.;
 
+	Vector<double>  x(n);
+	for (i=0;i<n;i++) x[i] = X[i][xcol];
 	const double  min_xdiff= (x[n-1]-x[0])*0.001;
 	double  xi= x[0] - 1 - min_xdiff,  xib;
 
@@ -49,79 +51,155 @@ void Clmbr::set_x( void )
 	if(lack)  stop( _("number of seperate 'x' values below minimum for changepoint inference") );
 
 
-	get_Q();
-	Matrix<double>  QS(m,n),  Q1S(m1,n);
-	QS = (*pQ)*(*pirS);
-	Q1S = (*pQ1)*(*pirS);
-	for (i=0;i<m;i++) for (j=0;j<n;j++) if (fabs(QS[i][j])<zero_eq) QS[i][j]=0.;
-	for (i=0;i<m1;i++) for (j=0;j<n;j++) if (fabs(Q1S[i][j])<zero_eq) Q1S[i][j]=0.;
+
+//  Canonically reduce the model, using an orthogonal matrix Q for change-of-basis.
+//  Use LAPACK routines DGEQRF to generate Q and DORMQR to multiply by Q .
 
 
-	const Vector<double>  v1(n,1.), dummy_m1(m1,0.), dummy_m(m,0.); 
-	Vector<double>  s1(m1), sx(m1);
-
-	*px = x;
-	s1 = Q1S*v1;	for(i=0;i<m1;i++) if(fabs(s1[i])<zero_eq) s1[i]=0.;
-	sx = Q1S*x;		for(i=0;i<m1;i++) if(fabs(sx[i])<zero_eq) sx[i]=0.;
-	*psig1 = s1;
-	*psigx = sx;
-
-	s11 = s1*s1;
-	sx1 = sx*s1;
-	sxx = sx*sx;
-	n1 = sqrt(s11);
-	*pv1h= 1./n1 * s1;
-
-	const double x1 = sx*(*pv1h);
-	*pxh = 1./sqrt( sx*sx - x1*x1 ) * ( sx - x1*(*pv1h) );
+//	compute  X =  irS * X :
+	if( vectorS )  for(j=0;j<xrank;j++)  for(i=0;i<n;i++)  X[i][j] *=  *( irS + i );
+	if( matrixS )  for(j=0;j<xrank;j++)  {
+		double  temp[ n ];
+		for(i=0;i<n;i++)  temp[i] = X[i][j];
+		for(i=0;i<n;i++) {
+			X[i][j] = 0.;
+			for( int k=0; k<n; k++) X[i][j] += *( irS + k*n + i ) * temp[k];
+		}
+	} 
 
 
-	Vector<double>  e1(n,0.),  en(n,0.),  sen(m1);
-
-	for(i=0;i<=is[0];i++)  e1[i] = 1.;
-	for(i=is[ns-2]+1;i<=is[ns-1];i++)  en[i] = 1.;
-	*nan_m1 = dummy_m1;
-	(*nan_m1)[0] = NaN;
-	*pnse1 = -1.*(Q1S*e1);		for(i=0;i<m1;i++) if(fabs((*pnse1)[i])<zero_eq) (*pnse1)[i]=0.;
-	se1sq = *pnse1*(*pnse1);
-	*pnuse1 = 1./sqrt(se1sq) * (*pnse1);
-	sen = Q1S*en;				for(i=0;i<m1;i++) if(fabs(sen[i])<zero_eq) sen[i]=0.;
-	*pusen = 1./sqrt(sen*sen) * sen;
+// 'Q' and 'tau' are global arrays, declared in "lmbr.h"
+// set the starting columns of 'Q' to be the columns of irS*X ,  
+// but with the  1- and x1- vectors as the final two cols
+	for(i=0;i<n;i++) for(j=xcol+1;j<xrank;j++)  *(Q + (j-xcol-1)*n + i ) =  X[i][j];
+	for(i=0;i<n;i++) for(j=0;j<xcol+1;j++)  *(Q + (j+xrank-xcol-1)*n + i ) =  X[i][j];
 
 
+	int  lwork,  info;
+	double  tmp[1];
+	{
+		lwork = -1;
 
-	*nan_m = dummy_m;
-	(*nan_m)[0] = NaN;
-	*puqe1 = 1./sqrt( (QS*e1)*(QS*e1) ) * (QS*e1);
-	*puqen = 1./sqrt( (QS*en)*(QS*en) ) * (QS*en);
-	for(j=0;j<m;j++) if( fabs((*puqe1)[j]) < zero_eq )  (*puqe1)[j] = 0.;
-	for(j=0;j<m;j++) if( fabs((*puqen)[j]) < zero_eq )  (*puqen)[j] = 0.;
+		F77_CALL(dgeqrf)( &n, &xrank, Q, &n, tau, tmp, &lwork, &info );
 
-	if(Model==M1) *puqx = *nan_m;  else {
-		*puqx = 1./sqrt( (QS*x)*(QS*x) ) * (QS*x);
-		for(j=0;j<m;j++) if( fabs((*puqx)[j]) < zero_eq )  (*puqx)[j] = 0.;
+		if( info )  stop( "LAPACK routine 'dgeqrf' failed" );  else  lwork= *tmp; 
+		double  work[lwork];
+
+		F77_CALL(dgeqrf)( &n, &xrank, Q, &n, tau, work, &lwork, &info );
+
+		if( info )  stop( "LAPACK routine 'dgeqrf' failed" );
+	}
+
+
+// first, use DORMQR to setup some vectors and constants
+
+	{
+		Vector<double>  e1(n,0.),  en(n,0.);
+		for(i=0;i<=is[0];i++)  e1[i] = 1.;
+		for(i=is[ns-2]+1;i<=is[ns-1];i++)  en[i] = 1.;
+
+		const int  nC0 = 4;
+		double  C0[n*nC0];
+		for(i=0;i<n;i++) {
+			*(C0+i) = 1;
+			*(C0+n+i) = x[i];
+			*(C0+2*n+i) = e1[i];
+			*(C0+3*n+i) = en[i];
+		}
+
+		if( vectorS )  for(j=0;j<nC0;j++)  for(i=0;i<n;i++)  *(C0+n*j+i) *=  *( irS + i );
+		if( matrixS )  for(j=0;j<nC0;j++)  {
+			double  temp[ n ];
+			for(i=0;i<n;i++)  temp[i] = *(C0+n*j+i);
+			for(i=0;i<n;i++) {
+				*(C0+n*j+i) = 0.;
+				for( int k=0; k<n; k++) *(C0+n*j+i) += *( irS + k*n + i ) * temp[k];
+			}
+		} 
+
+
+		const char  side = 'L',  tp = 'T';
+		{
+			lwork= -1;
+
+			F77_CALL(dormqr)( &side, &tp, &n, &nC0, &xrank, Q, &n, tau, C0, &n, tmp, &lwork, &info );
+
+			if( info )  stop( "LAPACK routine 'dormqr' failed" );  else  lwork= *tmp;
+			double  work[lwork]; 
+
+			F77_CALL(dormqr)( &side, &tp, &n, &nC0, &xrank, Q, &n, tau, C0, &n, work, &lwork, &info );
+
+			if( info )  stop( "LAPACK routine 'dormqr' failed" );
+		}
+ 
+
+		Vector<double>  s1(m1), sx(m1), se1(m1), sen(m1), qsx(m), qe1(m), qen(m);
+
+		for(i=0;i<m1;i++) {
+			const int  im1 = i+n-m1;
+			s1[i] = *(C0+im1);
+			sx[i] = *(C0+1*n+im1);
+			se1[i]= *(C0+2*n+im1);
+			sen[i]= *(C0+3*n+im1);
+		}
+
+		for(i=0;i<m;i++) {
+			const int  im = i+n-m;
+			qsx[i]= *(C0+1*n+im);
+			qe1[i]= *(C0+2*n+im);
+			qen[i]= *(C0+3*n+im);
+		}
+
+
+		const Vector<double>  dummy_m1(m1,0.),  dummy_m(m,0.); 
+
+		*px = x;
+		*psig1 = s1;
+		*psigx = sx;
+
+		s11 = s1*s1;
+		sx1 = sx*s1;
+		sxx = sx*sx;
+		n1 = sqrt(s11);
+		*pv1h = 1./n1 * s1;
+
+		const double  x1 = sx*(*pv1h);
+		*pxh = 1./sqrt( sx*sx - x1*x1 ) * ( sx - x1*(*pv1h) );
+
+
+		*nan_m1 = dummy_m1;
+		(*nan_m1)[0] = NaN;
+		*pnse1 = -1.*se1;		
+		se1sq = *pnse1*(*pnse1);
+		*pnuse1 = 1./sqrt(se1sq) * (*pnse1);
+		*pusen = 1./sqrt(sen*sen) * sen;
+
+		*nan_m = dummy_m;
+		(*nan_m)[0] = NaN;
+		*puqe1 = 1./sqrt( qe1*qe1 ) * qe1;
+		*puqen = 1./sqrt( qen*qen ) * qen;
+
+		if(Model==M1) *puqx = *nan_m;  else  *puqx = 1./sqrt( qsx*qsx ) * qsx;
 	}
 
 
 // array sizes that depend on 'ns'
 
-	if( xs != NULL ) {
+	if( xs != NULL )  {
 
 		delete[] xs;
 		delete[] ps1;  delete[] psx;  
-		delete[] ps1c;  delete[] psxc;
 		delete[] q11;  delete[] qx1;  delete[] qxx;  delete[] ck;  delete[] qff;
 		delete[] q10;  delete[] qx0;  delete[] a0;  delete[] b0;
 		delete[] f01;  delete[] f0x;  delete[] B;
-		delete[] pmq1;  delete[] pq1;  delete[] pqx;  
+		delete[] pq1;  delete[] pqx;  
 
 		xs = NULL;
-		ps1 = psx = ps1c = psxc = NULL;
+		ps1 = psx = NULL;
 		q11 = qx1 = qxx = ck = qff = NULL;
 		q10 = qx0 = a0 = b0 = NULL;
-		f01 = f0x = NULL;
-		B = NULL;
-		pmq1 = pq1 = pqx = NULL;
+		f01 = f0x = NULL;  B = NULL;
+		pq1 = pqx = NULL;
 	}
 
 
@@ -129,9 +207,6 @@ void Clmbr::set_x( void )
 		xs = new double[ns];
 		ps1 = new (Vector<double>[(ns+1)*m1]);
 		psx = new (Vector<double>[(ns+1)*m1]);
-		ps1c = new (Vector<double>[(ns+1)*m1]);
-		psxc = new (Vector<double>[(ns+1)*m1]);
-		pmq1 = new (Vector<double>[(ns+1)*m]);
 		pq1 = new (Vector<double>[(ns+1)*m]);
 		pqx = new (Vector<double>[(ns+1)*m]);
 		q11 = new double[ns+1];
@@ -148,7 +223,7 @@ void Clmbr::set_x( void )
 		B = new double[ns+1];
 
 	} catch( bad_alloc &ex ) {
-		Rcout << _("message: ") << 5 << " " << ex.what() << endl;
+		Rcout << _("message: ") << ex.what() << endl;
 		stop( _("memory allocation failed") );
 	}
 
@@ -157,76 +232,114 @@ void Clmbr::set_x( void )
 	for(i=0;i<ns;i++)  xs[i] = x[ is[i] ];
 
 
+// pre-calculate Q*"stub 1-" and Q*"stub x-" vectors and scalars
 
-	Vector<double>  vk1(n,1.), kx(n), q1(m), qx(m);
+	{
+		const int  nC1 = ns+1;
+		double  C1[n*nC1],  Cx[n*nC1];
 
-	kx = *px;
+		Vector<double>  vk1(n,1.), kx(n);
+		kx = *px;
 
+		for(j=0;j<nC1;j++) {
 
-	for (i=0;i<ns+1;i++) {
+			for(i=0;i<n;i++) *(C1+j*n+i) = vk1[i];
+			for(i=0;i<n;i++) *(Cx+j*n+i) = kx[i];
 
-		s1 = Q1S*vk1;
-		sx = Q1S*kx;
-
-		for(j=0;j<m1;j++) {
-			if (fabs(s1[j]) < zero_eq) s1[j] = 0.;
-			if (fabs(sx[j]) < zero_eq) sx[j] = 0.;
-		}
-		ps1[i] = s1;
-		psx[i] = sx;
-
-		s1 = Q1S*(v1-vk1);
-		sx = Q1S*(x-kx);
-		for(j=0;j<m1;j++) {
-			if (fabs(s1[j]) < zero_eq) s1[j] = 0.;
-			if (fabs(sx[j]) < zero_eq) sx[j] = 0.;
-		}
-		ps1c[i] = s1;
-		psxc[i] = sx;
-
-
-		q1 = QS*vk1;
-		qx = QS*kx;
-
-		for(j=0;j<m;j++) {
-			if (fabs(q1[j]) < zero_eq) q1[j] = 0.;
-			if (fabs(qx[j]) < zero_eq) qx[j] = 0.;
+			if(j==0) {
+				for(i=0;i<=is[j];i++) vk1[i] = 0.;
+				for(i=0;i<=is[j];i++) kx[i] = 0.;
+			} else  if(j<ns) {
+				for(i=is[j-1]+1;i<=is[j];i++) vk1[i] = 0.;
+				for(i=is[j-1]+1;i<=is[j];i++) kx[i] = 0.;
+			}
 		}
 
-		pq1[i] = q1;
-		pqx[i] = qx;
+		if( vectorS )  for(j=0;j<nC1;j++)  for(i=0;i<n;i++)  *(C1+n*j+i) *=  *( irS + i );
+		if( matrixS )  for(j=0;j<nC1;j++)  {
+			double  temp[ n ];
+			for(i=0;i<n;i++)  temp[i] = *(C1+n*j+i);
+			for(i=0;i<n;i++) {
+				*(C1+n*j+i) = 0.;
+				for( int k=0; k<n; k++) *(C1+n*j+i) += *( irS + k*n + i ) * temp[k];
+			}
+		} 
 
-		q11[i] = q1*q1;							if (fabs(q11[i]) < zero_eq) q11[i] = 0.;
-		qx1[i] = qx*q1;							if (fabs(qx1[i]) < zero_eq) qx1[i] = 0.;
-		qxx[i] = qx*qx;							if (fabs(qxx[i]) < zero_eq) qxx[i] = 0.;
-		ck[i] = qxx[i]*q11[i] - qx1[i]*qx1[i];  if (fabs(ck[i]) < zero_eq) ck[i] = 0.;
-		if(i==0)  qff[i]= NaN;  else  { qff[i]= (qx-xs[i-1]*q1)*(qx-xs[i-1]*q1);  
-		if (fabs(qff[i]) < zero_eq) qff[i]= 0.; }
+		const char  side = 'L',  tp = 'T';
+		{
+			lwork= -1;
+
+			F77_CALL(dormqr)( &side, &tp, &n, &nC1, &xrank, Q, &n, tau, C1, &n, tmp, &lwork, &info );
+
+			if( info )  stop( "LAPACK routine 'dormqr' failed" );  else  lwork= *tmp; 
+			double  work[lwork];
+
+			F77_CALL(dormqr)( &side, &tp, &n, &nC1, &xrank, Q, &n, tau, C1, &n, work, &lwork, &info );
+
+			if( info )  stop( "LAPACK routine 'dormqr' failed" );
+		}
+	
+
+		if( vectorS )  for(j=0;j<nC1;j++)  for(i=0;i<n;i++)  *(Cx+n*j+i) *=  *( irS + i );
+		if( matrixS )  for(j=0;j<nC1;j++)  {
+			double  temp[ n ];
+			for(i=0;i<n;i++)  temp[i] = *(Cx+n*j+i);
+			for(i=0;i<n;i++) {
+				*(Cx+n*j+i) = 0.;
+				for( int k=0; k<n; k++) *(Cx+n*j+i) += *( irS + k*n + i ) * temp[k];
+			}
+		} 
 
 
-		if(i==0) {
-			for(j=0;j<=is[i];j++) vk1[j] = 0.;
-			for(j=0;j<=is[i];j++) kx[j] = 0.;
-		} else  if(i<ns) {
-			for(j=is[i-1]+1;j<=is[i];j++) vk1[j] = 0.;
-			for(j=is[i-1]+1;j<=is[i];j++) kx[j] = 0.;
+		{
+			lwork= -1;
+
+			F77_CALL(dormqr)( &side, &tp, &n, &nC1, &xrank, Q, &n, tau, Cx, &n, tmp, &lwork, &info );
+
+			if( info )  stop( "LAPACK routine 'dormqr' failed" );  else  lwork= *tmp; 
+			double  work[lwork];
+
+			F77_CALL(dormqr)( &side, &tp, &n, &nC1, &xrank, Q, &n, tau, Cx, &n, work, &lwork, &info );
+
+			if( info )  stop( "LAPACK routine 'dormqr' failed" );
+		}
+	
+
+		Vector<double>  s1(m1), sx(m1), q1(m), qx(m);
+
+		for (j=0;j<ns+1;j++) {
+
+			for(i=0;i<m1;i++) s1[i]= *(C1+j*n+i+n-m1);
+			for(i=0;i<m1;i++) sx[i]= *(Cx+j*n+i+n-m1);
+
+			ps1[j] = s1;
+			psx[j] = sx;
+
+			for(i=0;i<m;i++) q1[i]= *(C1+j*n+i+n-m);
+			for(i=0;i<m;i++) qx[i]= *(Cx+j*n+i+n-m);
+
+			pq1[j] = q1;
+			pqx[j] = qx;
+
+			q11[j] = q1*q1;							
+			qx1[j] = qx*q1;							
+			qxx[j] = qx*qx;							
+			ck[j] = qxx[j]*q11[j] - qx1[j]*qx1[j];  
+			if(j==0)  qff[j]= NaN;  else  qff[j]= (qx-xs[j-1]*q1)*(qx-xs[j-1]*q1);  
 		}
 
 	}
-
 	
 	Lgamma = 0.;
 	double gg;
 	if(k1== -1)  {
 		gg = gam(-Inf,0)*gam(xs[0],0);
-		gg = min( 1., gg);
-		gg = max( -1., gg);
+		gg = min( 1., gg);  gg = max( -1., gg);
 		Lgamma += acos( gg );
 	}
 	for (i=max(k1,0);i<ns-2;i++)  {
 		gg = gam(xs[i],i)*gam(xs[i+1],i+1);
-		gg = min( 1., gg);
-		gg = max( -1., gg);
+		gg = min( 1., gg);  gg = max( -1., gg);
 		Lgamma += acos( gg );
 	}
 
