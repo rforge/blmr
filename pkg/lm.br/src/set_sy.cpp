@@ -24,6 +24,8 @@ void  Clmbr::set_sy(double *const irsy, const METHOD met)
 	} 
 	*py = vy;
 
+
+// multiply by Q
 	{
 		const char  side = 'L',  tp = 'T';
 		int  ny =1,  lwork= -1, info;
@@ -31,13 +33,14 @@ void  Clmbr::set_sy(double *const irsy, const METHOD met)
 
 		F77_CALL(dormqr)( &side, &tp, &n, &ny, &xrank, Q, &n, tau, virsy, &n, tmp, &lwork, &info );
 
-		if( info )  stop( "LAPACK routine 'dormqr' failed" );  else  lwork= *tmp;
+		if( info )  stop( _("LAPACK routine 'dormqr' failed") );  else  lwork= *tmp;
 		double  work[lwork]; 
 
 		F77_CALL(dormqr)( &side, &tp, &n, &ny, &xrank, Q, &n, tau, virsy, &n, work, &lwork, &info );
 
-		if( info )  stop( "LAPACK routine 'dormqr' failed" );
+		if( info )  stop( _("LAPACK routine 'dormqr' failed") );
 	}
+
 
 	for(i=0;i<m1;i++) sy[i]= *(virsy+i+n-m1);
 	for(i=0;i<m;i++)  qy[i]= *(virsy+i+n-m);
@@ -48,17 +51,19 @@ void  Clmbr::set_sy(double *const irsy, const METHOD met)
 	y1 = *psy*(*psig1);
 	yx = *psy*(*psigx);
 	sysq = *psy*(*psy);  
-
 	qysq = *pqy*(*pqy);
 
-	double  max_gy;
-	mle( false, &max_gy );
-	omega =  qysq - max_gy ;
-	if(omega < zero_eq)  omega= 0.;
+	double  max_gysq;
+	mle( false, &max_gysq );
+	omega =  qysq - max_gysq ;
+	if(omega < 0)  omega= 0.;
 
 	if ( met != INIT ) {
-		set_theta0( th0, met );
-		set_alpha0( alpha0, met );
+		const double  th0i = th0,  a0i = alpha0;
+		th0 += 1;
+		alpha0 += 1;
+		set_theta0( th0i, met );
+		set_alpha0( a0i, met );
 		set_SL();
 		set_acc();
 	}

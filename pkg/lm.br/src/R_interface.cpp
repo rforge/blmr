@@ -120,7 +120,7 @@ void Clmbr::slR(const double theta0, const double alpha0, const string met, cons
 
 
 
-double Clmbr::slR(const double theta0, const string met, const double acc, const bool output) { 
+double Clmbr::slR(const double theta0, const string met, const double acc, const bool verbose) { 
 
 	METHOD MET;
 	if(met=="CLR" || met=="clr") MET=GEO; else {
@@ -137,9 +137,9 @@ double Clmbr::slR(const double theta0, const string met, const double acc, const
 
 	double result;
 	if( model_in  > 0 ) 
-		result= sl(theta0, MET, output);
+		result= sl(theta0, MET, verbose);
 	else
-		result= sl(-theta0, MET, output);
+		result= sl(-theta0, MET, verbose);
 
 	acc_sl_abs= tmp1;
 	acc_sl_rel= tmp2;
@@ -149,7 +149,7 @@ double Clmbr::slR(const double theta0, const string met, const double acc, const
 
 
 
-double Clmbr::slR(const double theta0, const double alpha0, const string met, const double acc, const bool output) { 
+double Clmbr::slR(const double theta0, const double alpha0, const string met, const double acc, const bool verbose) { 
 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -171,9 +171,9 @@ double Clmbr::slR(const double theta0, const double alpha0, const string met, co
 
 	double result;
 	if( model_in  > 0 ) 
-		result= sl(theta0, alpha0, MET, output);
+		result= sl(theta0, alpha0, MET, verbose);
 	else
-		result= sl(-theta0, alpha0, MET, output);
+		result= sl(-theta0, alpha0, MET, verbose);
 
 	acc_sl_abs= tmp1;
 	acc_sl_rel= tmp2;
@@ -292,7 +292,7 @@ void Clmbr::crR(const double CL, const string met, const double incr) {
 		}
 	}
 
-	if( incr <= 0 )  stop("'incr' must be positive");
+	if( incr <= 0 )  stop( _("'incr' must be positive") );
 
 	const double tmp = SL;
 	set_SL(1.-CL);
@@ -331,16 +331,16 @@ void  Clmbr::MLE( void )  const
 
 NumericVector  Clmbr::PARAM( void )  const
 { 
-	double  *const  pdummy =NULL,  *const  par= new (nothrow) double[4];
+	double  *const  pdummy =NULL,  *const  par= new (nothrow) double[5];
 	if(par==NULL)  stop( _("memory allocation failed") );
 
 	mle( false, pdummy, par ); 
 
-	const double  th= par[0],  a= par[1],  b= par[2],  bp= par[3];
+	const double  th= par[0],  a= par[1],  b= par[2],  bp= par[3], thfmin= par[4];
 
 	delete[] par;
 
-	return  NumericVector::create( th, a, b, bp ); 
+	return  NumericVector::create( th, a, b, bp, thfmin ); 
 }
 
 

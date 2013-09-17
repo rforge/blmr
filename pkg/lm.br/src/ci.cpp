@@ -4,7 +4,7 @@
 
 
 
-int Clmbr::ci(const METHOD met, const double incr, const bool output, double *const bounds)
+int Clmbr::ci(const METHOD met, const double incr, const bool verbose, double *const bounds)
 // check whether {theta  such that  sig. level  > SL}  is contiguous
 // return number of contiguous segments and boundaries of each segment
 // 'incr' specifies increments to cover in grid search for method 'GEO'
@@ -15,10 +15,15 @@ int Clmbr::ci(const METHOD met, const double incr, const bool output, double *co
 	if(bds==NULL)  stop( _("memory allocation failed") );
 
 
-	if (output)  Rcout << _( "Confidence interval for changepoint,  confidence level,  and  method:" ) << endl;
+	if (verbose)  {
+		Rcout << " " << 100*(1-SL) << _("-percent confidence interval for changepoint 'theta' by method  ");
+		if(met==GEO)  Rcout << "CLR" << endl; else  Rcout << "AF" << endl;
+	}
+
 
 	double  inc;
 	if( incr == -1 )  inc= xinc;  else  inc= incr;
+
 
 	if(trivial) {
 
@@ -36,7 +41,7 @@ int Clmbr::ci(const METHOD met, const double incr, const bool output, double *co
 	}
 
 
-	if (output)  {
+	if (verbose)  {
 		Rcout << "    ";
 		if( model_in > 0 )  {
 			for (int i=0;i<2*numr;i+=2) {
@@ -58,10 +63,6 @@ int Clmbr::ci(const METHOD met, const double incr, const bool output, double *co
 			}
 
 		}
-		Rcout << "      " << 1-SL << "      ";
-		if (met==GEO) Rcout << "CLR";
-		if (met==AF) Rcout << "AF";
-
 		Rcout << endl << endl;
 	}
 
@@ -82,9 +83,11 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 // Conditional SL(th,mle-alpha) is not constant on end-intervals.
 // 'incr' specified so as to cover same theta values as in 'cr' routine.
 {
+	Rcpp::Function  getOption("getOption");
+	Rcpp::Function  Rflush("flush.console");
+
 	int  numi=0, ind=0;		// ind = indicator = {0 if sl_geo was below SL, 1 if above}
 	double th, sl_th =2, thold;
-	Rcpp::Function Rflush("flush.console");
 
 	if( Model==M3 )  {
 
@@ -96,11 +99,10 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 		if (sl_th > SL)  bds[numi++] = -Inf,  ind= 1;
 		thold= th;
 		const double  thi = th,  inc = (xs[0]-thi)/(subints+0.5);
-//Rcout << "thi inc  " << thi << " " << inc << endl;
+
 
 		for (th=thi;th<xs[0];th+=inc) {
 			sl_th = sl(th,met,false);
-//Rcout << "th sl ind thold  " << th << " " << sl_th << " " << ind << " " << thold << endl;
 			if (sl_th > SL && ind==0) {
 				bds[numi++] = bisect_sl(thold,th,met,-acc_xb);
 				ind=1;
@@ -178,9 +180,8 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 	while( k < ns-1 ) cpts[ncp++]= xs[k++];
 	if(met==GEO2) cpts[ncp++]= xs[ns-1]-acc_xb/2;
 
-//Rcout << "ncp " << ncp << endl;
-//for(k = 0; k < ncp; k++) Rcout << "k cpt  " << k << " " << cpts[k] << endl;
 	bool msg= false;
+	int  width =0,  col =33;
 	double lag;
 	if( met==GEO )  lag = 5;  else  lag = 10;
 	double  tstart= time(NULL);
@@ -189,7 +190,6 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 	for (k = 0; k < ncp - 1; k++) {
 		th= cpts[k];
 			sl_th = sl(th,met,false);
-//Rcout << "th sl ind thold  " << th << " " << sl_th << " " << ind << " " << thold << endl;
 			if (sl_th > SL && ind==0) {
 				bds[numi++] = bisect_sl( thold, th, met, -acc_xb );
 				ind= 1;
@@ -208,10 +208,8 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 		while( (cpts[k+1]-cpts[k])/inc < subints + 1 )  inc /= 2.;
 		double  fth= floor(th);
 		while( fth < cpts[k] + acc_xb )  fth += inc;
-//Rcout << "fth inc  " << fth << " " << inc << endl;
-		for (th=fth;th<cpts[k+1];th+=inc) { 
+		for ( th = fth; th < cpts[k+1] - acc_xb; th += inc )  { 
 			sl_th = sl(th,met,false);
-//Rcout << "th sl ind thold  " << th << " " << sl_th << " " << ind << " " << thold << endl;
 			if (sl_th > SL && ind==0) {
 				bds[numi++] = bisect_sl( thold, th, met, -acc_xb );
 				ind= 1;
@@ -224,10 +222,17 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 
 			double  tfinish = time( NULL ),  elapsed = tfinish - tstart;
 			if( elapsed > lag ) {
+				if(!msg) { 
+					Rcpp::IntegerVector  tw = getOption("width");
+					width = tw[0];
+					if(met==GEO)  { Rcout << "   " << _("progress:") << "   ";  col= 15; }
+					msg=true; 
+				}
+				if( col > width - 6 )  { Rcout << endl;  col= 0; } 
 				const double  progress = floor( 100*(th-cpts[0])/(cpts[ncp-1]-cpts[0]) );
-				if(!msg) { msg=true; if(met==GEO) Rcout << "   progress:   "; }
 				Rcout << progress << "%...   ";  Rflush();
 				tstart= tfinish;
+				col += 9;
 			}
 		}
 
@@ -237,7 +242,6 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 // check boundary of final end-interval
 	th = cpts[k];
 	sl_th = sl( th, met, false );
-//Rcout << "th sl ind thold  " << th << " " << sl_th << " " << ind << " " << thold << endl;
 	if (sl_th > SL && ind==0) {
 		bds[numi++] = bisect_sl( thold, th, met, -acc_xb );
 		ind= 1;
@@ -251,7 +255,6 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 // check region after xs[ns-1]
 	th = xs[ns-1]+1.;
 	sl_th = sl(th,met,false);
-//Rcout << "th sl ind thold  " << th << " " << sl_th << " " << ind << " " << thold << endl;
 	if (sl_th < SL && ind==1) bds[numi++] = xs[ns-1];
 	if (sl_th > SL && ind==0) {
 		bds[numi++] = xs[ns-1];

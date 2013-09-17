@@ -11,11 +11,10 @@
 
 double Clmbr::amu_by_Omega(const double th, const int k)  const
 {
-	if (k==k0 || fabs(th-th0)<zero_eq)  return Inf;
+	if ( k==k0 || fabs(th-th0) < zero_eq )  return Inf;
 
-	const double  ro = rho(th,k),  rosq = rhosq(th,k),  r = 1 - rosq;
-	double  zwr = fabs(z-w*ro);
-	if( zwr < zero_eq )  return 0.;
+	const double  ro = rho(th,k),  zwr = fabs(z-w*ro);
+	const double  rosq = rhosq(th,k),  r = 1 - rosq;
 
 	if( isinf(th) )  {
 		if( B[k]-rosq < 0 )  return 0.;
@@ -40,19 +39,17 @@ double Clmbr::Emupr(const double th, const int k)  const
 	if ( k==k0 || fabs(th-th0) < zero_eq || isinf(th) )  return 0.;
 
 	const double  rosq = rhosq(th,k),  ro = rho(th,k),  r=1-rosq,  zz = 1.-z*z,  wzr = w-z*ro;
-	double  drosq = drhosq(th,k),  zwr = fabs(z-w*ro);
-	if ( drosq < zero_eq*zero_eq )  drosq= 0.;
-	if ( zwr < zero_eq)  zwr= 0.;
+	const double  drosq = drhosq(th,k),  zwr = fabs(z-w*ro);
 	
 	const double  pisq = zz - wzr*wzr/r;
-	if ( pisq < zero_eq*zero_eq )  return  0.;
+	if ( pisq <= 0. )  return  0.;
 
 	const double  OMsq = dgsq(th,k) - drosq/r;
-	if( OMsq < zero_eq*zero_eq )  return 0.;
+	if( OMsq <= 0. )  return 0.;
 
 	const double  tau =  sqrt( OMsq * pisq ),  ambt = sqrt(drosq) * zwr / r / tau ;
 
-	if( ambt > 1 - zero_eq )  return 0.;
+	if( ambt >= 1. )  return 0.;
 
 	const double  rr= sqrt(r*zz), g= wzr/rr, pr= fk(m-2,g)/rr;
 
@@ -65,16 +62,15 @@ double  Clmbr::Emupr_vk(const double th, const int k)  const
 // calculate (E-mu+)*pr, the integrand in geometric-expectation formula for variance known
 // as a function of theta
 {
-	if (k==k0 || fabs(th-th0)<zero_eq || isinf(th) )  return 0.;
+	if ( k==k0  ||  fabs(th-th0) < zero_eq  ||  isinf(th) )  return 0.;
 
 	const double  rosq = rhosq(th,k),  r=1-rosq,  rr = sqrt(r),  ro= rho(th,k);
-	double  zwr= fabs(z-w*ro);
-	if( zwr < zero_eq )  zwr= 0.;
+	const double  zwr= fabs(z-w*ro);
 
 	const double  drosq = drhosq(th,k),  namu = -zwr*sqrt(drosq)/r ;
 
 	const double  OMsq = dgsq(th,k) - drosq/r;
-	if (OMsq < zero_eq*zero_eq)  return 0.; 
+	if (OMsq <= 0.)  return 0.; 
 
 	const double  OM = sqrt( OMsq ),  mbO = -zwr*sqrt(drosq/OMsq)/r;
 

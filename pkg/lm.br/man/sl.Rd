@@ -1,4 +1,4 @@
-\name{sl,Cpp_Clmbr-method}
+\name{sl}
 \alias{sl,Cpp_Clmbr-method}
 \alias{sl}
 
@@ -9,34 +9,35 @@
 }
 
 \usage{
-\S4method{sl}{Cpp_Clmbr}( theta0,  method ="clr", accuracy =0.001, output =TRUE )
-sl( theta0, alpha0,  method ="clr", accuracy =0.001, output =TRUE )
+\S4method{sl}{Cpp_Clmbr}( theta0,  method ="clr", accuracy =0.001, verbose =TRUE )
+sl( theta0, alpha0,  method ="clr", accuracy =0.001, verbose =TRUE )
 }
 
 \arguments{
-  \item{theta0}{postulate value for theta, the changepoint's x-coordinate }
-  \item{alpha0}{postulate value for alpha, the changepoint's y-coordinate }
-  \item{method}{"clr", "mc" or "af" which stand for conditional likelihood-ratio, conditional likelihood-ratio by Monte Carlo, or approximate-F, details below}
-  \item{accuracy}{maximum absolute error in numerical integration for the "clr" method, or in Monte Carlo evaluation of the "mc" method, has no effect for the "af" method}
-  \item{output}{TRUE or FALSE}
+  \item{theta0}{postulate value for 'theta', the changepoint's x-coordinate }
+  \item{alpha0}{postulate value for 'alpha', the changepoint's y-coordinate }
+  \item{method}{'clr', 'mc' or 'af' which stand for conditional likelihood-ratio, conditional likelihood-ratio by Monte Carlo, or approximate-F, details below}
+  \item{accuracy}{maximum absolute error in numerical integration for the 'clr' method, or in Monte Carlo evaluation for the 'mc' method, not referenced for the 'af' method}
+  \item{verbose}{if TRUE prints the result with gloss}
 }
 
 \details{
+Siegmund and Zhang derived the conditional likelihood-ratio significance level of a postulate change-point value as a probability of a generic random variable.
 
-The default evaluation method "clr" evaluates the conditional likelihood-ratio significance level using a geometric-expectation formula derived by Siegmund-Zhang, which slightly over-estimates.
+The default method 'clr' evaluates this probability using a geometric-expectation formula derived by Siegmund-Zhang, which slightly over-estimates.
 
-Method "mc" evaluates the conditonal likelihood-ratio significance level by Monte Carlo simulation, which avoids the over-estimate of the "clr" method.
+Method 'mc' evaluates the probability by Monte Carlo simulation, which avoids the over-estimate of the 'clr' method.
 
-Method "af" evaluates significance level by estimating the distribution of the likelihood-ratio statistic from the related F-distribution (or chi-squared distribution if variance is known) that would be exact if the model were linear.  This method is not exact.  It is common in nonlinear regression.
+Method 'af' evaluates significance level by estimating the distribution of the likelihood-ratio statistic by the related F-distribution (or chi-squared distribution if variance is known) that would be exact for a linear model.  This method is not exact, but it is common for non-linear regression.
 
 }
 
 \note{
-The 'accuracy' error limt does not include the slight over-estimate that is inherent in the "clr" method, nor the approximation inherent in the Approximate-F method.
+The 'accuracy' error limit does not include the slight over-estimate that is inherent in the 'clr' method, nor the approximation inherent in the 'af' method.
 }
 
 \value{
-Returns the numerical significance level if 'output' is set explicitly to TRUE or FALSE, otherwise only prints the result.
+Returns the significance level if parameter 'verbose' is input explicitly as TRUE or FALSE.  Otherwise, it prints-out the result but does not return a value.
 }
 
 \examples{

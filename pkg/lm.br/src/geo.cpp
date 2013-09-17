@@ -39,14 +39,12 @@ double Clmbr::geo_vu_D(const double th2, double *const err)  const
 
 
 	const double  rad= sqrt((1-w*w)*(1-z*z)),  rU= z*w+rad,  rZ= z/w,  rL= z*w-rad,  r2= rho(th2);
-//Rcout << "th0 th2 rU rZ rL r2  " << th0 << " " << th2 << " " << rU << " " << rZ << " " << rL << " " << r2 << endl;
 
 	if(r2 > rU)  return 0.;
 
 	double  arg;
 	if( r2 < rZ )  arg= sqrt( (w*w-z*z)/(1-z*z) );  else  arg= (w-z*r2)/sqrt( (1-r2*r2)*(1-z*z) );
 	double  pr =  F( m-2, -arg );
-//Rcout << "pr " << pr << endl;
 
 
 //   ki  is the first data-interval where  Omega != 0  after  th0 ,   kj  is the interval with outside boundary  th2
@@ -119,8 +117,6 @@ double Clmbr::geo_vu_D(const double th2, double *const err)  const
 			if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 
 
-//Rcout << "tha thZ pr error  " << tha << " " << thZ << " " << pr << " " << error << endl;
-
 			if( isinf(thb) )  
 				Rdqagi( igeo, ex, &thZ, &inf_flag, &epsabs, &epsrel, &result, &abserr, &neval, &ier, 
 					&limit, &lenw, &last, iwork, work );
@@ -132,7 +128,6 @@ double Clmbr::geo_vu_D(const double th2, double *const err)  const
 			error += abserr;
 			if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 
-//Rcout << "thZ thb pr error  " << thZ << " " << thb << " " << pr << " " << error << endl;
 
 		} else {
 
@@ -146,10 +141,9 @@ double Clmbr::geo_vu_D(const double th2, double *const err)  const
 			pr += fabs(result);
 			error += abserr;
 			if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
-//Rcout << "tha thb pr error  " << tha << " " << thb << " " << pr << " " << error << endl;
 
 		}
-//Rcout << "k ra rb pr error  " << k << " " << ra << " " << rb << " " << pr << " " << error << endl;
+
 	}
 
 	if (err!=0)  *err = error;
@@ -174,7 +168,6 @@ double Clmbr::geo_vu_ND(const double th2, double *const err)  const
 	if( k1 >= 0 )  if( th2 > th0 && th0 < xs[k1] )  ki= k1+2;
 	if( th2 < th0 && th0 > xs[ns-2] )  ki= ns-3;
 
-//Rcout << endl << endl << "vkND:  th0 th2 ki kj rZ  " << th0 << " " << th2 << " " << ki << " " << kj << " " << rZ << endl;
 
 
 // on th0's data interval,  rho  is monotonic decreasing from rho=1
@@ -187,8 +180,6 @@ double Clmbr::geo_vu_ND(const double th2, double *const err)  const
 		if( ro < rZ )  arg= sqrt( (w*w-z*z)/(1-z*z) );  else  arg= (w-z*ro)/sqrt( (1-ro*ro)*(1-z*z) );
 		pr +=  F( m-2, -arg );
 	}
-//Rcout << "ro ro2 arg  " << ro << " " << rho(th2) << " " << arg << endl;
-//Rcout << "k0 pr  " << k0 << " " << pr << endl;
 
 
 // integrate piecewise from ki to kj  on rho-monotonic sub intervals
@@ -237,7 +228,7 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 
 	const double  rad = sqrt((1-w*w)*(1-z*z)),  rU = z*w + rad,  rZ = z/w,  rL = z*w - rad;
 	double  r1= rho(th_a,k),  r2= rho(th_b,k),  ra= max(r1,r2),  rb= min(r1,r2);
-//if(k==2) Rcout << endl << "vuNDab:  k tha thb ra rb  " << k << " " << th_a << " " << th_b << " " << r1 << " " << r2 << endl;
+
 	if ( ra < rL || rb > rU )  return 0.;
 
 
@@ -274,7 +265,6 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 //  check where  mu_by_tau  defined
 	if( ra > rU )  ra= rU,  trunc= true;
 	if( rb < rL )  rb= rL,  trunc= true;
-//if(k==2) Rcout << "ra rb  " << ra << " " << rb << endl;
 
 
 //  check where  -1 < mu_by_tau < 1
@@ -284,7 +274,6 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 
 	if( ra > ru )  ra= ru,  trunc= true;
 	if( rb < rl )  rb= rl,  trunc= true;
-//if(k==2) Rcout << "ra rb  " << ra << " " << rb << endl;
 
 
 	double  th1,  th2;
@@ -304,7 +293,6 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 	const void *  exc[2] = {  this,  &k  };
 	void **  ex = const_cast< void** >( exc );
 
-//Rcout << "k tha thb ra rb rZ pr  " << k << " " << tha << " " << thb << " " << ra << " " << rb << " " << rZ << " " << pr << endl;
 
 	double  error= 0;
 	if( zero )  {
@@ -317,8 +305,6 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 		if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 
 
-//Rcout << "tha thZ pr  " << tha << " " << thZ << " " << pr << endl;
-
 		if( isinf(thb) )  
 			Rdqagi( igeo, ex, &thZ, &inf_flag, &epsabs, &epsrel, &result, &abserr, &neval, &ier, 
 				&limit, &lenw, &last, iwork, work );
@@ -330,7 +316,6 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 		error += abserr;
 		if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 
-//Rcout << "thZ thb pr  " << thZ << " " << thb << " " << pr << endl;
 
 	}  else  {
 
@@ -344,7 +329,6 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 		pr += fabs(result);
 		error += abserr;
 		if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
-//Rcout << "tha thb pr  " << tha << " " << thb << " " << pr << endl;
 
 	}
 
@@ -366,7 +350,6 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 	double  arg;
 	if( r2 < rZ )  arg= sqrt(w*w-z*z);  else  arg= (w - z*r2)/sqrt( 1-r2*r2 );
 	double  pr = Rf_pnorm5(-arg ,0,1,1,0);
-//Rcout << "th0 th2 rZ r2 pr  " << th0 << " " << th2 << " " << rZ <<  " " << r2 << " " << pr << endl;
 
 
 //   ki  is the first data-interval where  Omega != 0  after  th0 ,   kj  is the interval with outside boundary  th2
@@ -401,7 +384,6 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 		double  thZ = NaN;
 		if( zero )  thZ = rho_inv( rZ, k );
 		if( fabs(thZ-tha) < zero_eq || fabs(thZ-thb) < zero_eq || isinf(thZ) )  zero= false;
-//Rcout << "k tha thb thZ aa ab aZ  " << k << " " << tha << " " << thb << " " << thZ << " " << aa << " " << ab << " " << amu_by_Omega( thZ, k ) << endl;  
 
 		if( !zero  &&  aa > 6.5  &&  ab > 6.5 )  continue;
 
@@ -424,8 +406,6 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 			error += abserr;
 			if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 
-
-//Rcout << "tha thZ pr  " << tha << " " << thZ << " " << pr << endl;
 
 			if( isinf(thb) )  
 				Rdqagi( igeo, ex, &thZ, &inf_flag, &epsabs, &epsrel, &result, &abserr, &neval, &ier, 
@@ -451,7 +431,6 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 			}
 			if(aa<6.5 && ab>7.5 && !isinf(thb) )  thb= bisect( tha, thb, &Clmbr::amu_by_Omega, k, 7, inc_x);
 
-//Rcout << "tha thb pr1  " << tha << " " << thb << " " << pr << endl;
 
 			if( isinf(thb) )
 				Rdqagi( igeo, ex, &tha, &inf_flag, &epsabs, &epsrel, &result, &abserr, &neval, &ier, 
@@ -464,7 +443,7 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 			error += abserr;
 			if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 		}
-//Rcout << "ki ra rb pr  " << ki << " " << ra << " " << rb << " " << pr << endl;
+
 	}
 
 
@@ -490,16 +469,12 @@ double Clmbr::geo_vk_ND(const double th2, double *const err)  const
 
 // on th0's data interval,  rho  is monotonic decreasing from rho=1
 	const double  rZ= z/w;  
-//Rcout << endl << endl << "vkND:  th0 th2 ki kj rZ w z  " << th0 << " " << th2 << " " << ki << " " << kj << " " << rZ <<
-//		" " << w << " " << z << endl;
 	double  ro,  arg;
 	if( th2 > th0 )  ro= rho( xs[ki-1], ki );  else  {
 		if(ki<0)  ro= rho( -Inf, 0 );  else  ro= rho( xs[ki], ki );
 	}
 	if( ro < rZ )  arg= sqrt( w*w - z*z );  else  arg= (w-z*ro)/sqrt( 1 - ro*ro );
-//Rcout << "ro ro2 arg  " << ro << " " << rho(th2) << " " << arg << endl;
 	double  pr =  Rf_pnorm5( -arg ,0,1,1,0) ;
-//Rcout << "k0 pr  " << k0 << " " << pr << endl;
 
 
 
@@ -532,11 +507,9 @@ double Clmbr::geo_vk_ND(const double th2, double *const err)  const
 			error += *per;
 		}
 
-//Rcout << endl << "k tha thb thZp pzero pr  " << k << " " << tha << " " << thb << " " << thZp << " " << pzero << " " << pr << endl;
 	}
 
 
-//Rcout << endl << "vkND:  pr  " << pr << endl;
 	if (err!=0)  *err = error;
 	return  min( pr, 1. );
 }
@@ -558,8 +531,6 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 	if( (ra-rZ)*(rb-rZ) < 0 )  zero= true;		// check for zero of 'mu'
 
 
-//Rcout << endl << "NDab:  k ra rb dif rZ  " << k << " " << ra << " " << rb << " " << ra-rb << " " << rZ << endl;
-
 	if ( ra > rb )  {	// case of 'rho' decreasing as theta moves away from theta0
 
 		if (ra > rZ) {
@@ -576,20 +547,15 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 	}
 
 	double  pr =  Rf_pnorm5(arga ,0,1,1,0)  -  Rf_pnorm5(argb ,0,1,1,0) ;
-//Rcout << "arga argb 1-B pr  " << arga << " " << argb << " " << 1-B[k] << " " << pr << endl;
-
 
 
 	const double  aa= amu_by_Omega(tha,k),  ab= amu_by_Omega(thb,k);
-//Rcout << "thb tha zero aa ab pr  " << thb << " " << tha << " " << zero << " " << aa << " " << ab << " " << pr << endl;
 
 	if( !zero  &&  aa > 6.5  &&  ab > 6.5)  return pr;
 
 	double thZ= NaN;
 	if( zero )  thZ= rho_inv( rZ, k, hilo );
 	if( fabs(thZ-tha) < zero_eq || fabs(thZ-thb) < zero_eq || isinf(thZ) )  zero= false;
-
-//Rcout << "thZ rho(thZ) z-w*ro  " << thZ << " " << rho(thZ,k) << " " << z-w*rho(thZ,k) << endl;
 
 
 //  'Rdqag' parameters
@@ -599,12 +565,12 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 	const void *  exc[2] = {  this,  &k  };
 	void **  ex = const_cast< void** >( exc );
 
+
 	double  error =0;
 	if( zero )  {
 
 		if( aa > 7.5 )  tha= bisect( tha, thZ, &Clmbr::amu_by_Omega, k, 7, inc_x);			
 		if( ab > 7.5  &&  !isinf(thb) )  thb= bisect( thZ, thb, &Clmbr::amu_by_Omega, k, 7, inc_x);			
-//Rcout << "tha thZ thb  " << tha << " " << thZ << " " << thb << endl;
 
 		Rdqags( igeo, ex, &tha, &thZ, &epsabs, &epsrel, &result, &abserr, &neval, &ier, 
 			&limit, &lenw, &last, iwork, work );
@@ -613,8 +579,6 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 		error += abserr;
 		if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 
-
-//Rcout << "tha thZ pr  " << tha << " " << thZ << " " << pr << endl;
 
 		if( isinf(thb) )  
 			Rdqagi( igeo, ex, &thZ, &inf_flag, &epsabs, &epsrel, &result, &abserr, &neval, &ier, 
@@ -627,7 +591,6 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 		error += abserr;
 		if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 
-//Rcout << "thZ thb pr  " << thZ << " " << thb << " " << pr << endl;
 
 	}  else  {
 
@@ -642,7 +605,6 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 		}
 		if(aa<6.5 && ab>7.5 && !isinf(thb) )  thb= bisect( tha, thb, &Clmbr::amu_by_Omega, k, 7, inc_x);
 
-//Rcout << "tha thb pr1  " << tha << " " << thb << " " << pr << endl;
 
 		if( isinf(thb) )
 			Rdqagi( igeo, ex, &tha, &inf_flag, &epsabs, &epsrel, &result, &abserr, &neval, &ier, 
@@ -655,10 +617,8 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 		error += abserr;
 		if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 
-//Rcout << "tha thb pr2  " << tha << " " << thb << " " << pr << endl;
 	}
 
-//Rcout << "NDab: k pr   " << k << " " << pr << endl << endl;
 
 	if (err!=0)  *err = error;
 	return  min( pr, 1. );

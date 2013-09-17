@@ -1,11 +1,11 @@
-\name{sety,Cpp_Clmbr-method}
+\name{sety}
 \alias{sety,Cpp_Clmbr-method}
 \alias{sety}
 
 \title{Set y-Values}
 
 \description{
-  Reset the y-values in the S4 C++ object.  
+  Reset the y-values in the C++ object.  
 }
 
 \usage{
@@ -23,18 +23,17 @@ This method changes the y-values for the accessor functions 'sl', 'ci', 'cr' and
 \note{
 The pre-multiplied vector is more convenient as input during simulation tests.  This vector is simply the y-vector if 'weights' is omitted.  
 
-The square-root of a vector 'w' is the vector of the square roots of elements.  The square-root of a matrix 'W' here is the matrix 'rW' such that rW*rW = W (a stricter definition than  rW*transpose(rW) = W).
+The square-root of a vector 'w' is the vector of the square roots of elements.  The square-root of a matrix 'W' here is the matrix 'rW' such that rW*rW = W (stricter than  rW*transpose(rW) = W).
 }
 
 
 \examples{
-##  Data for Patient B from Smith and Cook (1980):
-library(lm.br)
-y= c(36.0, 45.5, 50.0, 60.0, 73.3, 71.0, 66.7, 60.0, 30.5, 18.3)
-x= 1:10
+##  Data for Patient B from Smith and Cook (1980)
+y <- c(36.0, 45.5, 50.0, 60.0, 73.3, 71.0, 66.7, 60.0, 30.5, 18.3)
+x <- 1:10
 sc <- lm.br(y~x)
 sc$ci()
-newy= c(37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4)
+newy <- c(37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4)
 sc$sety(newy)
 sc$ci()
 
@@ -42,7 +41,6 @@ sc$ci()
 ## An example simulation test:
 
 simtest <- function( x, theta, alpha, B, Bp, var, N =10000) {
-
    y <- x
    mod <- lm.br(y~x)     ## construct an 'lm.br' object with arbitrary y values.
 
@@ -77,10 +75,7 @@ simtest <- function( x, theta, alpha, B, Bp, var, N =10000) {
    cat("\n")
 }
 
-
 x = c( 1.0, 1.1, 1.3, 1.7, 2.4, 3.9, 5.7, 7.6, 8.4, 8.6 )
-simtest(x,3,0,-1,0.5,1)
-
-
+\donttest{simtest(x,3,0,-1,0.5,1)}
 }
 

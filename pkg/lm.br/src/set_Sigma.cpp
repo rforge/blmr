@@ -8,7 +8,7 @@
 
 void Clmbr::set_Sigma( void ) 
 // 'Sigma' = covariate or covariance vector or matrix,  errors ~ N( 0, var * Sigma )
-// check the input 'weights' vector or matrix,  make symetric if almost symetric, 
+// check the input 'weights' vector or matrix,  make symmetric if almost symmetric, 
 // then get 'rS' = square root of Sigma, and 'irS' = inverse square root of Sigma 
 {
 	int i,j;
@@ -25,13 +25,12 @@ void Clmbr::set_Sigma( void )
 		for (i=0;i<n;i++) for (j=0;j<n;j++) {
 			double  wij = *(w_in+j*n+i),  wji = *(w_in+i*n+j);
 			if ( isinf(wij) || isnan(wij) )  stop( _("'weights' has invalid entries") );
-			if( fabs(wij) < zero_eq )  wij= 0.; 
 			if( fabs(wij - wji) < zero_eq )  if( i < j)  wij = wji;
 			W2D[i][j] = wij;
 		}
 
 		Cholesky<double> testw(W2D);
-		if ( !testw.is_spd() )  stop( _("'weights' matrix is not symetric positive-definite") );
+		if ( !testw.is_spd() )  stop( _("'weights' matrix is not symmetric positive-definite") );
 	}
 
 
@@ -42,19 +41,21 @@ void Clmbr::set_Sigma( void )
 		for (i=0;i<n;i++) {
 			double  Di;
 			if( model_in > 0 )  Di= *( w_in + i );  else  Di= *( w_in + (n-1-i) );
+			if( Di > maxD )  maxD= Di;
+			if( Di < minD )  minD= Di;
 			const double  rDi = sqrt( Di );
 			if( inverse )
 				{  *( rS + i ) = rDi;  *( irS + i ) = 1./rDi; }
 			else
 				{ *( irS + i ) = rDi;   *( rS + i ) = 1./rDi; }
-			if( Di > maxD )  maxD= Di;
-			if( Di < minD )  minD= Di;
 		}
 
+		if( minD <= 0. )  stop( _("zero or negative 'weights' not allowed") );
+		if( minD/maxD < 1.e-7 )  Rf_warning( _("weights vector might be ill-conditioned for 'clr' method") );
 
 	}  else  {
 
-// geteigenvalues and eigenvectors of Sigma using LAPACK routine DSYEVR
+// use LAPACK routine DSYEVR to get eigenvalues and eigenvectors of Sigma 
 		double  D[n], Q_[n*n];
 		
 		{
@@ -64,7 +65,7 @@ void Clmbr::set_Sigma( void )
 			int  ne, isuppZ[2*n], lwork= -1, itmp[1], liwork =-1, info =0;
 			double  tmp[1];
 
-//  use 'irS' as the working input matrix, so copy 'w_in' to 'irS'
+//  use 'irS' as the working input matrix
 			for(i=0;i<n;i++) for(j=0;j<=i;j++)  
 				if( model_in > 0 )  
 					*(irS + j*n + i) = *(w_in + j*n + i);  
@@ -74,14 +75,14 @@ void Clmbr::set_Sigma( void )
 			F77_CALL(dsyevr)( &job, &range, &uplo, &n, irS, &n, &dd, &dd, &id, &id, &tol,
 								&ne, D, Q_, &n, isuppZ, tmp, &lwork, itmp, &liwork, &info );
 
-			if( info )  stop( "LAPACK routine 'dsyevr' failed" );  else  { lwork= *tmp; liwork= *itmp; }
+			if( info )  stop( _("LAPACK routine 'dsyevr' failed") );  else  { lwork= *tmp; liwork= *itmp; }
 			double  work[lwork];
 			int  iwork[liwork];
 
 			F77_CALL(dsyevr)( &job, &range, &uplo, &n, irS, &n, &dd, &dd, &id, &id, &tol,
 								&ne, D, Q_, &n, isuppZ, work, &lwork, iwork, &liwork, &info );
 
-			if( info || ne < n )  stop( "LAPACK routine 'dsyevr' failed" );
+			if( info || ne < n )  stop( _("LAPACK routine 'dsyevr' failed") );
 		}
 
 		double  rD[n];
@@ -91,7 +92,7 @@ void Clmbr::set_Sigma( void )
 			rD[i] =  sqrt( D[i] );
 		}
 
-// compute  'rS' = Q*sqrt(D)*QT  and  'irS' = Q*1/sqrt(D)*QT
+// 'rS' = Q*sqrt(D)*QT  and  'irS' = Q*1/sqrt(D)*QT
 		for (i=0;i<n;i++)  for(j=0;j<n;j++)  {
 			*(rS + j*n + i) = 0.;
 			*(irS + j*n + i) = 0.;
@@ -105,10 +106,9 @@ void Clmbr::set_Sigma( void )
 				}
 		}
 
+		if( minD/maxD < 1.e-7 )  Rf_warning( _("weights matrix might be ill-conditioned for 'clr' method") );
 	}
 
-
-	if( minD/maxD < 1.e-7 )  Rf_warning( _("weights matrix ill-conditioned for 'clr' method") );
 
 
 	if ( px != NULL )  set_x();

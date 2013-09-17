@@ -1,4 +1,5 @@
-\name{mle,Cpp_Clmbr-method}
+\name{mle}
+\alias{mle,Cpp_Clmbr-method}
 \alias{mle}
 
 \title{Maximum Likelihood Estimates}

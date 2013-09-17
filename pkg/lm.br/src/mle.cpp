@@ -4,7 +4,7 @@
 
 
 
-double  Clmbr::mle( const bool output,  double *const  max_gy,  double *const  par  )  const
+double  Clmbr::mle( const bool verbose,  double *const  max_gysq,  double *const  par  )  const
 // find theta_mle for maximum value of (gamma(theta)*qy)^2
 // calculate  alphamle, betamle, betapmle, vmle
 {
@@ -49,26 +49,23 @@ double  Clmbr::mle( const bool output,  double *const  max_gy,  double *const  p
 	if(kmle>0)  if ( fabs(xs[kmle-1] - thmle) < zero_eq )  thmle = xs[kmle-1];
 	if ( fabs(xs[kmle] - thmle) < zero_eq )  {  kmle++; thmle = xs[kmle-1]; }
 
-	if( max_gy != NULL )  *max_gy =  max;
+	if( max_gysq != NULL )  *max_gysq =  max;
 
 
 // calculate  alphamle, betamle, betapmle, vmle
 	double alphamle, betamle, betapmle, vmle;
 
 	if (Model==M1) {
-		const double  amle = *psy*gbar(thmle,kmle);
 		const double  bmle = *psy*gsm(thmle,kmle);
 		const double  bpmle = *psy*gfr(thmle,kmle);
-
-		double psi;
-		if (cov_matrix_diagonal) psi=0.; else psi = gfr(thmle,kmle)*sfc(thmle,kmle);
 		const double sm1 = *psig1*gsm(thmle,kmle);
 		const double fr1 = *psig1*gfr(thmle,kmle);
-		const double r1sf = sqrt(s11-sm1*sm1-fr1*fr1);
-		alphamle = amle/r1sf;
-		betamle = (bmle - alphamle*sm1)/sqrt(sfc(thmle,kmle)*sfc(thmle,kmle)-psi*psi);
-		betapmle = (bpmle - alphamle*fr1 - betamle*psi)/sqrt(sf(thmle,kmle)*sf(thmle,kmle));
+		double psi;
+		if (cov_matrix_diagonal)  psi=0.;  else  psi = gfr(thmle,kmle)*sfc(thmle,kmle);
 
+		alphamle = ( y1 - bmle*sm1 - bpmle*fr1 )/( s11-sm1*sm1-fr1*fr1 ) ;
+		betamle = (bmle - alphamle*sm1)/sqrt(sfc(thmle,kmle)*sfc(thmle,kmle)-psi*psi);
+		betapmle = (bpmle - alphamle*fr1 - betamle*psi)/sqrt( sf(thmle,kmle) * sf(thmle,kmle) );
 	}
 
 	if (Model==M2) {
@@ -100,11 +97,6 @@ double  Clmbr::mle( const bool output,  double *const  max_gy,  double *const  p
 
 	if (variance_unknown)  vmle = omega/(m-2);  else  vmle = 1.;
 
-	if( fabs(thmle) < zero_eq) thmle= 0.;
-	if( fabs(alphamle) < zero_eq) alphamle= 0.;
-	if( fabs(betamle) < zero_eq) betamle= 0.;
-	if( fabs(betapmle) < zero_eq) betapmle= 0.;
-	if( fabs(vmle) < zero_eq) vmle= 0.;
 
 	if(line) {
 		if(Model==M1) {
@@ -125,9 +117,44 @@ double  Clmbr::mle( const bool output,  double *const  max_gy,  double *const  p
 		}
 	}
 
+
+//  find theta value for minimum of 'ff' to check for singular x-matrix
+	double  ffmin = Inf,  thfmin = xs[1];
+	double  lo_limit = xs[0]+acc_xb;
+	if( Model==M2 )  lo_limit = xs[0]-acc_xb-1;
+	for( int k = k1+1; k < ns; k++ )  {
+		const double  rad= qx1[k]*qx1[k] - q11[k]*qxx[k],  Df0 = qx1[k]/q11[k];
+
+		if( rad >= 0 ) {
+			const double  r = sqrt(rad),  th1 = (qx1[k]-r)/q11[k],  th2 = (qx1[k]-r)/q11[k];
+			if( k > 0 )  {
+				if( xs[k-1] <= th1  &&  th1 <= xs[k]  &&  lo_limit+acc_xb < th1  &&  th1 < xs[ns-1]-acc_xb ) { thfmin=th1; break; }
+				if( xs[k-1] <= th2  &&  th2 <= xs[k]  &&  lo_limit+acc_xb < th2  &&  th2 < xs[ns-1]-acc_xb ) { thfmin=th2; break; }
+			}  else  {
+				if( -Inf < th1  &&  th1 <= xs[k]  &&  th1 < xs[ns-1]-acc_xb ) { thfmin=th1; break; }
+				if( -Inf < th2  &&  th2 <= xs[k]  &&  th2 < xs[ns-1]-acc_xb ) { thfmin=th2; break; }
+			}
+		}
+
+		if( k > 0 )  {
+			if( xs[k-1] <= Df0  &&  Df0 <= xs[k]  &&  lo_limit+acc_xb < Df0  &&  Df0 < xs[ns-1]-acc_xb )
+				if( ff(Df0,k) < ffmin )  { ffmin = ff(Df0,k);  thfmin = Df0; }
+		}  else  {
+			if( -Inf < Df0  &&  Df0 <= xs[k]  &&  Df0 < xs[ns-1]-acc_xb )
+				if( ff(Df0,k) < ffmin )  { ffmin = ff(Df0,k);  thfmin = Df0; }
+		}
+
+		if( k < ns-1 )  if( ff(xs[k],k) < ffmin )  { ffmin = ff(xs[k],k);  thfmin = xs[k]; }
+	}
+
+
 	const int  reflect = copysign( 1, model_in );
 
-	if (output) {
+	if( par != NULL )  *par= thmle*reflect,  *(par+1)= alphamle,  *(par+2)= betamle,  
+							*(par+3)= betapmle,  *(par+4)= thfmin*reflect;
+
+
+	if (verbose) {
 		Rcout << endl << _("maximum-likelihood estimates of parameters:") << endl << endl;
 		Rcout << setw(20) << "         theta =" << setw(12) << thmle*reflect << "     ( " << _("x-coordinate of changepoint") << " )" << endl;
 		Rcout << setw(20) << "         alpha =" << setw(12) << alphamle << "     ( " << _("y-coordinate of changepoint") << " )" << endl;
@@ -136,8 +163,6 @@ double  Clmbr::mle( const bool output,  double *const  max_gy,  double *const  p
 		Rcout << setw(20) << "      variance =" << setw(12) << vmle << endl << endl;
 	}
 
-
-	if( par != NULL )  *par= thmle*reflect,  *(par+1)= alphamle,  *(par+2)= betamle,  *(par+3)= betapmle;
 
 	return thmle;
 }

@@ -60,12 +60,7 @@ double Clmbr::sF(const int k, const double arg)  const
 // calculate the sF() "script F" function defined as integral of Fk(s) from s= -Inf to s= x,
 // where Fk() is the F(k,x) function defined in K,S&Z (1991) eq.(14)
 {
-	if( k<0 || isnan(arg) )  {
-		Rcout << "sF k arg vu  " << k << " " << arg << " " << variance_unknown << endl; 
-		Rcout << "y  " << *py << endl;
-		Rcout << "irsy  " << *psy << endl;
-		stop( _("'sF': invalid input") );
-	}
+	if( k<0 || isnan(arg) )  stop( _("'sF': invalid input") );
 
 	double sFx;
 	if (arg <= -1. + zero_eq)

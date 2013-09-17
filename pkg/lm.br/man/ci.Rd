@@ -1,12 +1,11 @@
-
-\name{ci,Cpp_Clmbr-method}
+\name{ci}
 \alias{ci,Cpp_Clmbr-method}
 \alias{ci}
 
 \title{Confidence Interval for the Changepoint}
 
 \description{
-  Confidence interval for theta, the changepoint's x-coordinate.
+  Confidence interval for 'theta', the changepoint's x-coordinate.
 }
 
 \usage{
@@ -15,22 +14,22 @@
 
 \arguments{
   \item{CL}{confidence level, between 0 and 1}
-  \item{method}{"clr" or "af" which stand for conditional likelihood-ratio, which is exact, or approximate-F}
+  \item{method}{"clr" or "af" which stand for conditional likelihood-ratio or approximate-F}
 }
 
 \details{
-This subroutine scans to determine the postulate values of theta that have significance levels greater than 1-CL.
+This subroutine scans to determine the postulate values of 'theta' that have significance levels greater than 1-CL.
 }
 
 \examples{
-##  Data for Patient B from Smith and Cook (1980):
+##  Data for Patient B from Smith and Cook (1980)
 require(lm.br)
 y = c(37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4)
 x = 1:10
 sc <- lm.br(y~x)
 sc$ci()
 sc$ci(0.90)
-sc$ci(.99,"af")
+sc$ci(.99,'af')
 
 
 }

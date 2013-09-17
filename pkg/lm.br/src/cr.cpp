@@ -4,7 +4,7 @@
 
 
 
-int Clmbr::cr(const METHOD met, const double incr, const bool output, double *const bounds)
+int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *const bounds)
 //
 //      Checks whether { (theta,alpha)  such that  sig. level  > SL}  is contiguous.
 // Returns N = number of rows for array 'bounds[N][3]' = (th, min_alpha, max_alpha) values.
@@ -17,14 +17,16 @@ int Clmbr::cr(const METHOD met, const double incr, const bool output, double *co
 //  in the broken line model.
 //
 {
+	Rcpp::Function  getOption("getOption");
+	Rcpp::Function  Rflush("flush.console");
+
 	double inc;
 	if( incr == -1 )  inc= xinc;  else  inc= incr;
-	Rcpp::Function Rflush("flush.console");
 
 
 // get theta-boundaries of confidence region(s)
 
-	if(output) if(met==GEO) { Rcout << "   " << _("getting theta-boundaries...   ");  Rflush(); }
+	if(verbose) if(met==GEO) { Rcout << "   " << _("getting theta-boundaries...   ");  Rflush(); }
 
 	double *const  tmp= new (nothrow) double[2*ns];
 	if(tmp==NULL)  stop( _("memory allocation failed") );
@@ -42,7 +44,7 @@ int Clmbr::cr(const METHOD met, const double incr, const bool output, double *co
 	for (i=0;i<2*numr;i++)  th_bds[i] = tmp[i];
 	delete[] tmp;
 
-	if(output) if(met==GEO)  Rcout << endl;
+	if(verbose) if(met==GEO)  Rcout << endl;
 
 
 	const double th_min= xs[0]-1, th_max= xs[ns-1]+1;
@@ -81,12 +83,16 @@ int Clmbr::cr(const METHOD met, const double incr, const bool output, double *co
 		double  th= 0;
 
 
+		int  width =0,  col =0;
 		double  min_th=0,  max_th=0;
 		double  tstart= time(NULL), tfinish= tstart, elapsed= 0;
-		if(output) if(met==GEO) { 
+		if(verbose)  if(met==GEO)  { 
 			Rcout << "   " << _("getting alpha-boundaries...   ");  Rflush();
 			if(Model==M1)  min_th = max(th_bds[0],xs[0]);  else  min_th = th_bds[0];
 			max_th = min(th_bds[2*numr-1],xs[ns-1]);
+			Rcpp::IntegerVector  tw = getOption("width");
+			width = tw[0];
+			col = 33;
 		}
 
 
@@ -164,13 +170,15 @@ int Clmbr::cr(const METHOD met, const double incr, const bool output, double *co
 
 					*(bds+N*3+0) =th; *(bds+N*3+1) =a_sl(met,th,-1); *(bds+N*3+2) =a_sl(met,th,1); N++; 
 
-					if(output) if(met==GEO) { 
+					if(verbose) if(met==GEO) { 
 						tfinish = time( NULL );
 						elapsed = tfinish - tstart;
 						if( elapsed > 10 ) {
+							if( col > width - 6 )  { Rcout << endl;  col= 0; } 
 							const double  progress = floor( 100*(th-min_th)/(max_th-min_th) );
 							Rcout << progress << "%...   ";   Rflush();
 							tstart= tfinish;
+							col += 9;
 						}
 					}
 
@@ -210,7 +218,7 @@ int Clmbr::cr(const METHOD met, const double incr, const bool output, double *co
 	}
 
 
-	if(output)  { 
+	if(verbose)  { 
 		if(met==GEO) Rcout << endl << endl;
 		Rcout << " " << 100*(1-SL) << _("-percent joint confidence region for  (theta, alpha)  by method  ");
 		if(met==GEO)  Rcout << "CLR" << endl; else  Rcout << "AF" << endl;

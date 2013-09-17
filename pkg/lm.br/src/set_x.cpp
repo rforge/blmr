@@ -6,7 +6,8 @@
 
 
 void Clmbr::set_x( void )
-// precalculate working variables that depend only on 'x' values and 'Sigma' matrix
+// precalculate working variables and vectors 
+// that depend only on 'x' values and 'Sigma' matrix
 {
 	int i,j;
 
@@ -31,9 +32,9 @@ void Clmbr::set_x( void )
 		if( xib > xi )  stop( _("'x' values must be non-decreasing") );
 		const double xdiff= xi - xib;
 		if ( 0 < xdiff  &&  xdiff < min_xdiff  ) {
-			Rcout << _("suggest combining these data into two observations at a repeat 'x' value:") << endl;
-			Rcout << "x[" << i-1 << "] =" << xib << " ,  x[" << i << "] =" << xi << endl;
-			Rf_warning( _("'x' values too close for reliable computations") );
+			Rcout << _("consider a repeat predictor value instead of the values") << endl;
+			Rcout << xib << ",  " << xi << endl;
+			Rf_warning( _("predictor values might be too close for reliable computations") );
 		}
 	}
 
@@ -82,12 +83,12 @@ void Clmbr::set_x( void )
 
 		F77_CALL(dgeqrf)( &n, &xrank, Q, &n, tau, tmp, &lwork, &info );
 
-		if( info )  stop( "LAPACK routine 'dgeqrf' failed" );  else  lwork= *tmp; 
+		if( info )  stop( _("LAPACK routine 'dgeqrf' failed") );  else  lwork= *tmp; 
 		double  work[lwork];
 
 		F77_CALL(dgeqrf)( &n, &xrank, Q, &n, tau, work, &lwork, &info );
 
-		if( info )  stop( "LAPACK routine 'dgeqrf' failed" );
+		if( info )  stop( _("LAPACK routine 'dgeqrf' failed") );
 	}
 
 
@@ -124,12 +125,12 @@ void Clmbr::set_x( void )
 
 			F77_CALL(dormqr)( &side, &tp, &n, &nC0, &xrank, Q, &n, tau, C0, &n, tmp, &lwork, &info );
 
-			if( info )  stop( "LAPACK routine 'dormqr' failed" );  else  lwork= *tmp;
+			if( info )  stop( _("LAPACK routine 'dormqr' failed") );  else  lwork= *tmp;
 			double  work[lwork]; 
 
 			F77_CALL(dormqr)( &side, &tp, &n, &nC0, &xrank, Q, &n, tau, C0, &n, work, &lwork, &info );
 
-			if( info )  stop( "LAPACK routine 'dormqr' failed" );
+			if( info )  stop( _("LAPACK routine 'dormqr' failed") );
 		}
  
 
@@ -271,12 +272,12 @@ void Clmbr::set_x( void )
 
 			F77_CALL(dormqr)( &side, &tp, &n, &nC1, &xrank, Q, &n, tau, C1, &n, tmp, &lwork, &info );
 
-			if( info )  stop( "LAPACK routine 'dormqr' failed" );  else  lwork= *tmp; 
+			if( info )  stop( _("LAPACK routine 'dormqr' failed") );  else  lwork= *tmp; 
 			double  work[lwork];
 
 			F77_CALL(dormqr)( &side, &tp, &n, &nC1, &xrank, Q, &n, tau, C1, &n, work, &lwork, &info );
 
-			if( info )  stop( "LAPACK routine 'dormqr' failed" );
+			if( info )  stop( _("LAPACK routine 'dormqr' failed") );
 		}
 	
 
@@ -296,12 +297,12 @@ void Clmbr::set_x( void )
 
 			F77_CALL(dormqr)( &side, &tp, &n, &nC1, &xrank, Q, &n, tau, Cx, &n, tmp, &lwork, &info );
 
-			if( info )  stop( "LAPACK routine 'dormqr' failed" );  else  lwork= *tmp; 
+			if( info )  stop( _("LAPACK routine 'dormqr' failed") );  else  lwork= *tmp; 
 			double  work[lwork];
 
 			F77_CALL(dormqr)( &side, &tp, &n, &nC1, &xrank, Q, &n, tau, Cx, &n, work, &lwork, &info );
 
-			if( info )  stop( "LAPACK routine 'dormqr' failed" );
+			if( info )  stop( _("LAPACK routine 'dormqr' failed") );
 		}
 	
 

@@ -138,11 +138,11 @@ double Clmbr::dgsq(const double th, const int k)  const
 
 double Clmbr::rho_inv(const double s, const int k, const int hi_lo)  const
 //      Returns 'th' such that rho(th) = s  and 'th' is in (x[k-1], x[k]);
-// 'rho_inv' gives the same result for s and for -s, so it checks the sign of rho(th); 
-// result 'th' is a quadratic root, and if both roots are in the data interval then 
-// returns the lower value if 'hi_lo' < 0, the greater value if 'hi_lo' > 0 .
+// 'rho_inv' gives the same result for s and for -s, so it checks that  sign( rho(th) ) = sign(s); 
+// result 'th' is a quadratic root, so if both roots are in the data interval then 
+// it returns the lower value if 'hi_lo' < 0 and the greater value if 'hi_lo' > 0 .
 {
-	if( k1 <= k  &&  0 <= k  &&  k < ns )  {	//1
+	if( k1 <= k  &&  k < ns )  {	//1
 
 		if( k== ns-1 )  {  if( fabs( rho(xs[ns-2],k) - s ) < zero_eq )  return xs[ns-2];  }  else  {	//2
 
@@ -211,6 +211,7 @@ double Clmbr::rho_inv(const double s, const int k, const int hi_lo)  const
 					}  else  {
 						const double  rd = sqrt(rad);
 						const double  th1 = (-b-rd)/a,  th2 = (-b+rd)/a;
+
 						bool  i1 = false,  i2 = false;
 						if( k > 0 ) {
 							if (xs[k-1] <= th1  &&  th1 <= xs[k] )  if( fabs( rho(th1,k) - s ) < acc_rho )  i1 = true;
@@ -228,15 +229,23 @@ double Clmbr::rho_inv(const double s, const int k, const int hi_lo)  const
 		}	//2
 	}	//1
 
-Rcout << "s k hilo  " << s << " " << k << " " << hi_lo << endl;
-Rcout << "k0 th0 a0  " << k0 << " " << th0 << " " << alpha0 << endl;
-Rcout << "ra rb  " << rho(xs[k-1],k) << " " << rho(xs[k],k) << endl;
-Rcout << "thZp  " << a0[k] << " " << b0[k] << " " << a0[k]/b0[k] << endl;
-Rcout << "q10 qx0  " << q10[k] << " " << qx0[k] << endl;
-Rcout << "ff f01 f0x 11 x1 xx  " << ff(th0,k0) << " " << f01[k] << " " << f0x[k] << " " << q11[k] << " " << qx1[k] << " " << qxx[k] << endl;
-Rcout << "xs  " << endl;
-for(int i=0;i<ns;i++) Rcout << xs[i] << " "; Rcout << endl; 
-Rcout << "irsy  " << *psy << endl;
+// last ditch
+	if( 0 <= k  && k < ns )  {
+		const double  rb = rho( xs[k], k );
+		double  ra;
+		if( k > 0 )  ra= rho( xs[k-1], k );  else  ra= rho( -Inf, k );
+		if( (ra-s)*(rb-s) < 0. )  {
+			const double  thb = xs[k];
+			double  tha;
+			if( k > 0 )  tha = xs[k-1];  else  {
+				tha = min( thb - 1., -1. );
+				ra = rho(tha,k);
+				while( (ra-s)*(rb-s) < 0. ) { tha *= 2; ra= rho(tha,k); }
+			}
+			return  bisect( tha, thb, &Clmbr::rho, k, s, acc_rho );
+		}
+	}
+
 
 	stop ( _("'rho_inv' no inverse for given 'rho' in data interval") );
 	return NaN;

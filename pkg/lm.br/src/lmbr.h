@@ -24,7 +24,7 @@ private:
 	bool vectorS, matrixS, cov_matrix_diagonal, th0ex, trivial;
 	int k1, k0, subints;
 	double s11, sx1, sxx, n1, se1sq, y1, yx, sysq, qysq, omega, c, th0, alpha0, z, w;
-	double prime_z, g0u1, g0u2, c1, c2, Lgamma, lambdasq, lambda;
+	double prime_z, g0u1, g0u2, c1, c2, Lgamma, lambdasq, lambda, th0MC, th0a0;
 
 	double ah, old_th, prev_th, a_low, a_high, rel_print_eps;
 	double SL, prev_SL, cFex, cCHIex, cF, cCHI, x_vu_ex, x_vk_ex, x_vu, x_vk;
@@ -123,15 +123,15 @@ private:
 	double bisect_sl(double x1, double x2, METHOD met, double crit);
 
 //private engines for interface functions
-	double sl(double theta0, METHOD met = GEO, bool output =true);
-	double sl(double theta0, double alpha0, METHOD met = GEO, bool output =true);
-	int ci(METHOD met =GEO, double increments = -1, bool output =true, double *bounds =0);
-	int cr(METHOD met =GEO, double increments = -1, bool output =true, double *bounds =0);
-	double mle( bool output =true, double *max_gamma_dot_Qy_sq =NULL, double *param = NULL ) const;
+	double sl(double theta0, METHOD met = GEO, bool verbose =true);
+	double sl(double theta0, double alpha0, METHOD met = GEO, bool verbose =true);
+	int ci(METHOD met =GEO, double increments = -1, bool verbose =true, double *bounds =0);
+	int cr(METHOD met =GEO, double increments = -1, bool verbose =true, double *bounds =0);
+	double mle( bool verbose =true, double *max_gamma_dot_Qy_sq =NULL, double *param = NULL ) const;
 	void set_sy(double *irsy, METHOD met =INIT);
 
 // 'ci' and 'cr' sub-subroutines
-	int ci_geo( METHOD met, double increments =0.2, double *bounds =0);
+	int ci_geo( METHOD met, double increments, double *bounds =0);
 	int ci_af( METHOD met, double *bounds =0);
 	double a_sl(METHOD met, double th, int high_low);
 	double a_af(double th, int high_low);
@@ -141,22 +141,22 @@ private:
 
 public:
 // constructors
-	Clmbr( NumericVector yR, NumericMatrix xR, int model =1, NumericMatrix wR =NULL,
-			 bool inverse =false, bool var_known =false );
-	Clmbr( NumericVector yR, NumericMatrix xR, int model =1, bool var_known =false );
-	Clmbr( const Clmbr &initM );	// copy constructor
+	Clmbr( NumericVector  yR,  NumericMatrix  xR,  string  type ="LL",  NumericMatrix  wR =NULL,
+			 bool  inverse =false,  bool  var_known =false );
+	Clmbr( NumericVector  yR, NumericMatrix  xR, string  type ="LL", bool  var_known =false );
+	Clmbr( const Clmbr  &initM );	// copy constructor
 	~Clmbr();		// destructor
 
 
 // interface functions
-	void slR(double theta0);
-	void slR(double theta0, double alpha0);
+	void slR(double theta0 );
+	void slR(double theta0, double alpha0 );
 	void slR(double theta0, string met );
 	void slR(double theta0, double alpha0, string met );
-	void slR(double theta0, string met, double acc);
-	void slR(double theta0, double alpha0, string met, double acc);
-	double slR(double theta0, string met, double acc, bool output);
-	double slR(double theta0, double alpha0, string met, double acc, bool output ); 
+	void slR(double theta0, string met, double acc );
+	void slR(double theta0, double alpha0, string met, double acc );
+	double slR(double theta0, string met, double acc, bool verbose );
+	double slR(double theta0, double alpha0, string met, double acc, bool verbose ); 
 	void ciR(double CL);
 	void ciR(double CL, string met);
 	void ciR(void);

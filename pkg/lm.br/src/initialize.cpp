@@ -20,7 +20,7 @@ void Clmbr::initialize( void )
 		Rcout << _( "model " ) << model_in;
 		if (variance_unknown)  Rcout << _("  with variance unknown");  else  Rcout << _("  with variance known");
 		Rcout << endl << "y = "; for (i=0;i<n;i++) Rcout << " " << y_in[i];
-		Rcout << endl << "x matrix:  "; 
+		Rcout << endl << _("x matrix:  "); 
 		Matrix<double> X(n,xrank,0.);
 		for (i=0;i<n;i++) for (j=0;j<xrank;j++) X[i][j] = *(x_in+j*n+i);
 		Rcout << X;
@@ -50,8 +50,8 @@ void Clmbr::initialize( void )
 	if(Model==M3)  { m= n-(xrank-1);    m1= m;    k1= -1; }
 
 
-// set cov_matrix flag to 'non-diagonal' for multivariate models 
-// to invoke general routines 
+// for multivariate models, set cov_matrix flag to 'non-diagonal'  
+// to invoke more general routines 
 	if( m1 < n )  cov_matrix_diagonal = false;
 
 
@@ -121,9 +121,12 @@ void Clmbr::initialize( void )
 	set_y();		// calls 'set_sy'
 
 	const double th_0 = xs[1];
-	set_theta0(th_0, INIT);	// initializes 'z', 'w'
+	th0 = th_0 + 1;
+	th0MC = xs[ns-1] + 1;
+	set_theta0(th_0, INIT);		// initializes 'z', 'w'
 
 	const double a0 = (*py)[ is[1] ];
+	alpha0 = a0 + 1;
 	set_alpha0(a0, INIT);
 
 	prev_SL= -1; 

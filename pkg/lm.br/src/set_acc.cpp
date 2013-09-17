@@ -9,11 +9,8 @@
 void  Clmbr::set_acc( const double acc )
 // set accuracy and scale parameters
 {
-	if ( isnan(acc) || acc<0 || acc>1 )  stop( _("invalid 'acc' value") );
+	if ( isnan(acc) || acc<=0 || acc>=1 )  stop( _("invalid 'acc' value") );
 	
-	const int  digits= 6;
-	Rcout << setprecision( digits );
-	rel_print_eps =  pow( 10., -(digits-1) );
 
 	subints = 5;	// average number of subintervals per data interval for grid searches
 
@@ -29,12 +26,14 @@ void  Clmbr::set_acc( const double acc )
 	acc_xb = (xs[ns-1] - xs[0])*acc_sl_rel/64.;	
 	i=1;  while( acc_xb < ldexp(1.,-i) )  i++;  acc_xb = ldexp(1.,-i);
 
+
 // maximum error in y- boundaries
 	double  maxY= -Inf,  minY= Inf;
 	for(i=0;i<n;i++)  {  if( (*py)[i] > maxY )  maxY= (*py)[i];  if( (*py)[i] < minY )  minY= (*py)[i];  }
 	const double dY= maxY - minY;
 	acc_yb = dY*acc_sl_rel/64.;	
 	i=1;  while( acc_yb < ldexp(1.,-i) )  i++;  acc_yb = ldexp(1.,-i);
+
 
 // accuracy for integration limits
 	inc_x = acc_xb;
@@ -43,6 +42,7 @@ void  Clmbr::set_acc( const double acc )
 		if( inc < inc_x )  inc_x= inc; 
 	}
 	i=1;  while( inc_x < ldexp(1.,-i) )  i++;  inc_x = ldexp(1.,-i);
+
 
 // increment for x- grid searches, and for printout of confidence regions by 'cr'
 	double inc = ( xs[ns-1] - xs[0] )/(ns-1)/subints;
@@ -53,9 +53,16 @@ void  Clmbr::set_acc( const double acc )
 	inc = inc_seed[i]*inc10;
 	xinc = inc;
 
+
 // starting increment for y- grid searches
 	inc_y = dY/128;
 	i=1;  while( inc_y < ldexp(1.,-i) )  i++;  inc_y = ldexp(1.,-i);
+
+
+// output formatting
+	const int  digits= 6;
+	Rcout << setprecision( digits );
+	rel_print_eps =  pow( 10., -(digits-1) );
 
 
 // check for trivial case

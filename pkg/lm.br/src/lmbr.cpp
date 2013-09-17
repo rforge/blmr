@@ -8,8 +8,8 @@
 
 
 
-Clmbr::Clmbr( const NumericVector yR,  const NumericMatrix xR,  const int model,  const NumericMatrix wR,
-						const bool inv,  const bool var_k )
+Clmbr::Clmbr( const NumericVector  yR,  const NumericMatrix  xR,  const string  type,  const NumericMatrix  wR,
+						const bool  inv,  const bool  var_k )
 // constructor
 {
 	w_in = x_in = y_in = xs = NULL;
@@ -28,20 +28,37 @@ Clmbr::Clmbr( const NumericVector yR,  const NumericMatrix xR,  const int model,
 	py = psy = NULL;
 	pqy = NULL;
 
-	
 
-	model_in = model;
-
-	variance_unknown= !var_k;
-
-	inverse= inv;
+	int i, j;
 
 	n = yR.size();
 
 	xrank = xR.ncol();
 
+// infer model from first column of input 'x' matrix
+	bool  xint = true;
+	for(i=0;i<n;i++)   if( xR(i,0) != 1 )  xint = false;
+	if( xint  &&  xrank==1 )  stop( _("invalid x") );
 
-	int i, j;
+	if( type=="LL" ) {
+		if( xint )  model_in = 1;  else
+			stop( _("'alpha'=0 not supported for type 'LL'") );
+	} else {
+		if( type=="TL" ) {
+			if( xint )  model_in= 2;  else  model_in= 3;
+		}  else  {
+			if( type=="LT" ) {
+				if( xint )  model_in= -2;  else  model_in= -3; 
+			}  else  
+				stop( _("'type' must be one of 'LL', 'LT' or 'TL'") );
+		}
+	}
+
+
+	variance_unknown= !var_k;
+
+	inverse= inv;
+
 
 	bool  cov_matrix_I = true;
 	cov_matrix_diagonal = true;
@@ -90,7 +107,7 @@ Clmbr::Clmbr( const NumericVector yR,  const NumericMatrix xR,  const int model,
 
 
 
-Clmbr::Clmbr( const NumericVector yR,  const NumericMatrix xR,  const int model,  const bool var_k )
+Clmbr::Clmbr( const NumericVector  yR,  const NumericMatrix  xR,  const string  type,  const bool  var_k )
 // constructor
 {
 	w_in = x_in = y_in = xs = NULL;
@@ -110,14 +127,34 @@ Clmbr::Clmbr( const NumericVector yR,  const NumericMatrix xR,  const int model,
 	pqy = NULL;
 
 	
-
-	model_in = model;
-
-	variance_unknown = !var_k;
+	int  i;
 
 	n = yR.size();
 
 	xrank = xR.ncol();
+
+// infer model from first column of x matrix
+	bool  xint = true;
+	for(i=0;i<n;i++)   if( xR(i,0) != 1 )  xint = false;
+	if( xint  &&  xrank==1 )  stop( _("invalid x") );
+
+	if( type=="LL" ) {
+		if( xint )  model_in = 1;  else
+			stop( _("'alpha'=0 not supported for type 'LL'") );
+	} else {
+		if( type=="TL" ) {
+			if( xint )  model_in= 2;  else  model_in= 3;
+		}  else  {
+			if( type=="LT" ) {
+				if( xint )  model_in= -2;  else  model_in= -3; 
+			}  else  
+				stop( _("'type' must be one of 'LL', 'LT' or 'TL'") );
+		}
+	}
+
+
+	variance_unknown= !var_k;
+
 
 	cov_matrix_diagonal = true;
 	vectorS = false;
@@ -148,7 +185,7 @@ Clmbr::Clmbr( const NumericVector yR,  const NumericMatrix xR,  const int model,
 
 
 
-Clmbr::Clmbr( const Clmbr &initM )
+Clmbr::Clmbr( const Clmbr  &initM )
 //copy constructor
 {
 	w_in = x_in = y_in = xs = NULL;
