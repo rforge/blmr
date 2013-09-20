@@ -115,13 +115,14 @@ Statistics,  pp. 292-316.
 \keyword{ package }
 
 \seealso{
-'ci', 'cr', 'sl', 'mle', 'sety'
+\code{\link{ci}}, \code{\link{cr}}, \code{\link{sl}}, 
+\code{\link{mle}}, \code{\link{sety}}
 
 The 'sl' help page explains the evaluation methods.
 
 The 'sety' page gives an example simulations test.
 
-'lm' describes the arguments and output values.
+\code{\link{lm}} describes the arguments and output values.
 }
 
 \examples{
@@ -130,8 +131,8 @@ library(lm.br)
 #  Data for Patient B from Smith and Cook (1980),
 #  reciprocal of blood creatinine L/micromol  versus
 #  day after kidney transplant:
-crea = c( 37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4 )
-day = c( 1., 2., 3., 4., 5., 6., 7., 8., 9., 10. )
+crea <- c( 37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4 )
+day <- c( 1., 2., 3., 4., 5., 6., 7., 8., 9., 10. )
 sc <- lm.br( crea ~ day )
 sc$mle()
 sc$ci()
@@ -142,9 +143,9 @@ sc$sl( crea[1] - 1.5 )      # test for the presence of a changepoint
 
 #  A 'TL' example, from figure 1 of  Chiu et al. (2006),
 #  log(salmon abundance) vs year:
-salmon = c( 2.50, 2.93, 2.94, 2.83, 2.43, 2.84, 3.06, 2.97, 2.94, 2.65, 2.92,
- 2.71, 2.93, 2.60, 2.12, 2.08, 1.81, 2.45, 1.71, 0.55, 1.30 )
-year = 1980:2000
+salmon <- c( 2.50, 2.93, 2.94, 2.83, 2.43, 2.84, 3.06, 2.97, 2.94, 2.65,
+ 2.92, 2.71, 2.93, 2.60, 2.12, 2.08, 1.81, 2.45, 1.71, 0.55, 1.30 )
+year <- 1980:2000
 chiu <- lm.br( salmon ~ year, 'TL' )
 chiu$ci(0.90)
 
@@ -162,10 +163,10 @@ lm.br( mpg ~ wt + hp, data = mtcars )
 #  with seasonal adjustment based on monthly surveys by CAMH, Toronto,
 #  log-odds vs year:
 
-log_odds = c( -1.194, -2.023, -2.285, -1.815, -1.673, -1.444, -1.237, -1.228 )
-year = c( 1998.92, 2001.25, 2002.29, 2003.37, 2004.37, 2005.71, 2006.71, 2007.71 )
+log_odds <- c( -1.194, -2.023, -2.285, -1.815, -1.673, -1.444, -1.237, -1.228 )
+year <- c(1998.92, 2001.25, 2002.29, 2003.37, 2004.37, 2005.71, 2006.71, 2007.71)
 
-VarCov = matrix(  c(   0.0361, 0, 0, 0, 0, 0, 0, 0,
+VarCov <- matrix(  c(   0.0361, 0, 0, 0, 0, 0, 0, 0,
           0, 0.0218, 0.0129, 0, 0, 0, 0, 0,
           0, 0.0129, 0.0319, 0, 0, 0, 0, 0,
           0, 0, 0, 0.0451, 0.0389, 0, 0, 0,
@@ -184,8 +185,8 @@ dd$ci(.95,'af')
 
 #  An example that shows different confidence regions
 #  by conditional likelihood-ratio inference and by approximate-F inference:
-y = c( 1.55, 3.2, 6.3, 4.8, 4.3, 4.0, 3.5, 1.8 )
-x = 1:8
+y <- c( 1.55, 3.2, 6.3, 4.8, 4.3, 4.0, 3.5, 1.8 )
+x <- 1:8
 eg <- lm.br(y~x)
 \donttest{eg$cr()}
 eg$cr(.95,"af")

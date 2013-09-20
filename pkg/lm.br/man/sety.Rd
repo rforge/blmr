@@ -5,7 +5,7 @@
 \title{Set y-Values}
 
 \description{
-  Reset the y-values in the C++ object.  
+  Reset the response values in the C++ object.  
 }
 
 \usage{
@@ -13,17 +13,17 @@
 }
 
 \arguments{
-\item{rWy}{vector of y-values, pre-multiplied by the square-root of 'weights'}
+\item{rWy}{vector of 'y' values, pre-multiplied by the square-root of 'weights'}
 }
 
 \details{
-This method changes the y-values for the accessor functions 'sl', 'ci', 'cr' and 'mle'.  But the output list of 'coefficients' and 'fitted.values' and so on retains its values from the original call.
+The pre-multiplied vector is more convenient as input during simulation tests.  The 'rWy' vector is simply the y-vector if 'weights' is not input.  
+
+The square-root of a vector 'w' is the vector of the square roots of the elements.  The square-root of a matrix 'W' here is the matrix 'rW' such that rW*rW = W (a stricter definition than  rW*transpose(rW) = W).
 }
 
 \note{
-The pre-multiplied vector is more convenient as input during simulation tests.  This vector is simply the y-vector if 'weights' is omitted.  
-
-The square-root of a vector 'w' is the vector of the square roots of elements.  The square-root of a matrix 'W' here is the matrix 'rW' such that rW*rW = W (stricter than  rW*transpose(rW) = W).
+This method changes the y-values for the accessor functions 'sl', 'ci', 'cr' and 'mle'.  But the output list of 'coefficients' and 'fitted.values' and so on retains its values from the original call.
 }
 
 
@@ -75,7 +75,7 @@ simtest <- function( x, theta, alpha, B, Bp, var, N =10000) {
    cat("\n")
 }
 
-x = c( 1.0, 1.1, 1.3, 1.7, 2.4, 3.9, 5.7, 7.6, 8.4, 8.6 )
+x <- c( 1.0, 1.1, 1.3, 1.7, 2.4, 3.9, 5.7, 7.6, 8.4, 8.6 )
 \donttest{simtest(x,3,0,-1,0.5,1)}
 }
 

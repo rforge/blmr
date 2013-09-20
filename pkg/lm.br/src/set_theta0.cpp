@@ -9,7 +9,7 @@ void  Clmbr::set_theta0( const double th_0, const METHOD met )
 {
 	if ( !isinf(th_0) && isnan(th_0) )  stop( _("invalid 'theta0' value") );
 
-	if( th_0 != th0 )  { //1
+	if(  th_0 != th0  ||  ( th0==xs[k0-1] && fabs(th_0-th0) > zero_eq )  )  { //1
 
 		int k_0 = 0;
 		while ( xs[k_0] - th_0 < zero_eq  &&  k_0 < ns )  k_0++;

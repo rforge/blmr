@@ -118,11 +118,13 @@ double  Clmbr::mle( const bool verbose,  double *const  max_gysq,  double *const
 	}
 
 
-//  find theta value for minimum of 'ff' to check for singular x-matrix
+//  find theta value for minimum of 'ff' =(Q*f)^2 to check for singular x-matrix
 	double  ffmin = Inf,  thfmin = xs[1];
 	double  lo_limit = xs[0]+acc_xb;
 	if( Model==M2 )  lo_limit = xs[0]-acc_xb-1;
+
 	for( int k = k1+1; k < ns; k++ )  {
+
 		const double  rad= qx1[k]*qx1[k] - q11[k]*qxx[k],  Df0 = qx1[k]/q11[k];
 
 		if( rad >= 0 ) {
@@ -144,6 +146,7 @@ double  Clmbr::mle( const bool verbose,  double *const  max_gysq,  double *const
 				if( ff(Df0,k) < ffmin )  { ffmin = ff(Df0,k);  thfmin = Df0; }
 		}
 
+		if( k == 0 )  if( q11[k] < ffmin )  { ffmin = q11[k];  thfmin = -Inf; }		// test limit at th = -Inf
 		if( k < ns-1 )  if( ff(xs[k],k) < ffmin )  { ffmin = ff(xs[k],k);  thfmin = xs[k]; }
 	}
 
