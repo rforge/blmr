@@ -1,0 +1,16 @@
+Package: lm.br
+Type: Package
+Title: Linear Model with Breakpoint
+Version: 2.0
+Date: 2013-09-27
+Authors@R: c( person("Marc", "Adams", role= c("aut", "cre"), email= "lm.br.pkg@gmail.com") )
+Author: Marc Adams.  Source code includes a copy of the JAMA package from the U.S. National 
+	Institute of Standards and Technology (NIST), and borows from  'lm'  and  'MASS::lm.gls'.
+Maintainer: Marc Adams <lm.br.pkg@gmail.com>
+Description: Exact significance tests for a changepoint in linear or multivariate linear regression.
+	Confidence regions with exact coverage probabilities for the changepoint.
+License: GPL (>= 2)
+Depends: R(>= 3.0.1), methods, Rcpp (>= 0.10.4)
+LinkingTo: Rcpp
+ByteCompile: yes
+Packaged: 2013-09-27 16:37:45 UTC; marc

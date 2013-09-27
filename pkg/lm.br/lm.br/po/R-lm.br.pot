@@ -1,0 +1,32 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: lm.br 2.1\n"
+"POT-Creation-Date: 2013-09-27 08:15\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "mutiple response vectors not supported"
+msgstr ""
+
+msgid "zero variances not allowed"
+msgstr ""
+
+msgid "dim('weights') invalid"
+msgstr ""
+
+msgid "'weights' not positive-definite"
+msgstr ""
+
+msgid "'incr' must be positive"
+msgstr ""
+
+msgid "'output' must be 'G', 'T' or 'V'"
+msgstr ""
+
+msgid "'rWy' must be a numeric vector"
+msgstr ""

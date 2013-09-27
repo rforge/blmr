@@ -1,4 +1,0 @@
-\documentclass[10pt]{article}
-%\VignetteIndexEntry{lm.br-intro}
-\begin{document}
-\end{document}

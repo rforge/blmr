@@ -1,4 +1,0 @@
-\documentclass[10pt]{article}
-%\VignetteIndexEntry{lm.br-manual}
-\begin{document}
-\end{document}
