@@ -1,7 +1,7 @@
-### R code from vignette source 'lm_br.Rnw'
+### R code from vignette source 'lm.br.Rnw'
 
 ###################################################
-### code chunk number 1: lm_br.Rnw:154-182
+### code chunk number 1: lm.br.Rnw:156-184
 ###################################################
 library(lm.br)
 log_odds <- c( -1.194, -2.023, -2.285, -1.815, -1.673, -1.444, -1.237, -1.228 )
@@ -34,7 +34,7 @@ matplot( x, y,
 
 
 ###################################################
-### code chunk number 2: lm_br.Rnw:194-211
+### code chunk number 2: lm.br.Rnw:196-213
 ###################################################
 library( lm.br )
 logodds <-  c( -1.194, -2.023, -2.285, -1.815, -1.673, 
@@ -56,7 +56,7 @@ dd$ci( m = "af" )
 
 
 ###################################################
-### code chunk number 3: lm_br.Rnw:236-237
+### code chunk number 3: lm.br.Rnw:238-239
 ###################################################
 lm.br( mpg ~ wt + hp, data = mtcars )
 

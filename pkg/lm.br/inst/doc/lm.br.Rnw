@@ -1,7 +1,9 @@
 \documentclass{article}
 
-%\VignetteIndexEntry{lm_br}
+%\VignetteIndexEntry{lm.br}
 %\VignettePackage{lm.br}
+
+\SweaveOpts{prefix.string=lmbr}
 
 \setlength{\parskip}{0.5ex plus0.1ex minus0.1ex}
 \setlength{\parindent}{0em}
@@ -245,7 +247,7 @@ If a broken line with Normal errors represents the relationship between a factor
 
 
 
-\bibliography{lm_br}
+\bibliography{lm.br}
 
 
 \end{document}

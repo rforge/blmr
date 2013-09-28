@@ -117,12 +117,12 @@ Statistics,  pp. 292-316.
 \seealso{
 \code{\link{ci}}, \code{\link{cr}}, \code{\link{sl}}, 
 \code{\link{mle}}, \code{\link{sety}}
-The 'sl' help page explains the evaluation methods.  
-The 'sety' page gives an example simulations test.
 
-vignette( "lm_br" )
+The 'sety' help page gives an example simulations test.
 
-\code{\link{lm}} describes the arguments and output values.
+vignette( \sQuote{\href{../doc/lm.br.pdf}{lm.br}} )
+
+\code{\link{lm}} describes some arguments and output values.
 }
 
 \examples{
