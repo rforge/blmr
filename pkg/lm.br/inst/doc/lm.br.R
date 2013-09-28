@@ -28,7 +28,7 @@ y[1:nbd,2:3] <- bounds[,2:3]
 x[1:n,4] <- dd$x1
 y[1:n,4] <- c( -1.4571, -1.60646, -1.65565, -1.67545, -1.53292,
                    -1.76094, -1.55349, -1.54487 )
-matplot( x, y,
+matplot( x, y, 
    type=c('p','l','l','p'), pch=c(15,1), lty='solid', col='black',
    lwd=2, cex=1.5, main=title, xlab=dd$x1nm, ylab=dd$ynm )
 

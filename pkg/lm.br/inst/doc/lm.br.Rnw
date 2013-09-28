@@ -77,7 +77,7 @@ regions for the two-parameter changepoint  $(\theta, \alpha)$
 in model (2).  \citet{knowles+siegmund+zhang:1991} also developed 
 a formula for rapid evaluation, which \texttt{lm.br} implements.\\
 
-\texttt{lm.br} augments this theory.  Their method derives an
+\texttt{lm.br} augments this theory.  Their method also derives an
 exact significance test for $(\theta, \alpha)$ in model (1).  The
 theory adapts for the case  $\sigma$  known.  And these exact
 significance tests simplify for a postulate changepoint value
@@ -86,7 +86,7 @@ outside  $[ x_{1}, x_{n} ]$  \citep{knowles+siegmund:1989}.\\
 Approximate-F (AF) is another inference method that is common for
 nonlinear regression, but it is not exact.  The AF method
 estimates the distribution of a likelihood-ratio statistic by its
-asymptotic O2 distribution, with partial conditioning on a
+asymptotic $\chi^{2}$ distribution, with partial conditioning on a
 sufficient statistic for the variance.  See 
 \citet[ch.24]{draper+smith:1998}.
 
@@ -153,7 +153,7 @@ for the changepoint if the adjustment were valid.
 
 \begin{figure}[htbp]
 \begin{center}
-<< fig=TRUE, echo=FALSE, results=hide >>=
+<< fig=TRUE, height=5, echo=FALSE, results=hide >>=
 library(lm.br)
 log_odds <- c( -1.194, -2.023, -2.285, -1.815, -1.673, -1.444, -1.237, -1.228 )
 year <- c(1998.92, 2001.25, 2002.29, 2003.37, 2004.37, 2005.71, 2006.71, 2007.71)
@@ -179,7 +179,7 @@ y[1:nbd,2:3] <- bounds[,2:3]
 x[1:n,4] <- dd$x1
 y[1:n,4] <- c( -1.4571, -1.60646, -1.65565, -1.67545, -1.53292,
                    -1.76094, -1.55349, -1.54487 )
-matplot( x, y,
+matplot( x, y, 
    type=c('p','l','l','p'), pch=c(15,1), lty='solid', col='black',
    lwd=2, cex=1.5, main=title, xlab=dd$x1nm, ylab=dd$ynm )
 @
@@ -232,13 +232,13 @@ multiple parameters or discontinuity.\\
 coefficient of car weight in a linear fit of miles-per-gallon 
 against weight and horsepower for 38 cars, 1978-79 models.  One 
 of \textsf{R}'s included datasets is the ratings for 32 cars, 
-1973-74 models.  Analysis of this latter dataset by conditional 
+1973-74 models.  Analysis of this dataset by conditional 
 likelihood-ratio using \texttt{lm.br} also shows some evidence 
 for a changepoint:
 <<>>=
 lm.br( mpg ~ wt + hp, data = mtcars )
 @
-\texttt{lm.br} applies a canonical transformation for multivariate regression 
+\texttt{lm.br} applies a canonical transform for multivariate regression 
 \citep{siegmund+zhang:1994}.  One way to see how this method works is formulaic.  The composite likelihood-ratio statistic uses optimal values for unknown parameters.  A canonical model lets these optimal coefficients for other terms reduce their correspondent errors to zero always.  Thus they have no effect on inference, so the algebra can omit them.  This elimination reduces the multivariate model to a univariate model.  See
 \citet[ch.6]{hoffman+kunze:1971}, \citet[sec. 7.1]{lehmann:2005}.
 

@@ -120,9 +120,9 @@ Statistics,  pp. 292-316.
 
 The 'sety' help page gives an example simulations test.
 
-vignette( \sQuote{\href{../doc/lm.br.pdf}{lm.br}} )
+vignette( "\href{../doc/lm.br.pdf}{lm.br}" )
 
-\code{\link{lm}} describes some arguments and output values.
+\code{\link{lm}} describes some of the arguments and output values.
 }
 
 \examples{

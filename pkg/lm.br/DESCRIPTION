@@ -13,4 +13,4 @@ License: GPL (>= 2)
 Depends: R(>= 3.0.1), methods, Rcpp (>= 0.10.4)
 LinkingTo: Rcpp
 ByteCompile: yes
-Packaged: 2013-09-27 23:28:23 UTC; marc
+Packaged: 2013-09-28 11:48:07 UTC; Marc
