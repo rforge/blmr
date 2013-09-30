@@ -232,12 +232,13 @@ multiple parameters or discontinuity.\\
 coefficient of car weight in a linear fit of miles-per-gallon 
 against weight and horsepower for 38 cars, 1978-79 models.  One 
 of \textsf{R}'s included datasets is the ratings for 32 cars, 
-1973-74 models.  Analysis of this dataset by conditional 
+1973-74 models.  Analysis of this 1973-74 dataset by conditional 
 likelihood-ratio using \texttt{lm.br} also shows some evidence 
 for a changepoint:
 <<>>=
 lm.br( mpg ~ wt + hp, data = mtcars )
 @
+
 \texttt{lm.br} applies a canonical transform for multivariate regression 
 \citep{siegmund+zhang:1994}.  One way to see how this method works is formulaic.  The composite likelihood-ratio statistic uses optimal values for unknown parameters.  A canonical model lets these optimal coefficients for other terms reduce their correspondent errors to zero always.  Thus they have no effect on inference, so the algebra can omit them.  This elimination reduces the multivariate model to a univariate model.  See
 \citet[ch.6]{hoffman+kunze:1971}, \citet[sec. 7.1]{lehmann:2005}.

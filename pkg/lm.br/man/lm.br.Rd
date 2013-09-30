@@ -73,8 +73,8 @@ for the other parameters.
 
 Test for the presence of a changepoint by the significance level
 of a postulate value outside of the x-values.  Thus,
-'sl( min(x1) - 1 )'  would give the exact significance level of the null
-hypothesis "single line" versus the alternate hypothesis
+'sl( min(x1) - 1 )'  would give the exact significance level of 
+the null hypothesis "single line" versus the alternate hypothesis
 "broken line," in the LL model.
 
 }

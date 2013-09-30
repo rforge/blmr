@@ -50,8 +50,11 @@ void Clmbr::initialize( void )
 	if(Model==M3)  { m= n-(xrank-1);    m1= m;    k1= -1; }
 
 
-// for multivariate models, set cov_matrix flag to 'non-diagonal'  
-// to invoke more general routines 
+//  The computations for a multivariate model is the same as for a univariate, 
+//  except that the bottom 'm1' rows of Q*inv-root-Sigma replaces inv-root-Sigma.
+//  Therefore, set the 'cov_matrix' flag to non-diagonal to invoke more general routines,
+//  even if 'weights' is the identity matrix.
+ 
 	if( m1 < n )  cov_matrix_diagonal = false;
 
 
