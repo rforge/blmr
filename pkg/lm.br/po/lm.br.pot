@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lm.br 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-03 09:18-0400\n"
+"POT-Creation-Date: 2013-10-08 06:29-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -76,7 +76,7 @@ msgid ""
 msgstr ""
 
 #: ci.cpp:19
-msgid "-percent confidence interval for changepoint 'theta' by method  "
+msgid "-percent confidence interval for changepoint 'theta' by method "
 msgstr ""
 
 #: ci.cpp:228
@@ -295,10 +295,10 @@ msgstr ""
 msgid ",  target accuracy =  "
 msgstr ""
 
-#: sl_mc.cpp:75
+#: sl_mc.cpp:73
 msgid "MC evaluation of conditional likelihood-ratio SL for (th0,a0)= ("
 msgstr ""
 
-#: sl_mc.cpp:76
+#: sl_mc.cpp:74
 msgid "),  target accuracy = "
 msgstr ""

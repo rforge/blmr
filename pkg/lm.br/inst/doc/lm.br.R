@@ -1,7 +1,7 @@
 ### R code from vignette source 'lm.br.Rnw'
 
 ###################################################
-### code chunk number 1: lm.br.Rnw:156-184
+### code chunk number 1: lm.br.Rnw:154-182
 ###################################################
 library(lm.br)
 log_odds <- c( -1.194, -2.023, -2.285, -1.815, -1.673, -1.444, -1.237, -1.228 )
@@ -16,11 +16,11 @@ VarCov <- matrix(  c(   0.0361, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 0.0607, 0.0607, 0.0662 ) ,  
             nrow = 8, ncol = 8 )
 dd <- lm.br( log_odds ~ year, w = VarCov, inv = TRUE, var.known = TRUE )
-bounds <- dd$cr(out='v')
+bounds <- dd$cr( CL=0.90, out='v')
 n <- length(dd$x1)
 nbd <- nrow(bounds)
-title <- "95% conf. region for changepoint by CLR"
-x <- y <- matrix( NA, nbd, 4 )
+title <- "90% conf. region for changepoint by CLR"
+x <- y <- matrix( NA, max(n,nbd), 4 )
 x[1:n,1] <- dd$x1
 y[1:n,1] <- dd$y
 x[1:nbd,2:3] <- bounds[,1]
@@ -29,15 +29,15 @@ x[1:n,4] <- dd$x1
 y[1:n,4] <- c( -1.4571, -1.60646, -1.65565, -1.67545, -1.53292,
                    -1.76094, -1.55349, -1.54487 )
 matplot( x, y, 
-   type=c('p','l','l','p'), pch=c(15,1), lty='solid', col='black',
+   type=c('p','l','l','p'), pch=c(15,0), lty='solid', col='black',
    lwd=2, cex=1.5, main=title, xlab=dd$x1nm, ylab=dd$ynm )
 
 
 ###################################################
-### code chunk number 2: lm.br.Rnw:196-213
+### code chunk number 2: lm.br.Rnw:194-211
 ###################################################
 library( lm.br )
-logodds <-  c( -1.194, -2.023, -2.285, -1.815, -1.673, 
+log_odds <-  c( -1.194, -2.023, -2.285, -1.815, -1.673, 
    -1.444, -1.237, -1.228 )
 year <-  c( 1998.92, 2001.25, 2002.29, 2003.37, 2004.37, 
    2005.71, 2006.71, 2007.71 )
@@ -50,13 +50,13 @@ VarCov <-  matrix(  c( 0.0361,  0,  0,  0,  0,  0,  0,  0,
    0,  0,  0,  0,  0,  0.0607,  0.0664,  0.0607,
    0,  0,  0,  0,  0,  0.0607,  0.0607,  0.0662 ), 
    nrow = 8,  ncol = 8  )
-dd  <-  lm.br( logodds ~ year,  w= VarCov,  inv= T,  var.k= T )
+dd  <-  lm.br( log_odds ~ year,  w= VarCov,  inv= T,  var.k= T )
 dd$ci( )
 dd$ci( m = "af" )
 
 
 ###################################################
-### code chunk number 3: lm.br.Rnw:238-239
+### code chunk number 3: lm.br.Rnw:236-237
 ###################################################
 lm.br( mpg ~ wt + hp, data = mtcars )
 

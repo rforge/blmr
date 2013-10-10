@@ -6,7 +6,7 @@
 #  inferences that 'lm.br' makes from these observations are compared with 
 #  the "unknown", underlying, true model.  
 #
-#  A complete run takes about 24 hours, because numerical integration is slow.
+#  A complete run takes 10-20 hours, depending on your computer system.
 #
 
 
@@ -15,25 +15,34 @@ library( lm.br )
 
 testrun  <-  function( )
 # loop to generate random models of different types
-# and then call 'simtest'
+# and then call function 'simtest'
 {
-   cat("\n\nStarting tests of the R package 'lm.br':\n\n\n")
+   cat("\n\nStarting tests of the R package 'lm.br':\n")
+   cat("This script generates random models of all supported types.\n")
+   cat("For each random model, it checks coverage frequencies and tests\n")
+   cat("functions 'sl', 'ci', 'cr'.  A complete run takes 10-20 hours.\n\n\n")
 
-   scname <- tempfile( pat="simcall", fileext=".txt" )
-   rWyname <- tempfile( pat="rWy", fileext=".txt" )
-   rWy2name <- tempfile( pat="rWy2", fileext=".txt" )
+# if 'track' = TRUE then keep an ongoing log of input values
+# in local disk files
+   track <- FALSE
+
+   if( track )  {
+      scname <- tempfile( pat="simcall", fileext=".txt" )
+      rWyname <- tempfile( pat="rWy", fileext=".txt" )
+      rWy2name <- tempfile( pat="rWy2", fileext=".txt" )
+   }
 
    set.seed(1234)
 
 ## test 2 random models for each type of model
-   testpertype <- 2
-   totaltests <- 5*2*3*2*testpertype
+   testspertype <- 2
+   totaltests <- 5*2*3*2*testspertype
    tstart <- Sys.time()
    ntests <- 0
 
    for(nmodel in c(-3,-2,1,2,3) )  { for(vk in 0:1)
          { for(wtype in 1:3)  { for(mvx in 0:1)  
-            { for(ntest in 1:testpertype) {
+            { for(ntest in 1:testspertype) {
 
       ntests <- ntests + 1
       tcurrent <- Sys.time()
@@ -173,7 +182,7 @@ testrun  <-  function( )
       if(abs(nmodel)==3)  xint <- FALSE  else  xint <- TRUE
 
 #  echo call to 'simtest'
-      cat("\n 'lm.br' tests for model ", model, ",")
+      cat("\n  model ", model, ",")
       if(!xint)  cat("  'alpha' known =0,")
       if(vk)  cat("  'var' known =1,")
       cat("\n  ")
@@ -181,7 +190,7 @@ testrun  <-  function( )
       if(wtype==1) cat("no weights")
       if(wtype==2) cat("vector weights")
       if(wtype==3) cat("matrix weights")
-      cat("\n\n  model-type test", ntest, "of", testpertype, "\n\n")
+      cat("\n  test", ntest, "of", testspertype, "\n\n")
       cat("  random model:\n")
       cat("  theta=", theta, " alpha=", alpha,
          " B=", beta, " Bp=", betap, " var=", var, "\n")
@@ -196,44 +205,46 @@ testrun  <-  function( )
          cat( "  'weights' = \n" )
          print(wgts, zero.print = ".")
       }
+      cat("\n")
 
+      if( track )  {
 #  echo to a file
-      simcall <- file( scname, "wt")
-      cat("\n   'lm.br' tests for model ", model, file= simcall)
-      if(!xint)  cat(",  'alpha' known =0", file= simcall)
-      if(vk)  cat(",  'var' known =1", file= simcall)
-      cat("\n\n", file= simcall)
-      cat("  model-type test", ntest, "of", testpertype, "\n\n", file= simcall)
-      cat("  random model:\n", file= simcall)
-      cat("  theta=", theta, " alpha=", alpha,
-         " B=", beta, " Bp=", betap, " var=", var, "\n", file= simcall)
-      if(mvx) {
-         cat("  x2coef=", x2coef, " x3coef=", x3coef, "\n", file= simcall)
-         cat("  'x' matrix\n", file= simcall)
-         for(i in 1:NROW(x)) cat(x[i,], "\n", file= simcall)
-      } else
-         cat("  observations at  x=", x, "\n\n", file= simcall)
-      if(wtype==2) cat( "  'weights' = ", wgts, "\n", file= simcall )
-      if(wtype==3) {
-         cat( "  'weights' = \n", file= simcall )
-         for(i in 1:NROW(x)) cat(wgts[i,], "\n", file= simcall)
+         simcall <- file( scname, "wt")
+         cat("\n   'lm.br' tests for model ", model, file= simcall)
+         if(!xint)  cat(",  'alpha' known =0", file= simcall)
+         if(vk)  cat(",  'var' known =1", file= simcall)
+         cat("\n\n", file= simcall)
+         cat("  random model:\n", file= simcall)
+         cat("  theta=", theta, " alpha=", alpha,
+            " B=", beta, " Bp=", betap, " var=", var, "\n", file= simcall)
+         if(mvx) {
+            cat("  x2coef=", x2coef, " x3coef=", x3coef, "\n", file= simcall)
+            cat("  'x' matrix\n", file= simcall)
+            for(i in 1:NROW(x)) cat(x[i,], "\n", file= simcall)
+         } else
+            cat("  observations at  x=", x, "\n\n", file= simcall)
+         if(wtype==2) cat( "  'weights' = ", wgts, "\n", file= simcall )
+         if(wtype==3) {
+            cat( "  'weights' = \n", file= simcall )
+            for(i in 1:NROW(x)) cat(wgts[i,], "\n", file= simcall)
+         }
+         close( simcall )
       }
-      close( simcall )
-
 
       simtest( as.matrix(x), wgts, model, xint, x2coef, x3coef,
                    vk, theta, alpha, beta, betap, var, 10000,
-                      rWyname, rWy2name  )
+                      track, rWyname, rWy2name  )
 
 
    } } } } }
 
+   if( track )  {
+      unlink( scname )
+      unlink( rWyname )
+      unlink( rWy2name )
+   }
 
-   unlink( scname )
-   unlink( rWyname )
-   unlink( rWy2name )
-
-   cat( "\n\ntestrun of 'lm.br' completed successfully\n" )
+   cat( "\ntests of 'lm.br' completed successfully\n\n" )
 }
 
 
@@ -242,7 +253,7 @@ testrun  <-  function( )
 
 
 simtest <- function( x, W, model, xint, x2coef, x3coef, vk, 
-   theta, alpha, B, Bp, var, N =10000, rWyname, rWy2name  )
+   theta, alpha, B, Bp, var, N =10000, track, rWyname, rWy2name  )
 #
 #  This function generates sets of random observations according 
 #  to the input model.  The inferences that 'lm.br' makes from these 
@@ -297,9 +308,11 @@ simtest <- function( x, W, model, xint, x2coef, x3coef, vk,
 
          rWy <- m + rnorm(n,0,sigma)
          rWy <- round(rWy,4)
-         yset <- file( rWyname, "wt")
-         cat(rWy,file=yset)
-         close(yset)
+         if(track) {
+            yset <- file( rWyname, "wt")
+            cat(rWy,file=yset)
+            close(yset)
+         }
          mod$sety(rWy)
          stest <- mod$sl(theta,"clr",.0001,FALSE)
          if(stest>0.05) countCLR <- countCLR + 1
@@ -344,9 +357,11 @@ simtest <- function( x, W, model, xint, x2coef, x3coef, vk,
 
          rWy <- m + rnorm(n,0,sigma)
          rWy <- round(rWy,4)
-         yset2 <- file( rWy2name, "wt")
-         cat(rWy,file=yset2)
-         close(yset2)
+         if(track) {
+            yset2 <- file( rWy2name, "wt")
+            cat(rWy,file=yset2)
+            close(yset2)
+         }
          mod$sety(rWy)
          stest <- mod$sl(theta,alpha,"clr",.001,FALSE)
          if(stest>0.05) countCLR <- countCLR + 1

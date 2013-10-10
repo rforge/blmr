@@ -22,13 +22,13 @@ sl( theta0, alpha0,  method ="CLR", accuracy =0.001, verbose =TRUE )
 }
 
 \details{
-Siegmund and Zhang derived the conditional likelihood-ratio significance level of a postulate change-point value as a probability of a generic random variable.
+Siegmund and Zhang derived the conditional likelihood-ratio significance level of a changepoint value as a probability of a generic random variable.
 
-The default method "CLR" evaluates this probability using a geometric-expectation formula derived by Siegmund and Zhang, which slightly over-estimates.  The overestimate is negligible for significance levels below 20%.
+The default method "CLR" evaluates this probability using a geometric-expectation formula derived by Siegmund and Zhang, which slightly over-estimates.  The overestimate is negligible for significance levels below 0.20.
 
-Method "MC" evaluates the probability directly by Monte Carlo simulation, which avoids the over-estimate of the "CLR" method.
+Method "MC" evaluates the probability expression directly by Monte Carlo simulation, which avoids the over-estimate of the "CLR" method.
 
-Method "AF" estimates the distribution of the likelihood-ratio statistic by the related F-distribution (or chi-squared if variance is known) that would be exact for a linear model.  This method is not exact, but it is common for non-linear regression.
+Method "AF" estimates the distribution of the likelihood-ratio statistic by the related F-distribution (or chi-squared if variance known) that would be exact for a linear model.  This method is not exact, but it is common for non-linear regression.
 }
 
 \note{
@@ -36,27 +36,20 @@ The 'accuracy' error limit does not include the slight over-estimate that is inh
 }
 
 \value{
-'sl' returns the significance level if parameter 'verbose' is input explicitly as TRUE or FALSE.  Otherwise, 'sl' prints-out the result, but does not return a value.
+'sl' returns the significance level if 'verbose' is input explicitly as TRUE or FALSE.  Otherwise, 'sl' prints-out the result, but does not return a value.
 }
 
 \examples{
 require(lm.br)
 ##  Data for Patient B from Smith and Cook (1980):
-y = c(37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4)
-x = 1:10
-sc <- lm.br(y~x)
+y <- c(37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4)
+x <- 1:10
+sc <- lm.br( y ~ x )
 
-sc$sl(6.1)
-sc$sl(6.1,"af")
-\donttest{sc$sl(6.1,'mc',0.00001)}
-tmp <- sc$sl(6.1,'clr',0.001,FALSE)
+sc $ sl( 6.1 )
+sc $ sl( 6.1, 88.2, 'af' )
+\donttest{sc $ sl( 6.1, 'mc', 0.00001 )}
+tmp <- sc $ sl( 6.1, 88.2, 'clr', 0.0001, TRUE )
 tmp
-
-sc$sl(6.1,88.2)
-sc$sl(6.1,88.2,'clr',0.00001)
-sc$sl(6.1,88.2,'af')
-\donttest{sc$sl(6.1,88.2,'mc',0.00001)}
-tmp2 <- sc$sl(6.1,88.2,'af',.001,TRUE)
-tmp2
-
 }
+

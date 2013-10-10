@@ -238,7 +238,7 @@ na.action, ... )
             else  {
                if( output=="G" )  {
                   nbd <- nrow(bounds)
-                  cl <- as(100*CL,"character")
+                  cl <- as( round(100*CL,0), "character" )
                   title <- paste( cl, 
                      "% conf. region for changepoint by ", method, sep="")
                   if( (z$xint && length(z$coef)==4) ||
@@ -355,8 +355,8 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
    type <- x$type
    cat( "Broken-line type:  ", type, "\n\n" )
    if (length(coef(x))>1  && !is.na(x$coef[2])) {
-      cat( "Significance Level of hypothesis \"no changepoint\" versus",
-              " h. \"one changepoint\"\n" )
+      cat( "Significance Level of H0:\"no changepoint\" versus",
+              "H1:\"one changepoint\"\n" )
       cat("  ")
       mx1 <- max( x$x1 )
       mn1 <- min( x$x1 )

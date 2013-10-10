@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lm.br 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-03 09:18-0400\n"
+"POT-Creation-Date: 2013-10-08 06:29-0400\n"
 "PO-Revision-Date: 2013-09-20 20:09-0500\n"
 "Last-Translator: \n"
 "Language-Team: Marc Adams <lm.br.pkg@gmail.com>\n"
@@ -82,10 +82,10 @@ msgid ""
 msgstr "'bisect_sl' hors tolérance après nombre maximum d'itérations"
 
 #: ci.cpp:19
-msgid "-percent confidence interval for changepoint 'theta' by method  "
+msgid "-percent confidence interval for changepoint 'theta' by method "
 msgstr ""
 "-pourcent interval de confiance pour point de changement 'theta' par "
-"méthode  "
+"méthode "
 
 #: ci.cpp:228
 msgid "progress:"
@@ -309,12 +309,12 @@ msgstr "pour theta0= "
 msgid ",  target accuracy =  "
 msgstr ",  précision de cible =  "
 
-#: sl_mc.cpp:75
+#: sl_mc.cpp:73
 msgid "MC evaluation of conditional likelihood-ratio SL for (th0,a0)= ("
 msgstr ""
 "évaluation Monte Carlo, de SL par ratio-de-vraisemblance conditionelle, pour "
 "(th0,a0)= ("
 
-#: sl_mc.cpp:76
+#: sl_mc.cpp:74
 msgid "),  target accuracy = "
 msgstr "),  précision de cible = "

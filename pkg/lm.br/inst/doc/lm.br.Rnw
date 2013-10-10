@@ -1,7 +1,6 @@
 \documentclass{article}
 
 %\VignetteIndexEntry{lm.br}
-%\VignettePackage{lm.br}
 
 \SweaveOpts{prefix.string=lmbr}
 
@@ -30,10 +29,9 @@ of the broken line models.
 \end{abstract}
 
 
-
-\section{Introduction}
+\section{Theory}
 A broken-line model consists of two straight lines joined at a
-changepoint.  Exactly, the broken-line models are
+changepoint.  Three variants are
 \begin{equation} \label{model1} 
 y_i = \alpha + \beta(x_i-\theta)_{-} 
 + \beta{}'(x_i-\theta)_{+} + e_i
@@ -45,10 +43,10 @@ y_i = \alpha + \beta(x_i-\theta)_{-} + e_i
 y_i = \beta(x_i-\theta)_{-} + e_i
 \end{equation}
 where $e \sim N(0,\sigma^{2}\Sigma)$, denoting $a_{-}=min(a,0)$
-and $a_{+}=max(a,0)$.  $\theta$, $\alpha$, $\beta$, $\beta{}'$,
-$\sigma$ are
-unknown but $\Sigma$ is known.  Model (2) is a threshold model,
-while model (3) would apply for a known threshold level.\\
+and $a_{+}=max(a,0)$.  Parameters $\theta$, $\alpha$, $\beta$, 
+$\beta{}'$, $\sigma$ are unknown but $\Sigma$ is known.  
+Model (2) is a threshold model, while model (3) would apply for 
+a known threshold level.\\
 
 The likelihood-ratio is a test statistic.  A test statistic $D$
 assigns a numeric value to a postulate parameter value, $p_{0}$,
@@ -147,7 +145,7 @@ The annual surveys asked respondents if in the past 30 days they
 had driven within two hours after a drink, while the monthly
 surveys asked if in the past 30 days they had driven within one
 hour after two drinks.  Figure \ref{fig:cr} shows the survey results without
-and with seasonal adjustment, and the exact 95\% confidence region
+and with seasonal adjustment, and the exact 90\% confidence region
 for the changepoint if the adjustment were valid.
 
 
@@ -167,11 +165,11 @@ VarCov <- matrix(  c(   0.0361, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 0.0607, 0.0607, 0.0662 ) ,  
             nrow = 8, ncol = 8 )
 dd <- lm.br( log_odds ~ year, w = VarCov, inv = TRUE, var.known = TRUE )
-bounds <- dd$cr(out='v')
+bounds <- dd$cr( CL=0.90, out='v')
 n <- length(dd$x1)
 nbd <- nrow(bounds)
-title <- "95% conf. region for changepoint by CLR"
-x <- y <- matrix( NA, nbd, 4 )
+title <- "90% conf. region for changepoint by CLR"
+x <- y <- matrix( NA, max(n,nbd), 4 )
 x[1:n,1] <- dd$x1
 y[1:n,1] <- dd$y
 x[1:nbd,2:3] <- bounds[,1]
@@ -180,13 +178,13 @@ x[1:n,4] <- dd$x1
 y[1:n,4] <- c( -1.4571, -1.60646, -1.65565, -1.67545, -1.53292,
                    -1.76094, -1.55349, -1.54487 )
 matplot( x, y, 
-   type=c('p','l','l','p'), pch=c(15,1), lty='solid', col='black',
+   type=c('p','l','l','p'), pch=c(15,0), lty='solid', col='black',
    lwd=2, cex=1.5, main=title, xlab=dd$x1nm, ylab=dd$ynm )
 @
 \caption{\label{fig:cr}Drinking-and-driving surveys log-odds 
-(circles) and log-odds with seasonal adjustment (squares) versus 
-year, and the exact 95\% confidence region for the 
-changepoint $(\theta,\alpha)$.}
+(blank squares) and log-odds with seasonal adjustment 
+(solid squares) versus year, and the exact 90\% confidence 
+region for the changepoint $(\theta,\alpha)$.}
 \end{center}
 \end{figure}
 
@@ -195,7 +193,7 @@ changepoint $(\theta,\alpha)$.}
 In \textsf{R} the commands are
 <<>>=
 library( lm.br )
-logodds <-  c( -1.194, -2.023, -2.285, -1.815, -1.673, 
+log_odds <-  c( -1.194, -2.023, -2.285, -1.815, -1.673, 
    -1.444, -1.237, -1.228 )
 year <-  c( 1998.92, 2001.25, 2002.29, 2003.37, 2004.37, 
    2005.71, 2006.71, 2007.71 )
@@ -208,7 +206,7 @@ VarCov <-  matrix(  c( 0.0361,  0,  0,  0,  0,  0,  0,  0,
    0,  0,  0,  0,  0,  0.0607,  0.0664,  0.0607,
    0,  0,  0,  0,  0,  0.0607,  0.0607,  0.0662 ), 
    nrow = 8,  ncol = 8  )
-dd  <-  lm.br( logodds ~ year,  w= VarCov,  inv= T,  var.k= T )
+dd  <-  lm.br( log_odds ~ year,  w= VarCov,  inv= T,  var.k= T )
 dd$ci( )
 dd$ci( m = "af" )
 @
@@ -243,7 +241,7 @@ lm.br( mpg ~ wt + hp, data = mtcars )
 \citep{siegmund+zhang:1994}.  One way to see how this method works is formulaic.  The composite likelihood-ratio statistic uses optimal values for unknown parameters.  A canonical model lets these optimal coefficients for other terms reduce their correspondent errors to zero always.  Thus they have no effect on inference, so the algebra can omit them.  This elimination reduces the multivariate model to a univariate model.  See
 \citet[ch.6]{hoffman+kunze:1971}, \citet[sec. 7.1]{lehmann:2005}.
 
-\section{Conclusion}
+\section{Remarks}
 If a broken line with Normal errors represents the relationship between a factor and responses, \texttt{lm.br} solves the inference step for the changepoint.  Fitting a broken line can reveal the plausible region for a changepoint, although practical cause-effect relations have a smooth transition usually.  Any statistical analysis should examine the fit of the model and the error distribution with graphs and significance tests, interpret results, and consider adjustments to the model or alternative models.
 
 

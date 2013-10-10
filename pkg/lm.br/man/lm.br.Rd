@@ -91,9 +91,9 @@ and 'sl' significance levels for the changepoint's x-coordinate or
 Other functions are 'mle' to get maximum likelihood estimates
 and 'sety' to set new y-values.
 
-The returned list also contains the components of an 'lm' list
-including 'coefficients', 'fitted.values' and 'residuals'.
-
+The returned list also contains the components of 
+an \code{\link{lm}} list including 'coefficients', 'fitted.values' 
+and 'residuals'.
 }
 
 
@@ -120,16 +120,16 @@ Statistics,  pp. 292-316.
 
 The 'sety' help page gives an example simulations test.
 
-vignette( dQuote{\href{../doc/lm.br.pdf}{lm.br}} )
+vignette( "\href{../doc/lm.br.pdf}{lm.br}" )
 
-\code{\link{lm}} describes some of the arguments and output values.
+demo( testscript )
 }
 
 \examples{
 library( lm.br )
 
-#  Data for Patient B from Smith and Cook (1980),
-#  reciprocal of blood creatinine L/micromol  versus
+#  Data for Patient B from Smith and Cook (1980), Appl Stat, vol 29,
+#  pp 180-189,  reciprocal of blood creatinine L/micromol  versus
 #  day after kidney transplant:
 crea <- c( 37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4 )
 day <- c( 1., 2., 3., 4., 5., 6., 7., 8., 9., 10. )
@@ -137,58 +137,49 @@ sc <- lm.br( crea ~ day )
 sc$mle()
 sc$ci()
 sc$cr(.90,'af')
-sc$sl( crea[1] - 1.5 )      # test for the presence of a changepoint
+sc$sl( day[1] - 1.5 )      # test for the presence of a changepoint
 
 
 
-#  A 'TL' example, from figure 1 of  Chiu et al. (2006),
-#  log(salmon abundance) vs year:
+#  A 'TL' example, from figure 1 of Chiu et al. (2006), J Am Stat Assoc,  
+#  vol 101, pp 542-553,  log(salmon abundance) vs year:
 salmon <- c( 2.50, 2.93, 2.94, 2.83, 2.43, 2.84, 3.06, 2.97, 2.94, 2.65,
- 2.92, 2.71, 2.93, 2.60, 2.12, 2.08, 1.81, 2.45, 1.71, 0.55, 1.30 )
-year <- 1980:2000
+   2.92, 2.71, 2.93, 2.60, 2.12, 2.08, 1.81, 2.45, 1.71, 0.55, 1.30 )
+year <- 1980 : 2000
 chiu <- lm.br( salmon ~ year, 'tl' )
-chiu$ci(0.90)
+chiu $ ci()
 
 
 
-#  A multivariate example, using one of R's included datasets,
-#  automobile miles-per-gallon versus weight and horsepower:
+#  A multivariate example, using one of R's included datasets, "mtcars",
+#  automobile miles-per-gallon  versus  weight and horsepower:
 
 lm.br( mpg ~ wt + hp, data = mtcars )
 
 
 
-#  An example with variance known, for the Normal approximations
-#  of binomial random variables.
-#       Drinking-and-driving yearly surveys by TIRF, Ottawa,
-#  with seasonal adjustment based on monthly surveys by CAMH, Toronto,
-#  log-odds vs year:
+#  eg 3.4 of J Freeman (2010) "Inference for binomial changepoint data" in
+#  _Advances in Data Analysis_, ed. C Skiadas, Boston: Birkhauser, 345-352
+#       An example with variance known, in the Normal approximations of
+#  binomial random variables:
 
-log_odds <- c( -1.194, -2.023, -2.285, -1.815, -1.673, -1.444, -1.237, -1.228 )
-year <- c(1998.92, 2001.25, 2002.29, 2003.37, 2004.37, 2005.71, 2006.71, 2007.71)
+group <- 1 : 20
+trials <- c( 15, 82, 82, 77, 38, 81, 12, 97, 33, 75,
+   85, 37, 44, 96, 76, 26, 91, 47, 41, 35 )
+successes <- c( 8, 44, 47, 39, 24, 38, 3, 51, 16, 43,
+   47, 27, 33, 64, 41, 18, 61, 32, 33, 24 )
+log_odds <- log( successes/(trials - successes) )
+variances <- (trials-1)/( successes*(trials-successes) )
 
-VarCov <- matrix(  c(   0.0361, 0, 0, 0, 0, 0, 0, 0,
-          0, 0.0218, 0.0129, 0, 0, 0, 0, 0,
-          0, 0.0129, 0.0319, 0, 0, 0, 0, 0,
-          0, 0, 0, 0.0451, 0.0389, 0, 0, 0,
-          0, 0, 0, 0.0389, 0.0445, 0, 0, 0,
-          0, 0, 0, 0, 0, 0.0672, 0.0607, 0.0607,
-          0, 0, 0, 0, 0, 0.0607, 0.0664, 0.0607,
-          0, 0, 0, 0, 0, 0.0607, 0.0607, 0.0662 ) ,  nrow = 8, ncol = 8 )
-
-dd <- lm.br( log_odds ~ year, w = VarCov, inv = TRUE, var.known = TRUE )
-
-dd$ci()
-dd$ci(.95,'af')
-\donttest{dd$cr()}
+lm.br( log_odds ~ group, 'TL', w= variances, inv= TRUE, var.k= TRUE )
 
 
 
 #  An example that shows different confidence regions
-#  by conditional likelihood-ratio inference and by approximate-F inference:
+#  by conditional likelihood-ratio inference and by approximate-F inference
 y <- c( 1.55, 3.2, 6.3, 4.8, 4.3, 4.0, 3.5, 1.8 )
 x <- 1:8
-eg <- lm.br(y~x)
+eg <- lm.br( y ~ x )
 \donttest{eg$cr()}
 eg$cr( m = 'af' )
 
