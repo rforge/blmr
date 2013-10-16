@@ -21,7 +21,6 @@ void  Clmbr::set_theta0( const double th_0, const METHOD met )
 
 
 //  'th0ex' = true  if 'th0' is exterior to  'x'  values 
-
 		if ( (Model==M1 && th0<=xs[0]) || xs[ns-1]<=th0 )  th0ex = true;  else  th0ex = false;
 
 
@@ -87,62 +86,47 @@ void  Clmbr::set_theta0( const double th_0, const METHOD met )
 
 
 	if ( met==MC  &&  !th0ex  &&  th_0 != th0MC )  {	
-
 // to speed-up Monte Carlo evaluation, pre-multiply vectors by  
 // orthogonal matrix 'M' which has first row = 'gamma(th0)' .
 // Use LAPACK routines DGEQRF to generate 'M' and DORMQR to multiply by 'M' .
- 
-		int  i,  j,  ng =1;
+		int  i,  j;
 		Vector<double>  g0(m);
 		g0 = gam(th0,k0);
-		double  M[m],  _tau[ng];
-		for(i=0;i<n;i++)  M[i] = g0[i];
-
-		int  lwork = -1,  info;
-		double  tmp[1];
+		double*  M= Calloc( m, double );
+		for(i=0;i<m;i++)  M[i] = g0[i];
+		int  ng =1,  lwork = -1,  info;
+		double  tmp[1],  tau_[1];
 		{
-			F77_CALL(dgeqrf)( &m, &ng, M, &m, _tau, tmp, &lwork, &info );
+			F77_CALL(dgeqrf)( &m, &ng, M, &m, tau_, tmp, &lwork, &info );
 			if( info )  stop( _("LAPACK routine 'dgeqrf' failed") );  else  lwork= *tmp; 
-			double  work[lwork];
-			F77_CALL(dgeqrf)( &m, &ng, M, &m, _tau, work, &lwork, &info );
+			double*  work= Calloc( lwork, double );
+			F77_CALL(dgeqrf)( &m, &ng, M, &m, tau_, work, &lwork, &info );
 			if( info )  stop( _("LAPACK routine 'dgeqrf' failed") );
+			Free( work );
 		}
 
 		const int  nCm = ns+2;
-		double  Cm[m*nCm];
+		double*  Cm= Calloc( m*nCm, double );
 		Vector<double>  cq(m);
 		for(j=0;j<nCm-1;j++)  { cq = pq1[j];  for(i=0;i<m;i++)  *(Cm+j*m+i) = cq[i]; }
 		cq = *pv1h;  for(i=0;i<m;i++)  *(Cm+(nCm-1)*m+i) = cq[i]; 
-
 		{
 			const char  side = 'L',  tp = 'N';
 			lwork= -1;
-			F77_CALL(dormqr)( &side, &tp, &m, &nCm, &ng, M, &m, _tau, Cm, &m, tmp, &lwork, &info );
+			F77_CALL(dormqr)( &side, &tp, &m, &nCm, &ng, M, &m, tau_, Cm, &m, tmp, &lwork, &info );
 			if( info )  stop( _("LAPACK routine 'dormqr' failed") );  else  lwork= *tmp; 
-			double  work[lwork];
-			F77_CALL(dormqr)( &side, &tp, &m, &nCm, &ng, M, &m, _tau, Cm, &m, work, &lwork, &info );
+			double*  work= Calloc( lwork, double );
+			F77_CALL(dormqr)( &side, &tp, &m, &nCm, &ng, M, &m, tau_, Cm, &m, work, &lwork, &info );
 			if( info )  stop( _("LAPACK routine 'dormqr' failed") );
-		}
-
-//			if( pmq1 != NULL )  {  delete[] pmq1;  delete[] pm1h;  pmq1 = pm1h = NULL;  }
-
-		if( pmq1 == NULL )  {
-			try{
-				pmq1 = new (Vector<double>[(ns+1)*m]);
-				if(Model==M3)  pm1h = new (Vector<double>[m]);
-
-			} catch( bad_alloc &ex ) {
-				Rcout << _("message: ") << ex.what() << endl;
-				stop( _("memory allocation failed") );
-			}
+			Free( work );
 		}
 
 		for(j=0;j<nCm-1;j++) { for(i=0;i<m;i++) cq[i]= *(Cm+j*m+i);  pmq1[j]= cq; } 
 		if(Model==M3)  { for(i=0;i<m;i++) cq[i]= *(Cm+(nCm-1)*m+i);  *pm1h= cq; }
 
 		th0MC = th0;
+		Free( M );  Free( Cm );
 	}
-
 
 	return;
 }

@@ -31,24 +31,21 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 
 	if(verbose_progress) { Rcout << "   " << _("getting theta-boundaries...   ");  Rflush(); }
 
-	double *const  tmp= new (nothrow) double[2*ns];
-	if(tmp==NULL)  stop( _("memory allocation failed") );
+	double*  tmp = Calloc( 2*ns, double );
 
 
 	int numr;
 	if(met==GEO)  numr = ci(GEO2,inc,false,tmp);  else  numr = ci(AF2,inc,false,tmp);
 
 
-	double *const  th_bds= new (nothrow) double[2*numr];
-	if(th_bds==NULL)  stop( _("memory allocation failed") );
+	double*  th_bds= Calloc( 2*numr, double );
 
 
 	int i;
 	for (i=0;i<2*numr;i++)  th_bds[i] = tmp[i];
-	delete[] tmp;
+	Free( tmp );
 
-
-	const double th_min= xs[0]-1, th_max= xs[ns-1]+1;
+	const double  th_min= xs[0]-1,  th_max= xs[ns-1]+1;
 	if(th_bds[0]== -Inf)  th_bds[0]= th_min;
 	if(th_bds[2*numr-1]== +Inf)  th_bds[2*numr-1]= th_max;
 	for(i=0;i<2*numr;i++) {
@@ -65,8 +62,7 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 	for (i=0;i<numr;i++) width += th_bds[2*i+1] - th_bds[2*i];
 	const int Nmax = width/inc + 1 + ns + 2*numr + 2;
 
-	double *const  bds= new (nothrow) double[3*Nmax];
-	if(bds==NULL)  stop( _("memory allocation failed") );
+	double*  bds= Calloc( 3*Nmax, double );
 
 
 	const double thmle= mle(false);
@@ -240,8 +236,7 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 
 	if(bounds!=0)  for(i=0;i<N;i++)  for(int j=0;j<3;j++)  *(bounds+j*N + i) = *(bds+i*3+j);
 
-
-	delete[] th_bds;  delete[] bds;
+	Free( th_bds );  Free( bds );
 	return N;
 }
 

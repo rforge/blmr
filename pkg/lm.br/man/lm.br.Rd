@@ -144,30 +144,28 @@ sc$sl( day[1] - 1.5 )      # test for the presence of a changepoint
 #  A 'TL' example, from figure 1 of Chiu et al. (2006), J Am Stat Assoc,  
 #  vol 101, pp 542-553,  log(salmon abundance) vs year:
 salmon <- c( 2.50, 2.93, 2.94, 2.83, 2.43, 2.84, 3.06, 2.97, 2.94, 2.65,
-   2.92, 2.71, 2.93, 2.60, 2.12, 2.08, 1.81, 2.45, 1.71, 0.55, 1.30 )
+  2.92, 2.71, 2.93, 2.60, 2.12, 2.08, 1.81, 2.45, 1.71, 0.55, 1.30 )
 year <- 1980 : 2000
 chiu <- lm.br( salmon ~ year, 'tl' )
 chiu $ ci()
 
 
 
-#  A multivariate example, using one of R's included datasets, "mtcars",
+#  A multivariate example, using one of R's included datasets,
 #  automobile miles-per-gallon  versus  weight and horsepower:
-
 lm.br( mpg ~ wt + hp, data = mtcars )
 
 
 
-#  eg 3.4 of J Freeman (2010) "Inference for binomial changepoint data" in
-#  _Advances in Data Analysis_, ed. C Skiadas, Boston: Birkhauser, 345-352
-#       An example with variance known, in the Normal approximations of
-#  binomial random variables:
-
+#  An example with variance known, in the Normal approximations of binomial
+#  random variables.
+#     ex. 3.4 of J Freeman (2010) "Inference for binomial changepoint data"
+#  in _Advances in Data Analysis_, ed. C Skiadas, Boston: Birkhauser, 345-352
 group <- 1 : 20
 trials <- c( 15, 82, 82, 77, 38, 81, 12, 97, 33, 75,
-   85, 37, 44, 96, 76, 26, 91, 47, 41, 35 )
+  85, 37, 44, 96, 76, 26, 91, 47, 41, 35 )
 successes <- c( 8, 44, 47, 39, 24, 38, 3, 51, 16, 43,
-   47, 27, 33, 64, 41, 18, 61, 32, 33, 24 )
+  47, 27, 33, 64, 41, 18, 61, 32, 33, 24 )
 log_odds <- log( successes/(trials - successes) )
 variances <- (trials-1)/( successes*(trials-successes) )
 
@@ -175,13 +173,12 @@ lm.br( log_odds ~ group, 'TL', w= variances, inv= TRUE, var.k= TRUE )
 
 
 
-#  An example that shows different confidence regions
-#  by conditional likelihood-ratio inference and by approximate-F inference
+#  An example that shows different confidence regions from inference by
+#  conditional likelihood-ratio  vs  approximate-F
 y <- c( 1.55, 3.2, 6.3, 4.8, 4.3, 4.0, 3.5, 1.8 )
 x <- 1:8
 eg <- lm.br( y ~ x )
 \donttest{eg$cr()}
 eg$cr( m = 'af' )
-
 }
 

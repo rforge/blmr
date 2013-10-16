@@ -1,6 +1,5 @@
 //
-//  define class  Clmbr  for
-//  data-and-model objects 
+//  define class  Clmbr  for  data-and-model objects 
 //  which are applications of the broken line model to observed data sets
 //
 
@@ -58,6 +57,7 @@ private:
 	void initialize( void );
 	void set_Sigma( void );
 	void set_x(void);
+	void transform(void);
 	void set_y(void);
 	void set_theta0(double th_0, METHOD met =INIT);
 	void set_alpha0(double a_0, METHOD met =INIT);
@@ -141,30 +141,20 @@ private:
 
 public:
 // constructors
-	Clmbr( NumericVector  yR,  NumericMatrix  xR,  string  type ="LL",  NumericMatrix  wR =NULL,
-			 bool  inverse =false,  bool  var_known =false );
-	Clmbr( NumericVector  yR, NumericMatrix  xR, string  type ="LL", bool  var_known =false );
+	Clmbr( NumericVector  yR,  NumericMatrix  xR,  NumericMatrix  wR,  int  model_num,
+			 int  inverse,  int  var_known );
 	Clmbr( const Clmbr  &initM );	// copy constructor
 	~Clmbr();		// destructor
 
 
 // interface functions
-	void slR(double theta0 );
-	void slR(double theta0, double alpha0 );
-	void slR(double theta0, string met );
-	void slR(double theta0, double alpha0, string met );
-	void slR(double theta0, string met, double acc );
-	void slR(double theta0, double alpha0, string met, double acc );
-	double slR(double theta0, string met, double acc, bool verbose );
-	double slR(double theta0, double alpha0, string met, double acc, bool verbose ); 
-	void ciR(double CL);
-	void ciR(double CL, string met);
-	void ciR(void);
-	void crR(double CL);
-	void crR(double CL, string met);
-	void crR(double CL, string met, double incr);
-	NumericMatrix crR(double CL, string met, double incr, bool verbose );
-	void crR(void);
+	void slR( int met, double acc, double theta0 );
+	void slR( int met, double acc, double theta0, double alpha0 );
+	double slR( int met, int verboseR, int valueR, double acc, double theta0 );
+	double slR( int met, int verboseR, int valueR, double acc, double theta0, double alpha0 ); 
+	void ciR(double CL, int met);
+	void crR(double CL, int met, double incr);
+	NumericMatrix crR(double CL, int met, double incr, int verboseR );
 	void MLE(void) const;
 	NumericVector PARAM(void) const;	//internal
 	void SET_rWy(NumericVector rWy);

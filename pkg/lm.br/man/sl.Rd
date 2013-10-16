@@ -36,7 +36,7 @@ The 'accuracy' error limit does not include the slight over-estimate that is inh
 }
 
 \value{
-'sl' returns the significance level if 'verbose' is input explicitly as TRUE or FALSE.  Otherwise, 'sl' prints-out the result, but does not return a value.
+'sl' returns the significance level if 'verbose' is input explicitly as TRUE or FALSE.  Otherwise, 'sl' prints-out the result but does not return a value.
 }
 
 \examples{

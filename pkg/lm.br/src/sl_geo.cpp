@@ -61,9 +61,13 @@ double Clmbr::sl_geo2(double *const err)
 //  'Rdqag' parameters
 //  here it integrates another numerical integral, so adds its average error-estimate 
 
-	int  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0,  iwork[limit];
+	int  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
+	int*  iwork= Calloc( limit, int );
+
 	double  lower = -c,  upper = c,  epsabs = acc_sl_abs/2,  epsrel = acc_sl_rel/2,  
-				result =0,  abserr =0,  work[lenw];
+				result =0,  abserr =0;
+	double *  work= Calloc( lenw, double );
+
 	if (!variance_unknown)  epsabs /= lambda;
 
 	int  ne = 0;
@@ -72,6 +76,8 @@ double Clmbr::sl_geo2(double *const err)
 
 	Rdqags( igeo2, ex, &lower, &upper, &epsabs, &epsrel, &result, &abserr, &neval, 
 				&ier, &limit, &lenw, &last, iwork, work );
+
+	Free( iwork );  Free( work );
 
 	double  integral= result,  error= abserr + er/ne;
 

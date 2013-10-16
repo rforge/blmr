@@ -37,6 +37,5 @@ sc <- lm.br(y~x)
 \donttest{sc$cr()}
 \donttest{sc $ cr( .9, incr = 0.1 )}
 sc $ cr( .99, 'af', out='t' )
-
 }
 

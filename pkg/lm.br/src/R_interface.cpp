@@ -3,75 +3,21 @@
 #include "lmbr.h"
 
 #define CLmsg			_( "confidence level must be between 0 and 1" )
-#define methods2msg		_( "'method' must be \"clr\" or \"af\",  example:  ci( 0.99, \"af\" )" )
-#define methods3msg		_( "'method' must be \"clr\", \"mc\" or \"af\",  example:  sl( 5.8, \"af\" )" )
+#define methods2msg		_( "'method' must be 1 or 2" )
+#define methods3msg		_( "'method' must be 1, 2 or 3" )
 #define model_msg		_( "not applicable for this model" )
 
 
 
-void Clmbr::slR(const double theta0) 
-{ 
-	if(model_in > 0 ) sl(theta0); else sl(-theta0);
-	return; 
-}
 
 
-void Clmbr::slR(const double theta0, const double alpha0) 
-{
-	if(Model==M3)  
-		Rcout << model_msg << endl << endl;
-	else  
-		if(model_in > 0 ) sl(theta0,alpha0); else sl(-theta0,alpha0);
-	return; 
-}
-
-
-void Clmbr::slR(const double theta0, const string met ) 
+void  Clmbr::slR( const int met,  const double acc,
+	const double theta0 ) 
 { 
 	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
-			if(met=="MC" || met=="mc") MET=MC; else {
-				stop( methods3msg );
-			}
-		}
-	}
-
-	if(model_in > 0 ) sl(theta0, MET ); else sl(-theta0, MET );
-
-	return;
-}
-
-
-void Clmbr::slR(const double theta0, const double alpha0, const string met ) 
-{ 
-	if(Model==M3)  {
-		Rcout << model_msg << endl << endl;
-		return;
-	}  
-
-	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
-			if(met=="MC" || met=="mc") MET=MC; else {
-				stop( methods3msg );
-			}
-		}
-	}
-
-	if(model_in > 0 ) sl(theta0, alpha0, MET ); else sl(-theta0, alpha0, MET );
-
-	return;
-}
-
-
-
-void Clmbr::slR(const double theta0, const string met, const double acc) 
-{ 
-	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
-			if(met=="MC" || met=="mc") MET=MC; else {
+	if(met==1)  MET=GEO;  else  {
+		if(met==2)  MET=AF;  else  { 
+			if(met==3)  MET=MC;  else  {
 				stop( methods3msg );
 			}
 		}
@@ -81,7 +27,7 @@ void Clmbr::slR(const double theta0, const string met, const double acc)
 	acc_sl_abs= acc;
 	acc_sl_rel= min(10*acc_sl_abs,0.01);
 
-	if(model_in > 0 ) sl(theta0, MET ); else sl(-theta0, MET );
+	if( model_in > 0 )  sl(theta0, MET );  else  sl(-theta0, MET );
 
 	acc_sl_abs= tmp1;
 	acc_sl_rel= tmp2;
@@ -91,8 +37,8 @@ void Clmbr::slR(const double theta0, const string met, const double acc)
 
 
 
-void Clmbr::slR(const double theta0, const double alpha0, 
-				const string met, const double acc) 
+void  Clmbr::slR( const int met,  const double acc,
+	const double theta0,  const double alpha0 ) 
 { 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -100,9 +46,9 @@ void Clmbr::slR(const double theta0, const double alpha0,
 	}  
 
 	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
-			if(met=="MC" || met=="mc") MET=MC; else {
+	if(met==1)  MET=GEO;  else  {
+		if(met==2)  MET=AF;  else  { 
+			if(met==3)  MET=MC;  else  {
 				stop( methods3msg );
 			}
 		}
@@ -112,7 +58,10 @@ void Clmbr::slR(const double theta0, const double alpha0,
 	acc_sl_abs= acc;
 	acc_sl_rel= min(10*acc_sl_abs,0.01);
 
-	if(model_in > 0 ) sl(theta0, alpha0, MET ); else sl(-theta0, alpha0, MET ); 
+	if( model_in  > 0 ) 
+		sl(theta0, alpha0, MET);
+	else
+		sl(-theta0, alpha0, MET);
 
 	acc_sl_abs= tmp1;
 	acc_sl_rel= tmp2;
@@ -122,19 +71,22 @@ void Clmbr::slR(const double theta0, const double alpha0,
 
 
 
-
-double Clmbr::slR(const double theta0, 
-				const string met, const double acc, const bool verbose) 
+double  Clmbr::slR( const int met,  const int verboseR,  const int valueR,
+	const double acc,  const double theta0 ) 
 { 
 	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
-			if(met=="MC" || met=="mc") MET=MC; else {
+	if(met==1)  MET=GEO;  else  {
+		if(met==2)  MET=AF;  else  { 
+			if(met==3)  MET=MC;  else  {
 				stop( methods3msg );
 			}
 		}
 	}
 
+	const bool  verbose = static_cast<bool>( verboseR );
+	const bool  value = static_cast<bool>( valueR );
+	if( !value )  stop( "dummy argument for dispatch, should be TRUE" );
+	
 	const double tmp1 = acc_sl_abs, tmp2 = acc_sl_rel;
 	acc_sl_abs= acc;
 	acc_sl_rel= min(10*acc_sl_abs,0.01);
@@ -153,8 +105,8 @@ double Clmbr::slR(const double theta0,
 
 
 
-double Clmbr::slR(const double theta0, const double alpha0, 
-			const string met, const double acc, const bool verbose) 
+double  Clmbr::slR( const int met,  const int verboseR,  const int valueR,
+	const double acc,  const double theta0,  const double alpha0 ) 
 { 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -162,13 +114,18 @@ double Clmbr::slR(const double theta0, const double alpha0,
 	}  
 
 	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
-			if(met=="MC" || met=="mc") MET=MC; else {
+	if(met==1)  MET=GEO;  else  {
+		if(met==2)  MET=AF;  else  { 
+			if(met==3)  MET=MC;  else  {
 				stop( methods3msg );
 			}
 		}
 	}
+
+	const bool  verbose = static_cast<bool>( verboseR );
+	const bool  value = static_cast<bool>( valueR );
+	if( !value )  
+		stop( "dummy argument for dispatch, should be TRUE" );
 
 	const double tmp1 = acc_sl_abs, tmp2 = acc_sl_rel;
 	acc_sl_abs= acc;
@@ -188,27 +145,13 @@ double Clmbr::slR(const double theta0, const double alpha0,
 
 
 
-
-void Clmbr::ciR(const double CL) 
+void  Clmbr::ciR(const double CL, const int met) 
 { 
-	if(CL <=0. || CL >=1.) stop( CLmsg );
+	if(CL <=0. || CL >=1.)  stop( CLmsg );
 
-	const double tmp = SL;
-	set_SL(1.-CL);
-	ci(); 
-	set_SL(tmp);
-	return; 
-}
-
-
-
-void Clmbr::ciR(const double CL, const string met) 
-{ 
-	if(CL <=0. || CL >=1.) stop( CLmsg );
-
-	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
+	METHOD  MET;
+	if(met==1)  MET=GEO;  else  {
+		if(met==2)  MET=AF;  else  { 
 			stop( methods2msg );
 		}
 	}
@@ -223,39 +166,8 @@ void Clmbr::ciR(const double CL, const string met)
 
 
 
-void Clmbr::ciR(void) 
-{ 
-	const double tmp = SL;
-	set_SL(0.05);
-	ci(); 
-	set_SL(tmp);
 
-	return;
-}
-
-
-
-
-void Clmbr::crR(const double CL) 
-{ 
-	if(Model==M3)  {
-		Rcout << model_msg << endl << endl;
-		return;
-	}  
-
-	if(CL <=0. || CL >=1.)  stop( CLmsg );
-
-	const double tmp = SL;
-	set_SL(1.-CL);
-	cr(); 
-	set_SL(tmp);
-
-	return; 
-}
-
-
-
-void Clmbr::crR(const double CL, const string met) 
+void  Clmbr::crR(const double CL, const int met, const double incr) 
 { 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -265,8 +177,8 @@ void Clmbr::crR(const double CL, const string met)
 	if(CL <=0. || CL >=1.) stop( CLmsg );
 
 	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
+	if(met==1)  MET=GEO;  else  {
+		if(met==2)  MET=AF;  else  { 
 			stop( methods2msg );
 		}
 	}
@@ -274,7 +186,7 @@ void Clmbr::crR(const double CL, const string met)
 	const double tmp = SL;
 	set_SL(1.-CL);
 
-	cr(MET); 
+	cr( MET, incr );
 
 	set_SL(tmp);
 
@@ -283,34 +195,8 @@ void Clmbr::crR(const double CL, const string met)
 
 
 
-void Clmbr::crR(const double CL, const string met, const double incr) 
-{ 
-	if(Model==M3)  {
-		Rcout << model_msg << endl << endl;
-		return;
-	}  
-
-	if(CL <=0. || CL >=1.) stop( CLmsg );
-
-	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
-			stop( methods2msg );
-		}
-	}
-
-	const double tmp = SL;
-	set_SL(1.-CL);
-	cr(MET,incr); 
-	set_SL(tmp);
-
-	return;
-}
-
-
-
-NumericMatrix Clmbr::crR(const double CL, const string met, 
-			const double incr, const bool verbose ) 
+NumericMatrix  Clmbr::crR(const double CL, const int met, 
+	const double incr, const int verboseR ) 
 { 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -318,10 +204,12 @@ NumericMatrix Clmbr::crR(const double CL, const string met,
 	}  
 
 	if(CL <=0. || CL >=1.)  stop( CLmsg );
+	const double tmp = SL;
+	set_SL(1.-CL);
 
 	METHOD MET;
-	if(met=="CLR" || met=="clr") MET=GEO; else {
-		if(met=="AF" || met=="af") MET=AF; else { 
+	if(met==1)  MET=GEO;  else  {
+		if(met==2)  MET=AF;  else  { 
 			stop( methods2msg );
 		}
 	}
@@ -332,13 +220,15 @@ NumericMatrix Clmbr::crR(const double CL, const string met,
 	const double  maxwidth = xs[ns-1] - xs[0] + 2;						
 	const int  Nmax = maxwidth/inc + ns + 3;
 
-	double *const  Btmp= new (nothrow) double[Nmax*3];
-	if(Btmp==NULL)  stop( _("memory allocation failed") );
+	double*  Btmp= Calloc( Nmax*3, double );
 
-	const double tmp = SL;
-	set_SL(1.-CL);
+	const bool  verbose = static_cast<bool>( verboseR );
+	if( verbose )  
+		stop( "dummy argument for dispatch, should be FALSE" );
 
-	const int  nrows = cr(MET,incr,false,Btmp); 
+
+	const int  nrows = cr( MET, incr, false, Btmp ); 
+
 
 	set_SL(tmp);
 
@@ -348,27 +238,11 @@ NumericMatrix Clmbr::crR(const double CL, const string met,
 		bds(i,1) = *(Btmp + 1*nrows + i);
 		bds(i,2) = *(Btmp + 2*nrows + i);
 	}
-	delete[] Btmp;
+	Free( Btmp );
 
 	return bds;
 }
 
-
-
-void Clmbr::crR(void) 
-{ 
-	if(Model==M3)  {
-		Rcout << model_msg << endl << endl;
-		return;
-	}  
-
-	const double tmp = SL;
-	set_SL(0.05);
-	cr(); 
-	set_SL(tmp);
-
-	return; 
-}
 
 
 
@@ -382,34 +256,32 @@ void  Clmbr::MLE( void )  const
 
 NumericVector  Clmbr::PARAM( void )  const
 { 
-	double  *const  pdummy =NULL,  *const  par= new (nothrow) double[5];
-	if(par==NULL)  stop( _("memory allocation failed") );
+	double  *const  pdummy =NULL,  *par= Calloc( 5, double );
 
 	mle( false, pdummy, par ); 
 
 	const double  th= par[0],  a= par[1],  b= par[2],  
 			bp= par[3],  thfmin= par[4];
 
-	delete[] par;
+	Free( par );
 
 	return  NumericVector::create( th, a, b, bp, thfmin ); 
 }
 
 
 
-void Clmbr::SET_rWy(const NumericVector rWy)  
+void  Clmbr::SET_rWy(const NumericVector rWy)  
 {
 	const int yn =rWy.size();
 	if(yn!=n) stop( _("'rWy' vector has wrong dimension") );
 
-	double *const  Ytmp= new (nothrow) double[n];
-	if(Ytmp==NULL)  stop( _("memory allocation failed") );
+	double*  Ytmp= Calloc( n, double );
 	
 	for (int i=0;i<n;i++) Ytmp[i] = rWy[i];
 
 	set_sy( Ytmp, GEO2 );
 
-	delete[] Ytmp;
+	Free( Ytmp );
 
 	return;
 }

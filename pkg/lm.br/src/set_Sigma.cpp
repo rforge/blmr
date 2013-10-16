@@ -21,16 +21,11 @@ void Clmbr::set_Sigma( void )
 		}
 
 	}  else  {
-		Array2D<double>  W2D(n,n);
 		for (i=0;i<n;i++) for (j=0;j<n;j++) {
 			double  wij = *(w_in+j*n+i),  wji = *(w_in+i*n+j);
 			if ( isinf(wij) || isnan(wij) )  stop( _("'weights' has invalid entries") );
-			if( fabs(wij - wji) < zero_eq )  if( i < j)  wij = wji;
-			W2D[i][j] = wij;
+			if( fabs(wij - wji) < zero_eq )  if( i < j)  *(w_in+j*n+i) = wji;
 		}
-
-		Cholesky<double> testw(W2D);
-		if ( !testw.is_spd() )  stop( _("'weights' matrix is not symmetric positive-definite") );
 	}
 
 
@@ -56,13 +51,14 @@ void Clmbr::set_Sigma( void )
 	}  else  {
 
 // use LAPACK routine DSYEVR to get eigenvalues and eigenvectors of Sigma 
-		double  D[n], Q_[n*n];
+		double *  D= Calloc( n, double ), *  Q_= Calloc( n*n, double );
 		
 		{
 			const char  job ='V',  range ='A',  uplo ='L';
 			const int  id =0;	
 			const double  tol = 0, dd = 0;
-			int  ne, isuppZ[2*n], lwork= -1, itmp[1], liwork =-1, info =0;
+			int  ne, lwork= -1, itmp[1], liwork =-1, info =0;
+			int*  isuppZ= Calloc(2*n,int);
 			double  tmp[1];
 
 //  use 'irS' as the working input matrix
@@ -76,23 +72,25 @@ void Clmbr::set_Sigma( void )
 								&ne, D, Q_, &n, isuppZ, tmp, &lwork, itmp, &liwork, &info );
 
 			if( info )  stop( _("LAPACK routine 'dsyevr' failed") );  else  { lwork= *tmp; liwork= *itmp; }
-			double  work[lwork];
-			int  iwork[liwork];
+			double *  work= Calloc( lwork, double );
+			int*  iwork= Calloc( liwork, int );
 
 			F77_CALL(dsyevr)( &job, &range, &uplo, &n, irS, &n, &dd, &dd, &id, &id, &tol,
 								&ne, D, Q_, &n, isuppZ, work, &lwork, iwork, &liwork, &info );
 
 			if( info || ne < n )  stop( _("LAPACK routine 'dsyevr' failed") );
+			Free( isuppZ );  Free( work );  Free( iwork );
 		}
 
-		double  rD[n];
+		double *  rD= Calloc(n,double);
+
 		for (i=0;i<n;i++) {
 			if( D[i] > maxD )  maxD= D[i];
 			if( D[i] < minD )  minD= D[i];
 			rD[i] =  sqrt( D[i] );
 		}
 
-// 'rS' = Q*sqrt(D)*QT  and  'irS' = Q*1/sqrt(D)*QT
+// 'rS' = Q*sqrt(D)*t(Q)  and  'irS' = Q*1/sqrt(D)*t(Q)
 		for (i=0;i<n;i++)  for(j=0;j<n;j++)  {
 			*(rS + j*n + i) = 0.;
 			*(irS + j*n + i) = 0.;
@@ -107,15 +105,12 @@ void Clmbr::set_Sigma( void )
 		}
 
 		if( minD/maxD < 1.e-7 )  Rf_warning( _("weights matrix might be ill-conditioned for 'clr' method") );
+		Free( D );  Free( Q_ );  Free( rD );
 	}
-
 
 
 	if ( px != NULL )  set_x();
 
 	return;
 }
-
-
-
 

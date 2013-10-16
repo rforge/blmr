@@ -6,9 +6,9 @@
 void  igeo( double *const x,  const int n,  void *const ex );
 
 
-//  'Rdqag' sometimes returns error code '5' for "doubtful convergence,"  
-//  but the integral is convergent, O(theta^-2), and results have been reliable,  
-//  so routines below ignore  ier = 5.
+//  the 'Rdqag' numeric integration routines sometimes return error code '5' for 
+//  "doubtful convergence,"  but the integral is convergent O(theta^-2)  and 
+//  results have been reliable,  so routines below ignore  ier = 5.
 
 
 
@@ -100,8 +100,11 @@ double Clmbr::geo_vu_D(const double th2, double *const err)  const
 		if( fabs(thZ-tha) < zero_eq || fabs(thZ-thb) < zero_eq || isinf(thZ) )  zero= false;
 
 //  'Rdqag' parameters
-		int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0,  iwork[limit];
-		double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0,  work[lenw];
+		int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
+		int*  iwork= Calloc( limit, int );
+
+		double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
+		double *  work= Calloc( lenw, double );
 
 		const void *  exc[2] = {  this,  &k  };
 		void **  ex = const_cast< void** >( exc );
@@ -144,6 +147,7 @@ double Clmbr::geo_vu_D(const double th2, double *const err)  const
 
 		}
 
+		Free( iwork );  Free( work );
 	}
 
 	if (err!=0)  *err = error;
@@ -287,8 +291,11 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 	if( fabs(thZ-tha) < zero_eq || fabs(thZ-thb) < zero_eq || isinf(thZ) )  zero= false;
 
 //  'Rdqag' parameters
-	int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0,  iwork[limit];
-	double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0,  work[lenw];
+	int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
+	int*  iwork= Calloc( limit, int );
+
+	double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
+	double *  work= Calloc( lenw, double );
 
 	const void *  exc[2] = {  this,  &k  };
 	void **  ex = const_cast< void** >( exc );
@@ -332,6 +339,7 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 
 	}
 
+	Free( iwork );  Free( work );
 
 	if (err!=0)  *err = error;
 	return  min( pr, 1. );
@@ -388,8 +396,11 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 		if( !zero  &&  aa > 6.5  &&  ab > 6.5 )  continue;
 
 //  'Rdqag' parameters
-		int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0,  iwork[limit];
-		double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0,  work[lenw];
+		int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
+		int*  iwork= Calloc( limit, int );
+
+		double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
+		double *  work= Calloc( lenw, double );
 
 		const void *  exc[2] = {  this,  &k  };
 		void **  ex = const_cast< void** >( exc );
@@ -444,6 +455,7 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 			if( ier > 0  &&  ier!=5 )  Rf_warning( _("integration flag") ); 
 		}
 
+		Free( iwork );  Free( work );
 	}
 
 
@@ -559,8 +571,11 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 
 
 //  'Rdqag' parameters
-	int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0,  iwork[limit];
-	double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0,  work[lenw];
+	int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
+	int*  iwork= Calloc( limit, int );
+
+	double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
+	double *  work= Calloc( lenw, double );
 
 	const void *  exc[2] = {  this,  &k  };
 	void **  ex = const_cast< void** >( exc );
@@ -619,6 +634,7 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 
 	}
 
+	Free( iwork );  Free( work );
 
 	if (err!=0)  *err = error;
 	return  min( pr, 1. );

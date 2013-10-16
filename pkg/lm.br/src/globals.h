@@ -8,11 +8,11 @@
 
 #define R_NO_REMAP
 
-#include <new>
 #include <iomanip>
 #include <algorithm>
 #include <limits>
 #include <math.h>
+#include <time.h>
 
 #include <R.h>
 #include <R_ext/Applic.h>		//  for 'Rdqags' and 'Rdqagi'
@@ -20,10 +20,7 @@
 
 #include <Rcpp.h>
 
-#include "jama125/jama_eig.h"
-#include "jama125/jama_cholesky.h"
-#include "jama125/jama_lu.h"
-#include "jama125/tnt.h"
+#include "tnt_vector.h"
 
 
 #ifdef ENABLE_NLS
@@ -34,16 +31,17 @@
 #endif
 
 
-using namespace JAMA;
+using TNT::Vector;
+using std::endl;
 using Rcpp::NumericVector;
 using Rcpp::NumericMatrix;
 using Rcpp::Rcout;
 using Rcpp::stop;
 
 
-enum MODEL{ M1, M2, M3 };
-enum METHOD { GEO, GEO2, AF, AF2, MC, INIT };
-const double zero_eq = ldexp(1.,-40);
+enum  MODEL { M1, M2, M3 };
+enum  METHOD { GEO, GEO2, AF, AF2, MC, INIT };
+const double zero_eq = ldexp( 1., -40 );
 const double Inf = numeric_limits<double>::infinity();     
 const double NaN = numeric_limits<double>::quiet_NaN();
 

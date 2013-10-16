@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lm.br 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-08 06:29-0400\n"
+"POT-Creation-Date: 2013-10-16 10:48-0400\n"
 "PO-Revision-Date: 2013-09-20 20:09-0500\n"
 "Last-Translator: \n"
 "Language-Team: Marc Adams <lm.br.pkg@gmail.com>\n"
@@ -25,29 +25,18 @@ msgid "confidence level must be between 0 and 1"
 msgstr "niveau de confiance doit être entre 0 et 1"
 
 #: R_interface.cpp:6
-msgid "'method' must be \"clr\" or \"af\",  example:  ci( 0.99, \"af\" )"
-msgstr ""
-"'méthode' doit être \"clr\" ou \"af\",  par example:  ci( 0.99, \"af\" )"
+msgid "'method' must be 1 or 2"
+msgstr "'method' doit être 1 ou 2"
 
 #: R_interface.cpp:7
-msgid ""
-"'method' must be \"clr\", \"mc\" or \"af\",  example:  sl( 5.8, \"af\" )"
-msgstr ""
-"'méthode' doit être \"clr\", \"mc\" ou \"af\",  par example:  sl( 5.8, \"af"
-"\" )"
+msgid "'method' must be 1, 2 or 3"
+msgstr "'method' doit être 1, 2 ou 3"
 
 #: R_interface.cpp:8
 msgid "not applicable for this model"
 msgstr "pas applicable pour ce modèle"
 
-#: R_interface.cpp:336 R_interface.cpp:386 R_interface.cpp:406 ci.cpp:15
-#: ci.cpp:166 cr.cpp:35 cr.cpp:43 cr.cpp:69 initialize.cpp:78
-#: initialize.cpp:107 initialize.cpp:121 initialize.cpp:147 lmbr.cpp:89
-#: lmbr.cpp:169 lmbr.cpp:230 set_theta0.cpp:136 set_x.cpp:228
-msgid "memory allocation failed"
-msgstr "allocation de mémoire a échoué"
-
-#: R_interface.cpp:403
+#: R_interface.cpp:271
 msgid "'rWy' vector has wrong dimension"
 msgstr "longueur du vecteur 'rWy' est incorrect"
 
@@ -81,13 +70,12 @@ msgid ""
 "'bisect_sl' failed to reach tolerance after maximum number of iterations"
 msgstr "'bisect_sl' hors tolérance après nombre maximum d'itérations"
 
-#: ci.cpp:19
+#: ci.cpp:18
 msgid "-percent confidence interval for changepoint 'theta' by method "
 msgstr ""
-"-pourcent interval de confiance pour point de changement 'theta' par "
-"méthode "
+"-pourcent interval de confiance pour point de changement 'theta' par méthode "
 
-#: ci.cpp:228
+#: ci.cpp:226
 msgid "progress:"
 msgstr "progrès:"
 
@@ -95,88 +83,23 @@ msgstr "progrès:"
 msgid "getting theta-boundaries...   "
 msgstr "cherchant les limites pour theta...   "
 
-#: cr.cpp:89
+#: cr.cpp:85
 msgid "getting alpha-boundaries...   "
 msgstr "cherchant les limites pour alpha...   "
 
-#: cr.cpp:220
+#: cr.cpp:216
 msgid "-percent joint confidence region for  (theta, alpha)  by method  "
 msgstr ""
 "-pourcent région de confiance jointe pour  (theta, alpha)  par méthode  "
 
-#: cr.cpp:261
+#: cr.cpp:256
 msgid "'a_sl' initial point below critical SL"
 msgstr "'a_sl' point initial a SL moin le niveau critical"
 
-#: geo.cpp:117 geo.cpp:129 geo.cpp:143 geo.cpp:305 geo.cpp:317 geo.cpp:331
-#: geo.cpp:407 geo.cpp:419 geo.cpp:444 geo.cpp:580 geo.cpp:592 geo.cpp:618
+#: geo.cpp:120 geo.cpp:132 geo.cpp:146 geo.cpp:312 geo.cpp:324 geo.cpp:338
+#: geo.cpp:418 geo.cpp:430 geo.cpp:455 geo.cpp:595 geo.cpp:607 geo.cpp:633
 msgid "integration flag"
 msgstr "avis du routine d'intégration"
-
-#: initialize.cpp:19
-msgid "initializing:"
-msgstr "initialisation:"
-
-#: initialize.cpp:20
-msgid "model "
-msgstr "modèle "
-
-#: initialize.cpp:21
-msgid "  with variance unknown"
-msgstr "  avec variance inconnue"
-
-#: initialize.cpp:21
-msgid "  with variance known"
-msgstr "  avec variance connue"
-
-#: initialize.cpp:23
-msgid "x matrix:  "
-msgstr "matrice x:  "
-
-#: initialize.cpp:29
-msgid "weights vector:  "
-msgstr "matrice de poids:  "
-
-#: initialize.cpp:29
-msgid "variances:  "
-msgstr "variances:   "
-
-#: initialize.cpp:34
-msgid "weights matrix:  "
-msgstr "matrice de poids:  "
-
-#: initialize.cpp:34
-msgid "variance-covariance matrix:  "
-msgstr "matrice de variances et covariances:  "
-
-#: initialize.cpp:77 initialize.cpp:106 initialize.cpp:120 initialize.cpp:146
-#: lmbr.cpp:88 lmbr.cpp:168 lmbr.cpp:229 set_theta0.cpp:135 set_x.cpp:227
-msgid "message: "
-msgstr "message: "
-
-#: lmbr.cpp:41
-msgid "'x' rank invalid"
-msgstr "rang de 'x' incorrect"
-
-#: lmbr.cpp:45
-msgid "'alpha'=0 not supported for type \"LL\""
-msgstr "le cas 'alpha'=0 n'est pas permis pour type \"LL\""
-
-#: lmbr.cpp:53
-msgid "'type' must be \"LL\", \"LT\" or \"TL\""
-msgstr "'type' doit être \"LL\", \"LT\" ou \"TL\""
-
-#: lmbr.cpp:139
-msgid "invalid x"
-msgstr "valeur de 'x' incorrecte"
-
-#: lmbr.cpp:143
-msgid "'alpha'=0 not supported for type 'LL'"
-msgstr "le cas 'alpha'=0 n'est pas permis pour type 'LL'"
-
-#: lmbr.cpp:151
-msgid "'type' must be one of 'LL', 'LT' or 'TL'"
-msgstr "'type' doit être 'LL', 'LT' ou 'TL'"
 
 #: mle.cpp:161
 msgid "maximum-likelihood estimates of parameters:"
@@ -208,27 +131,23 @@ msgstr ""
 msgid "invalid 'SL' value"
 msgstr "valeur de 'SL' incorrecte"
 
-#: set_Sigma.cpp:19 set_Sigma.cpp:20 set_Sigma.cpp:27
+#: set_Sigma.cpp:19 set_Sigma.cpp:20 set_Sigma.cpp:26
 msgid "'weights' has invalid entries"
 msgstr "'weights' a des éléments incorrects"
 
-#: set_Sigma.cpp:33
-msgid "'weights' matrix is not symmetric positive-definite"
-msgstr "matrice 'weights' n'est pas symétrique ou n'est pas positive-définie"
-
-#: set_Sigma.cpp:53
+#: set_Sigma.cpp:48
 msgid "zero or negative 'weights' not allowed"
 msgstr "valeurs de 'weights' doit être positifs"
 
-#: set_Sigma.cpp:54
+#: set_Sigma.cpp:49
 msgid "weights vector might be ill-conditioned for 'clr' method"
 msgstr "vecteur 'weights' peut être mal formée pour la méthode 'clr'"
 
-#: set_Sigma.cpp:78 set_Sigma.cpp:85
+#: set_Sigma.cpp:74 set_Sigma.cpp:81
 msgid "LAPACK routine 'dsyevr' failed"
 msgstr "routine 'dsyevr' de LAPACK a échoué"
 
-#: set_Sigma.cpp:109
+#: set_Sigma.cpp:107
 msgid "weights matrix might be ill-conditioned for 'clr' method"
 msgstr "matrice 'weights' peut être mal formée pour la méthode 'clr'"
 
@@ -244,9 +163,9 @@ msgstr "valeur de 'alpha0' incorrecte"
 msgid "invalid value in 'rWy' vector"
 msgstr "élément incorrect dans le vecteur 'rWy'"
 
-#: set_sy.cpp:36 set_sy.cpp:41 set_theta0.cpp:121 set_theta0.cpp:124
-#: set_x.cpp:128 set_x.cpp:133 set_x.cpp:275 set_x.cpp:280 set_x.cpp:300
-#: set_x.cpp:305
+#: set_sy.cpp:36 set_sy.cpp:41 set_theta0.cpp:117 set_theta0.cpp:120
+#: transform.cpp:101 transform.cpp:106 transform.cpp:205 transform.cpp:210
+#: transform.cpp:231 transform.cpp:236
 msgid "LAPACK routine 'dormqr' failed"
 msgstr "routine 'dormqr' de LAPACK a échoué"
 
@@ -254,27 +173,27 @@ msgstr "routine 'dormqr' de LAPACK a échoué"
 msgid "invalid 'theta0' value"
 msgstr "valeur de 'theta0' incorrecte"
 
-#: set_theta0.cpp:105 set_theta0.cpp:108 set_x.cpp:86 set_x.cpp:91
+#: set_theta0.cpp:101 set_theta0.cpp:104 transform.cpp:59 transform.cpp:64
 msgid "LAPACK routine 'dgeqrf' failed"
 msgstr "routine 'dgeqrf' de LAPACK a échoué"
 
-#: set_x.cpp:31
+#: set_x.cpp:22
 msgid "invalid 'x' value"
 msgstr "valeur de 'x' incorrecte"
 
-#: set_x.cpp:32
+#: set_x.cpp:23
 msgid "'x' values must be non-decreasing"
 msgstr "valeurs de 'x' doit être non-décroissantes"
 
-#: set_x.cpp:35
+#: set_x.cpp:26
 msgid "consider a repeat predictor value instead of the values"
-msgstr "suggère une valeur x répétée au lieu des valeurs"
+msgstr "suggère une valeur 'x' répétée au lieu des valeurs"
 
-#: set_x.cpp:37
+#: set_x.cpp:28
 msgid "predictor values might be too close for reliable computations"
 msgstr "valeurs de 'x' peut être trop proches pour calculs fiables"
 
-#: set_x.cpp:52
+#: set_x.cpp:44
 msgid "number of seperate 'x' values below minimum for changepoint inference"
 msgstr ""
 "nombre de valeurs distinctes de 'x' trop peut pour inférer le point de "
@@ -318,3 +237,4 @@ msgstr ""
 #: sl_mc.cpp:74
 msgid "),  target accuracy = "
 msgstr "),  précision de cible = "
+

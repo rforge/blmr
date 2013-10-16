@@ -11,8 +11,7 @@ int Clmbr::ci(const METHOD met, const double incr, const bool verbose, double *c
 {
 	int numr = 0;
 
-	double *const bds= new (nothrow) double[2*ns];
-	if(bds==NULL)  stop( _("memory allocation failed") );
+	double* bds= Calloc( 2*ns, double );
 
 
 	if (verbose)  {
@@ -69,7 +68,7 @@ int Clmbr::ci(const METHOD met, const double incr, const bool verbose, double *c
 
 	if(bounds != 0)  for (int i=0;i<2*numr;i+=2)  { bounds[i] = bds[i];  bounds[i+1] = bds[i+1]; }
 
-	delete[] bds;
+	Free( bds );
 
 	return numr;
 }
@@ -162,8 +161,7 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 
 // get critical points
 
-	double *const cpts= new (nothrow) double[ns+2];
-	if( cpts==NULL )  stop( _("memory allocation failed") );
+	double* cpts= Calloc( ns+2, double );
 
 	const double thmle = mle(false);
 
@@ -263,7 +261,7 @@ int Clmbr::ci_geo( const METHOD met, const double incr, double *const bds )
 	if (sl_th > SL && ind==1) bds[numi++] = Inf;
 
 
-	delete[] cpts;
+	Free( cpts );
 	return numi/2;
 }
 

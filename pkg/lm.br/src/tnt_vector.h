@@ -24,7 +24,7 @@
 
 #include "tnt_subscript.h"
 #include <cstdlib>
-#include <cassert>
+//  #include <cassert>
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -75,9 +75,11 @@ class Vector
         // adjust pointers so that they are 1-offset:
         // v_[] is the internal contiguous array, it is still 0-offset
         //
-        assert(v_ == NULL);
-        v_ = new T[N];
-        assert(v_  != NULL);
+        //  assert(v_ == NULL);
+
+		v_ = Calloc(N,T);
+
+        //  assert(v_  != NULL);
         vm1_ = v_-1;
         n_ = N;
     }
@@ -143,7 +145,7 @@ class Vector
         if (v_ == NULL) return ;
 
         /* if we are here, then matrix was previously allocated */
-        delete [] (v_);     
+		Free(v_);
 
         v_ = NULL;
         vm1_ = NULL;
@@ -256,8 +258,8 @@ class Vector
     inline reference operator()(Subscript i)
     { 
 #ifdef TNT_BOUNDS_CHECK
-        assert(1<=i);
-        assert(i <= n_) ;
+        //  assert(1<=i);
+        //  assert(i <= n_) ;
 #endif
         return vm1_[i]; 
     }
@@ -265,8 +267,8 @@ class Vector
     inline const_reference operator() (Subscript i) const
     {
 #ifdef TNT_BOUNDS_CHECK
-        assert(1<=i);
-        assert(i <= n_) ;
+        //  assert(1<=i);
+        //  assert(i <= n_) ;
 #endif
         return vm1_[i]; 
     }
@@ -274,8 +276,8 @@ class Vector
     inline reference operator[](Subscript i)
     { 
 #ifdef TNT_BOUNDS_CHECK
-        assert(0<=i);
-        assert(i < n_) ;
+        //  assert(0<=i);
+        //  assert(i < n_) ;
 #endif
         return v_[i]; 
     }
@@ -283,14 +285,14 @@ class Vector
     inline const_reference operator[](Subscript i) const
     {
 #ifdef TNT_BOUNDS_CHECK
-        assert(0<=i);
+        //  assert(0<=i);
 
 
 
 
 
 
-        assert(i < n_) ;
+        //  assert(i < n_) ;
 #endif
         return v_[i]; 
     }
@@ -346,7 +348,7 @@ Vector<T> operator+(const Vector<T> &A,
 {
     Subscript N = A.dim();
 
-    assert(N==B.dim());
+    //  assert(N==B.dim());
 
     Vector<T> tmp(N);
     Subscript i;
@@ -363,7 +365,7 @@ Vector<T> operator+=(Vector<T> &A,
 {
     Subscript N = A.dim();
 
-    assert(N==B.dim());
+    //  assert(N==B.dim());
 
     Subscript i;
 
@@ -379,7 +381,7 @@ Vector<T> operator-(const Vector<T> &A,
 {
     Subscript N = A.dim();
 
-    assert(N==B.dim());
+    //  assert(N==B.dim());
 
     Vector<T> tmp(N);
     Subscript i;
@@ -396,7 +398,7 @@ Vector<T> operator-=(Vector<T> &A,
 {
     Subscript N = A.dim();
 
-    assert(N==B.dim());
+    //  assert(N==B.dim());
 
     Subscript i;
 
@@ -414,7 +416,7 @@ Vector<T> elementwise_mult(const Vector<T> &A, const Vector<T> &B)
 {
     Subscript N = A.dim();
 
-    assert(N==B.dim());
+    //  assert(N==B.dim());
 
     Vector<T> tmp(N);
     Subscript i;
@@ -443,7 +445,7 @@ template <class T>
 T dot_prod(const Vector<T> &A, const Vector<T> &B)
 {
     Subscript N = A.dim();
-    assert(N == B.dim());
+    //  assert(N == B.dim());
 
     Subscript i;
     T sum = 0;
