@@ -18,8 +18,8 @@ probabilities for the changepoint.
 
 
 \usage{
-lm.br( formula, type = "LL", data, subset, weights, inverse = FALSE,
-       var.known = FALSE, offset, contrasts, na.action, ... )
+lm.br(formula, type = "LL", data, subset, na.action, weights,
+      inverse = FALSE, var.known = FALSE, offset, contrasts, ...)
 }
 
 
@@ -32,6 +32,7 @@ line-threshold or threshold-line, defined below }
   \item{data}{an optional data frame that defines variables in
 \code{formula} }
   \item{subset}{expression saying which subset of the data to use}
+  \item{na.action}{a function to filter missing data}
   \item{weights}{vector or positive-definite matrix}
   \item{inverse}{if TRUE, 'weights' specifies the inverse of the
 weights vector or matrix, as for a covariance matrix}
@@ -40,7 +41,6 @@ weights vector or matrix, as for a covariance matrix}
 responses vector}
   \item{contrasts}{an optional list, see 'contrasts.arg' in
 \code{\link{model.matrix.default}}  }
-  \item{na.action}{a function to filter missing data}
   \item{\dots}{ other arguments to \code{\link{lm.fit}} or
 \code{\link{lm.wfit}} }
 }

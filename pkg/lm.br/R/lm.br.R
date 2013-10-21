@@ -257,6 +257,7 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
         if( method=="AF" )  met <- 2  else
           stop( "'method' must be \"CLR\" or \"AF\"" )
       }
+      if(missing(output) && .Device=="null device")  output <- "T"
       output <- toupper(output)
       if( output=="T" )
         (z$CppObj)$cr( CL, met, incr )
@@ -419,7 +420,7 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
       cat( "Fit changepoint and coefficients:\n" )
       print.default( round(x$coef, 5) )
     }
-    else  cat( "Use 'mle()' for changepoint and coefficient estimates\n" )
+    else  cat( "'sety' called, use 'mle()' for parameter estimates\n" )
   }
   else  cat( "No coefficients\n" )
   cat("\n")

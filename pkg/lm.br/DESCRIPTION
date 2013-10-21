@@ -4,16 +4,17 @@ Title: Linear Model with Breakpoint
 Version: 2.2
 Date: 2013-10-19
 Authors@R: c( person("Marc", "Adams", role= c("aut", "cre"), email= "lm.br.pkg@gmail.com"),
-  person("'lm' authors", role = "ctb", comment = "prototype for 'lm.br'"),  person("'lm.gls' authors", 
-  role = "ctb"), person("U.S. NIST", role = "ctb", comment = "C++ code for TNT::Vector template") )
+  person("authors of R function 'lm'", role = "ctb", comment = "general interface"),
+  person("authors of 'lm.gls'", role = "ctb", comment = "interface and R code for matrix weights"),
+  person("U.S. NIST", role = "ctb", comment = "C++ code for TNT::Vector template") )
 Maintainer: Marc Adams <lm.br.pkg@gmail.com>
 Description: Exact significance tests for a changepoint in linear or multivariate linear regression.  
   Confidence regions with exact coverage probabilities for the changepoint.
 License: GPL (>= 2)
 Depends: R(>= 3.0.1), methods, Rcpp (>= 0.10.4)
 LinkingTo: Rcpp
-Packaged: 2013-10-21 00:50:27 UTC; marc
+Packaged: 2013-10-21 13:51:33 UTC; Marc
 Author: Marc Adams [aut, cre],
-  'lm' authors [ctb] (prototype for 'lm.br'),
-  'lm.gls' authors [ctb],
+  authors of R function 'lm' [ctb] (general interface),
+  authors of 'lm.gls' [ctb] (interface and R code for matrix weights),
   U.S. NIST [ctb] (C++ code for TNT::Vector template)

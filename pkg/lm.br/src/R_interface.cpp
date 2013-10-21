@@ -255,6 +255,8 @@ void  Clmbr::MLE( void )  const
 
 
 NumericVector  Clmbr::PARAM( void )  const
+// function to pass parameter values to R-code
+// internal, not meant for the user
 { 
 	double  *const  pdummy =NULL,  *par= Calloc( 5, double );
 
