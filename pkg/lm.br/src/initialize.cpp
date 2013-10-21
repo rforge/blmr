@@ -24,7 +24,6 @@ void Clmbr::initialize( void )
 	set_x();
 
 
-
 //  'S' = 'Sigma'  is the covariate or covariance matrix,  such that
 //   errors  ~ N( 0, var * Sigma ) ,   Sigma = inverse( 'weights' )
 
@@ -50,13 +49,17 @@ void Clmbr::initialize( void )
 	if( m1 < n )  cov_matrix_diagonal = false;
 
 
+	Q = Calloc( n*xrank, double );
+	tau = Calloc( xrank, double );
+
+	set_Q();
+
+
+// allocate memory for pre-calculated variables
 	pv1h = Calloc( 1, Vector<double> );
 	pxh = Calloc( 1, Vector<double> );
 	psig1 = Calloc( 1, Vector<double> );
 	psigx = Calloc( 1, Vector<double> );
-	Q = Calloc( n*xrank, double );
-	tau = Calloc( xrank, double );
-
 	nan_m1 = Calloc( 1, Vector<double> );
 	nan_m = Calloc( 1, Vector<double> );
 	pnse1 = Calloc( 1, Vector<double> );
@@ -66,32 +69,22 @@ void Clmbr::initialize( void )
 	puqen = Calloc( 1, Vector<double> );
 	puqx = Calloc( 1, Vector<double> );
 
-
 // array sizes that depend on 'ns'
 	is = Calloc( ns, int );
 	xs = Calloc( ns,  double );
-
 	ps1 = Calloc( ns+1, Vector<double> );
 	psx = Calloc( ns+1, Vector<double> );
 	pq1 = Calloc( ns+1, Vector<double> );
 	pqx = Calloc( ns+1, Vector<double> );
 	pmq1 =  Calloc( ns+1, Vector<double> );
 	if(Model==M3)  pm1h =  Calloc( 1, Vector<double> );
-
 	q11 = Calloc( ns+1, double );
 	qx1 = Calloc( ns+1, double );
 	qxx = Calloc( ns+1, double );
 	ck = Calloc( ns+1, double );
 	qff = Calloc( ns+1, double );
-	q10 = Calloc( ns+1, double );
-	qx0 = Calloc( ns+1, double );
-	a0 = Calloc( ns+1, double );
-	b0 = Calloc( ns+1, double );
-	f01 = Calloc( ns+1, double );
-	f0x = Calloc( ns+1, double );
-	B = Calloc( ns+1, double );
 
-	transform();
+	pre_calc();
 
 
 	py = Calloc( 1, Vector<double> );
@@ -100,6 +93,16 @@ void Clmbr::initialize( void )
 
 	set_y();	// calls 'set_sy'
 
+	sety_called = false;
+
+
+	q10 = Calloc( ns+1, double );
+	qx0 = Calloc( ns+1, double );
+	a0 = Calloc( ns+1, double );
+	b0 = Calloc( ns+1, double );
+	f01 = Calloc( ns+1, double );
+	f0x = Calloc( ns+1, double );
+	B = Calloc( ns+1, double );
 
 	const double th_0 = xs[1];
 	th0 = th_0 + 1;

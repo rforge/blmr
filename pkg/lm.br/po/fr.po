@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lm.br 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-16 10:48-0400\n"
+"POT-Creation-Date: 2013-10-20 20:31-0400\n"
 "PO-Revision-Date: 2013-09-20 20:09-0500\n"
 "Last-Translator: \n"
 "Language-Team: Marc Adams <lm.br.pkg@gmail.com>\n"
@@ -36,7 +36,7 @@ msgstr "'method' doit être 1, 2 ou 3"
 msgid "not applicable for this model"
 msgstr "pas applicable pour ce modèle"
 
-#: R_interface.cpp:271
+#: R_interface.cpp:278
 msgid "'rWy' vector has wrong dimension"
 msgstr "longueur du vecteur 'rWy' est incorrect"
 
@@ -71,7 +71,7 @@ msgid ""
 msgstr "'bisect_sl' hors tolérance après nombre maximum d'itérations"
 
 #: ci.cpp:18
-msgid "-percent confidence interval for changepoint 'theta' by method "
+msgid "-percent confidence interval for changepoint 'theta' by "
 msgstr ""
 "-pourcent interval de confiance pour point de changement 'theta' par méthode "
 
@@ -109,23 +109,37 @@ msgstr "estimations de vraisemblance maximum pour les paramètres:"
 msgid "x-coordinate of changepoint"
 msgstr "coordonné x du point de changement"
 
-#: mle.cpp:163
+#: mle.cpp:164
 msgid "y-coordinate of changepoint"
 msgstr "coordonné y du point de changement"
 
 #: mle.cpp:164
+msgid "coefficient of '1'-vector"
+msgstr "coefficient du vecteur '1'"
+
+#: mle.cpp:165
 msgid "slope of first line"
 msgstr "gradient de la première ligne"
 
-#: mle.cpp:165
+#: mle.cpp:166
 msgid "slope of second line"
 msgstr "gradient de la deuxième ligne"
+
+#: pre_calc.cpp:60 pre_calc.cpp:65 pre_calc.cpp:159 pre_calc.cpp:164
+#: pre_calc.cpp:185 pre_calc.cpp:190 set_sy.cpp:36 set_sy.cpp:41
+#: set_theta0.cpp:117 set_theta0.cpp:120
+msgid "LAPACK routine 'dormqr' failed"
+msgstr "routine 'dormqr' de LAPACK a échoué"
 
 #: rho_etc.cpp:250
 msgid "'rho_inv' no inverse for given 'rho' in data interval"
 msgstr ""
 "'rho-inv' ne trouve pas d'inverse pour le valeur de 'rho' et l'interval "
 "d'observation fournis"
+
+#: set_Q.cpp:48 set_Q.cpp:53 set_theta0.cpp:101 set_theta0.cpp:104
+msgid "LAPACK routine 'dgeqrf' failed"
+msgstr "routine 'dgeqrf' de LAPACK a échoué"
 
 #: set_SL.cpp:14
 msgid "invalid 'SL' value"
@@ -147,7 +161,11 @@ msgstr "vecteur 'weights' peut être mal formée pour la méthode 'clr'"
 msgid "LAPACK routine 'dsyevr' failed"
 msgstr "routine 'dsyevr' de LAPACK a échoué"
 
-#: set_Sigma.cpp:107
+#: set_Sigma.cpp:88
+msgid "'weights' matrix not positive-definite"
+msgstr "matrice 'weights' n'est pas positive-définie"
+
+#: set_Sigma.cpp:108
 msgid "weights matrix might be ill-conditioned for 'clr' method"
 msgstr "matrice 'weights' peut être mal formée pour la méthode 'clr'"
 
@@ -163,19 +181,9 @@ msgstr "valeur de 'alpha0' incorrecte"
 msgid "invalid value in 'rWy' vector"
 msgstr "élément incorrect dans le vecteur 'rWy'"
 
-#: set_sy.cpp:36 set_sy.cpp:41 set_theta0.cpp:117 set_theta0.cpp:120
-#: transform.cpp:101 transform.cpp:106 transform.cpp:205 transform.cpp:210
-#: transform.cpp:231 transform.cpp:236
-msgid "LAPACK routine 'dormqr' failed"
-msgstr "routine 'dormqr' de LAPACK a échoué"
-
 #: set_theta0.cpp:10
 msgid "invalid 'theta0' value"
 msgstr "valeur de 'theta0' incorrecte"
-
-#: set_theta0.cpp:101 set_theta0.cpp:104 transform.cpp:59 transform.cpp:64
-msgid "LAPACK routine 'dgeqrf' failed"
-msgstr "routine 'dgeqrf' de LAPACK a échoué"
 
 #: set_x.cpp:22
 msgid "invalid 'x' value"
@@ -215,26 +223,17 @@ msgstr "  par la méthode "
 msgid " for (th0,a0)= ( "
 msgstr " pour (th0,a0)= ( "
 
-#: sl_mc.cpp:15
+#: sl_mc.cpp:15 sl_mc.cpp:73
 msgid "MC evaluation of conditional likelihood-ratio SL"
 msgstr ""
-"évaluation Monte Carlo, de SL par ratio-de-vraisemblance conditionelle,"
+"évaluation Monte Carlo de SL par ratio-de-vraisemblance conditionelle"
 
-#: sl_mc.cpp:16
-msgid "for theta0= "
-msgstr "pour theta0= "
+#: sl_mc.cpp:16 sl_mc.cpp:74
+msgid "for "
+msgstr "pour "
 
-#: sl_mc.cpp:16
-msgid ",  target accuracy =  "
-msgstr ",  précision de cible =  "
+#: sl_mc.cpp:16 sl_mc.cpp:75
+msgid "target accuracy =  "
+msgstr "précision de cible =  "
 
-#: sl_mc.cpp:73
-msgid "MC evaluation of conditional likelihood-ratio SL for (th0,a0)= ("
-msgstr ""
-"évaluation Monte Carlo, de SL par ratio-de-vraisemblance conditionelle, pour "
-"(th0,a0)= ("
-
-#: sl_mc.cpp:74
-msgid "),  target accuracy = "
-msgstr "),  précision de cible = "
 

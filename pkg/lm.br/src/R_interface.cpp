@@ -265,7 +265,9 @@ NumericVector  Clmbr::PARAM( void )  const
 
 	Free( par );
 
-	return  NumericVector::create( th, a, b, bp, thfmin ); 
+	const double  syc = static_cast<double>( sety_called );
+
+	return  NumericVector::create( th, a, b, bp, thfmin, syc ); 
 }
 
 
@@ -282,6 +284,8 @@ void  Clmbr::SET_rWy(const NumericVector rWy)
 	set_sy( Ytmp, GEO2 );
 
 	Free( Ytmp );
+
+	sety_called = true;
 
 	return;
 }

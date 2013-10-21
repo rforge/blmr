@@ -51,7 +51,7 @@ void Clmbr::set_Sigma( void )
 	}  else  {
 
 // use LAPACK routine DSYEVR to get eigenvalues and eigenvectors of Sigma 
-		double *  D= Calloc( n, double ), *  Q_= Calloc( n*n, double );
+		double *  D= Calloc( n, double ),  * Q_= Calloc( n*n, double );
 		
 		{
 			const char  job ='V',  range ='A',  uplo ='L';
@@ -84,7 +84,8 @@ void Clmbr::set_Sigma( void )
 
 		double *  rD= Calloc(n,double);
 
-		for (i=0;i<n;i++) {
+		for (i=0;i<n;i++)  {
+			if( D[i] <= 0. )  stop( _("'weights' matrix not positive-definite") );
 			if( D[i] > maxD )  maxD= D[i];
 			if( D[i] < minD )  minD= D[i];
 			rD[i] =  sqrt( D[i] );
@@ -108,8 +109,6 @@ void Clmbr::set_Sigma( void )
 		Free( D );  Free( Q_ );  Free( rD );
 	}
 
-
-	if ( px != NULL )  set_x();
 
 	return;
 }

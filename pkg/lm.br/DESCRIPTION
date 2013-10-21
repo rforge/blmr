@@ -1,16 +1,19 @@
 Package: lm.br
 Type: Package
 Title: Linear Model with Breakpoint
-Version: 2.1
-Date: 2013-10-16
-Authors@R: c( person("Marc", "Adams", role= c("aut", "cre"), email= "lm.br.pkg@gmail.com") )
-Author: Marc Adams.  Source code includes a file from the TNT package by the U.S. National Institute
-	of Standards and Technology (NIST), and borrows from  'lm'  and  'lm.gls'.
+Version: 2.2
+Date: 2013-10-19
+Authors@R: c( person("Marc", "Adams", role= c("aut", "cre"), email= "lm.br.pkg@gmail.com"),
+  person("'lm' authors", role = "ctb", comment = "prototype for 'lm.br'"),  person("'lm.gls' authors", 
+  role = "ctb"), person("U.S. NIST", role = "ctb", comment = "C++ code for TNT::Vector template") )
 Maintainer: Marc Adams <lm.br.pkg@gmail.com>
-Description: Exact significance tests for a changepoint in linear or multivariate linear regression.
-	Confidence regions with exact coverage probabilities for the changepoint.
+Description: Exact significance tests for a changepoint in linear or multivariate linear regression.  
+  Confidence regions with exact coverage probabilities for the changepoint.
 License: GPL (>= 2)
 Depends: R(>= 3.0.1), methods, Rcpp (>= 0.10.4)
 LinkingTo: Rcpp
-ByteCompile: yes
-Packaged: 2013-10-16 17:28:17 UTC; marc
+Packaged: 2013-10-21 00:50:27 UTC; marc
+Author: Marc Adams [aut, cre],
+  'lm' authors [ctb] (prototype for 'lm.br'),
+  'lm.gls' authors [ctb],
+  U.S. NIST [ctb] (C++ code for TNT::Vector template)

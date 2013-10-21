@@ -103,7 +103,7 @@ double Clmbr::geo_vu_D(const double th2, double *const err)  const
 		int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
 		int*  iwork= Calloc( limit, int );
 
-		double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
+		double  epsabs = acc_sl_abs/2/ns,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
 		double *  work= Calloc( lenw, double );
 
 		const void *  exc[2] = {  this,  &k  };
@@ -294,7 +294,7 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 	int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
 	int*  iwork= Calloc( limit, int );
 
-	double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
+	double  epsabs = acc_sl_abs/2/ns,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
 	double *  work= Calloc( lenw, double );
 
 	const void *  exc[2] = {  this,  &k  };
@@ -399,7 +399,7 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 		int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
 		int*  iwork= Calloc( limit, int );
 
-		double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
+		double  epsabs = acc_sl_abs/2/ns,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
 		double *  work= Calloc( lenw, double );
 
 		const void *  exc[2] = {  this,  &k  };
@@ -574,7 +574,7 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 	int  inf_flag = -1,  neval =0,  ier =0,  limit =100,  lenw = 4*limit,  last =0;
 	int*  iwork= Calloc( limit, int );
 
-	double  epsabs = acc_sl_abs/2/n,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
+	double  epsabs = acc_sl_abs/2/ns,  epsrel = acc_sl_rel/2,  result =0,  abserr =0;
 	double *  work= Calloc( lenw, double );
 
 	const void *  exc[2] = {  this,  &k  };

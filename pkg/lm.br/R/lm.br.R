@@ -15,9 +15,9 @@
 
 
 
-lm.br  <- function( formula, type ="LL", data, subset, weights,
-  inverse =FALSE, var.known =FALSE, offset, contrasts =NULL, 
-  na.action, ... )  {
+lm.br  <- function( formula, type ="LL", data, subset, na.action,
+  weights, inverse =FALSE, var.known =FALSE, offset,
+  contrasts =NULL, ... )  {
 
   call <- match.call()
   mf <- match.call(expand.dots = FALSE)
@@ -62,6 +62,8 @@ lm.br  <- function( formula, type ="LL", data, subset, weights,
       offset <- as.vector( A %*% as.matrix(offset) )
   }
 
+# use 'lm.fit' or 'lm.wfit' to check input, check x-rank per 'tolerance',
+# and return some of the output list
   z  <-  if( is.null(w) )
       lm.fit( x, y, offset=offset, ... )
     else  {
@@ -193,7 +195,8 @@ lm.br  <- function( formula, type ="LL", data, subset, weights,
       xb <- x
       if(xint) colnames(xb)[1] <- "  1-vector"
       for(i in 1:nx) if( is.na(z$coef[i+1]) ) xb[,i] <- 0
-    }  else  {
+    }  
+    else  {
       xb[ , x1c ]  <-  if( type=='TL' )  0  else
           { if( is.infinite(par[1]) )  1  else  pmin( x1-par[1], 0 ) }
       xb[ , x1c+1 ]  <-  if( type=='LT' )  0  else
@@ -231,7 +234,7 @@ lm.br  <- function( formula, type ="LL", data, subset, weights,
 
 
 #  accessor functions
-    z$Cpp_obj  <-  obj
+    z$CppObj  <-  obj
 
 
     z$ci <- function( CL =0.95, method ="clr" )  {
@@ -241,7 +244,7 @@ lm.br  <- function( formula, type ="LL", data, subset, weights,
         if( method=="AF" )  met <- 2  else
           stop( "'method' must be \"CLR\" or \"AF\"" )
       }
-      (z$Cpp_obj)$ci( CL, met )
+      (z$CppObj)$ci( CL, met )
     }
 
 
@@ -256,9 +259,9 @@ lm.br  <- function( formula, type ="LL", data, subset, weights,
       }
       output <- toupper(output)
       if( output=="T" )
-        (z$Cpp_obj)$cr( CL, met, incr )
+        (z$CppObj)$cr( CL, met, incr )
       else  {
-        bounds <- (z$Cpp_obj)$cr( CL, met, incr, as.integer(FALSE) )
+        bounds <- (z$CppObj)$cr( CL, met, incr, as.integer(FALSE) )
         if( output=="V" )
           return( bounds )
         else  {
@@ -319,21 +322,21 @@ lm.br  <- function( formula, type ="LL", data, subset, weights,
       if( is.null(verbose) )  value <- FALSE  else  value <- TRUE
       if( is.null(alpha0) | !is.numeric(alpha0) )  {
         if( is.null(verbose) )
-          (z$Cpp_obj)$sl( met, accuracy, theta0 )
+          (z$CppObj)$sl( met, accuracy, theta0 )
         else
-          (z$Cpp_obj)$sl( met, as.integer(verbose), as.integer(value),
+          (z$CppObj)$sl( met, as.integer(verbose), as.integer(value),
             accuracy, theta0 )
       } else {
         if( is.null(verbose) )
-          (z$Cpp_obj)$sl( met, accuracy, theta0, alpha0 )
+          (z$CppObj)$sl( met, accuracy, theta0, alpha0 )
         else
-          (z$Cpp_obj)$sl( met, as.integer(verbose), as.integer(value),
+          (z$CppObj)$sl( met, as.integer(verbose), as.integer(value),
             accuracy, theta0, alpha0 )
       }
     }
 
 
-    z$mle <- function( )  (z$Cpp_obj)$mle( )
+    z$mle <- function( )  (z$CppObj)$mle( )
 
 
     z$sety <- function( rWy )  {
@@ -346,7 +349,7 @@ lm.br  <- function( formula, type ="LL", data, subset, weights,
         wsorted <- z$weights[ order(z$x1) ]
         rWysorted <- rWysorted[ wsorted!=0 ]
       }
-      (z$Cpp_obj)$sety( rWysorted )
+      (z$CppObj)$sety( rWysorted )
     }
 
 
@@ -385,14 +388,13 @@ lm.br  <- function( formula, type ="LL", data, subset, weights,
 
 
 
-print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
-{
+print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )  {
   cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse ="\n"),
     "\n\n", sep = "")
   type <- x$type
   cat( "Broken-line type:  ", type, "\n\n" )
   if (length(coef(x))>1  && !is.na(x$coef[2]))  {
-    cat( "Significance Level of H0:\"no changepoint\" versus",
+    cat( "Significance Level of H0:\"no changepoint\" vs",
       "H1:\"one changepoint\"\n" )
     cat("  ")
     mx1 <- max( x$x1 )
@@ -410,13 +412,18 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
           x$sl( round( max( mn1 - ai*1.5 ), 2) )
     cat("\n")
     x$ci()
-      cat( "Best-fit changepoint and coefficients:\n" )
-    print.default( round( x$coef, 5 ) )
-    cat("\n")
-   }
-   else  cat( "No coefficients\n" )
-   cat("\n")
-   invisible(x)
+
+# print coefficients unless 'sety' has been called
+    par <- x$CppObj$param()
+    if( !par[6] )  {
+      cat( "Fit changepoint and coefficients:\n" )
+      print.default( round(x$coef, 5) )
+    }
+    else  cat( "Use 'mle()' for changepoint and coefficient estimates\n" )
+  }
+  else  cat( "No coefficients\n" )
+  cat("\n")
+  invisible(x)
 }
 
 

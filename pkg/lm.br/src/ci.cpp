@@ -15,7 +15,7 @@ int Clmbr::ci(const METHOD met, const double incr, const bool verbose, double *c
 
 
 	if (verbose)  {
-		Rcout << 100*(1-SL) << _("-percent confidence interval for changepoint 'theta' by method ");
+		Rcout << 100*(1-SL) << _("-percent confidence interval for changepoint 'theta' by ");
 		if(met==GEO)  Rcout << "CLR" << endl; else  Rcout << "AF" << endl;
 	}
 

@@ -5,7 +5,7 @@
 
 
 void  Clmbr::set_sy(double *const irsy, const METHOD met)
-// recalculate numbers and vectors based on  rW*y = irS*y  values 
+// re-calculate numbers and vectors based on  rW*y = irS*y  values 
 {
 	int i;
 	for (i=0;i<n;i++)
@@ -55,12 +55,13 @@ void  Clmbr::set_sy(double *const irsy, const METHOD met)
 	sysq = *psy*(*psy);  
 	qysq = *pqy*(*pqy);
 
-	double  max_gysq;
-	mle( false, &max_gysq );
-	omega =  qysq - max_gysq ;
+	double  max_gqysq;
+	mle( false, &max_gqysq );
+	omega =  qysq - max_gqysq ;
 	if(omega < 0)  omega= 0.;
 
-	if ( met != INIT ) {
+
+	if ( met != INIT )  {
 		const double  th0i = th0,  a0i = alpha0;
 		th0 += 1;
 		alpha0 += 1;

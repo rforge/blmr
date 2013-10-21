@@ -4,7 +4,7 @@
 
 
 
-void  Clmbr::transform( void )
+void  Clmbr::pre_calc( void )
 // transform to a canoncial model,  precalculate working variables and vectors 
 // that depend only on 'x' values and 'Sigma' matrix
 {
@@ -17,57 +17,16 @@ void  Clmbr::transform( void )
 	for(i=0;i<ns;i++)  xs[i] = (*px)[ is[i] ];
 
 
-	double *  X= Calloc( n*xrank, double );
-	for (i=0;i<n;i++)  for (j=0;j<xrank;j++)  
-		if( model_in > 0 )  *(X+j*n+i) = *(x_in+j*n+i);  else  *(X+j*n+i) = *(x_in+j*n+(n-1-i));
-
-	int xcol;
-	if(Model==M3) xcol=0; else xcol=1;
-	if( model_in < 0 )  for (i=0;i<n;i++)  *(X+xcol*n+i) *= -1.;
-
 
 //  Canonically reduce the model, using an orthogonal matrix Q for change-of-basis.
-//  Use LAPACK routines DGEQRF to generate Q and DORMQR to multiply by Q .
+//  Use LAPACK routine DORMQR to multiply by Q .
 
-
-//	compute  X =  irS * X :
-	double *  temp= Calloc( n, double );
-	if( vectorS )  for(j=0;j<xrank;j++)  for(i=0;i<n;i++)  *(X+j*n+i) *=  *( irS + i );
-	if( matrixS )  for(j=0;j<xrank;j++)  {
-		for(i=0;i<n;i++)  temp[i] = *(X+j*n+i);
-		for(i=0;i<n;i++) {
-			*(X+j*n+i) = 0.;
-			for( int k=0; k<n; k++) *(X+j*n+i) += *( irS + k*n + i ) * temp[k];
-		}
-	} 
-
-
-// 'Q' and 'tau' are global arrays, declared in "lmbr.h"
-// set the pre-transform columns of 'Q' to be the columns of irS*X ,  
-// but with the  1- and x1- vectors as the final two cols
-	for(i=0;i<n;i++)  for(j=xcol+1;j<xrank;j++)  *(Q + (j-xcol-1)*n + i ) =  *(X+j*n+i);
-	for(i=0;i<n;i++)  for(j=0;j<xcol+1;j++)  *(Q + (j+xrank-xcol-1)*n + i ) =  *(X+j*n+i);
-	Free( X );
 
 	int  lwork,  info;
+	double *  temp= Calloc( n, double );
 	double  tmp[1];
-	{
-		lwork = -1;
-
-		F77_CALL(dgeqrf)( &n, &xrank, Q, &n, tau, tmp, &lwork, &info );
-
-		if( info )  stop( _("LAPACK routine 'dgeqrf' failed") );  else  lwork= *tmp; 
-		double *  work= Calloc( lwork, double );
-
-		F77_CALL(dgeqrf)( &n, &xrank, Q, &n, tau, work, &lwork, &info );
-
-		if( info )  stop( _("LAPACK routine 'dgeqrf' failed") );
-		Free( work );
-	}
-
 
 // first, use DORMQR to setup some vectors and constants
-
 	{
 		Vector<double>  e1(n,0.),  en(n,0.);
 		for(i=0;i<=is[0];i++)  e1[i] = 1.;
@@ -155,16 +114,11 @@ void  Clmbr::transform( void )
 		*puqen = 1./sqrt( qen*qen ) * qen;
 
 		if(Model==M1) *puqx = *nan_m;  else  *puqx = 1./sqrt( qsx*qsx ) * qsx;
-
-// initialize vectors for method="MC"
-		for(j=0;j<ns+1;j++)  pmq1[j]= dummy_m; 
-		if(Model==M3)  *pm1h= dummy_m; 
 	}
 
 
 
 // pre-calculate  Q* "stub 1-"  and  Q* "stub x-"  vectors and scalars
-
 	{
 		const int  nC1 = ns+1;
 		double *  C1= Calloc( n*nC1, double );
@@ -265,6 +219,15 @@ void  Clmbr::transform( void )
 		Free( C1 );  Free( Cx );
 	}
 	
+
+// initialize vectors for method="MC"
+	{
+		Vector<double>  dummy_m( m, 0. );
+		for(j=0;j<ns+1;j++)  pmq1[j]= dummy_m; 
+		if(Model==M3)  *pm1h= dummy_m; 
+	}
+
+
 	Lgamma = 0.;
 	double gg;
 	if(k1== -1)  {
@@ -278,8 +241,6 @@ void  Clmbr::transform( void )
 		Lgamma += acos( gg );
 	}
 
-
-	if ( py != NULL )   set_y();
 
 	return;
 }

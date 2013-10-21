@@ -46,7 +46,8 @@ where $e \sim N(0,\sigma^{2}\Sigma)$, denoting $a_{-}=min(a,0)$
 and $a_{+}=max(a,0)$.  Parameters $\theta$, $\alpha$, $\beta$, 
 $\beta{}'$, $\sigma$ are unknown but $\Sigma$ is known.  
 Model (2) is a threshold model, while model (3) would apply for 
-a known threshold level.\\
+a known threshold level.  The following presentation orders 
+$x_1 \le x_2 \le ... \le x_n$, without loss of generality.\\
 
 The likelihood-ratio is a test statistic.  A test statistic $D$
 assigns a numeric value to a postulate parameter value, $p_{0}$,
@@ -61,7 +62,7 @@ is a $100\alpha\%$ confidence region.\\
 Conditional inference incorporates sufficient statistics to
 account for the other, unknown parameters.  This refinement
 determines the exact distribution of a test statistic, even for
-small data sets.  The familiar Student's $t$, for example, is the
+small data sets.  Student's $t$, for example, is the
 distribution of a sample mean conditional on a sufficient
 statistic for the variance.  See 
 \citet[ch.15]{kalbfleisch:1985}.\\
@@ -241,7 +242,9 @@ lm.br( mpg ~ wt + hp, data = mtcars )
 \citet[ch.6]{hoffman+kunze:1971}, \citet[sec. 7.1]{lehmann:2005}.
 
 \section{Remarks}
-If a broken line with Normal errors represents the relationship between a factor and responses, \texttt{lm.br} solves the inference step for the changepoint.  Fitting a broken line can reveal the plausible interval for a changepoint, although practical cause-effect relations have a smooth transition usually.  Any statistical analysis should examine the fit of the model and the error distribution with graphs and significance tests, interpret results, and consider adjustments to the model or alternative models.
+If a broken line with Normal errors represents the relationship between a factor and responses, \texttt{lm.br} solves the inference step for the changepoint.  Fitting a broken line can reveal the plausible interval for a changepoint, although practical cause-effect relations usually have 
+a smooth transition.  Any statistical analysis should examine the fit of the model and the error distribution with graphs and significance tests, 
+interpret results, and consider adjustments to the model or alternative models.
 
 
 

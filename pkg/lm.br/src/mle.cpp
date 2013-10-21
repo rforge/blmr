@@ -4,7 +4,7 @@
 
 
 
-double  Clmbr::mle( const bool verbose,  double *const  max_gysq,  double *const  par  )  const
+double  Clmbr::mle( const bool verbose,  double *const  max_gqysq,  double *const  par  )  const
 // find theta_mle for maximum value of (gamma(theta)*qy)^2
 // calculate  alphamle, betamle, betapmle, vmle
 {
@@ -12,8 +12,8 @@ double  Clmbr::mle( const bool verbose,  double *const  max_gysq,  double *const
 	if( qysq/m < zero_eq )  line= true;
 
 
-// find theta_mle, which is the value of theta that gives
-// the maximum value of   ( gam(theta).Qy )^2 
+// find 'thmle', the maximum likelihood estimate of 'theta', which is the value that
+// maximizes  ( gam(theta).Qy )^2 
 	double  vf= (xs[ns-1]-xs[ns-2])*(*pqy*pq1[ns-1]), max= vf*vf/qff[ns-1], thmle= xs[ns-2];
 	int kmle= ns-1;
 
@@ -49,7 +49,7 @@ double  Clmbr::mle( const bool verbose,  double *const  max_gysq,  double *const
 	if(kmle>0)  if ( fabs(xs[kmle-1] - thmle) < zero_eq )  thmle = xs[kmle-1];
 	if ( fabs(xs[kmle] - thmle) < zero_eq )  {  kmle++; thmle = xs[kmle-1]; }
 
-	if( max_gysq != NULL )  *max_gysq =  max;
+	if( max_gqysq != NULL )  *max_gqysq =  max;
 
 
 // calculate  alphamle, betamle, betapmle, vmle
@@ -118,7 +118,7 @@ double  Clmbr::mle( const bool verbose,  double *const  max_gysq,  double *const
 	}
 
 
-//  find theta value for minimum of 'ff' =(Q*f)^2 to check for singular x-matrix
+//  find 'theta' value for minimum of 'ff' =(Q*f)^2 to check for singular x-matrix
 	double  ffmin = Inf,  thfmin = xs[1];
 	double  lo_limit = xs[0]+acc_xb;
 	if( Model==M2 )  lo_limit = xs[0]-acc_xb-1;
@@ -160,7 +160,8 @@ double  Clmbr::mle( const bool verbose,  double *const  max_gysq,  double *const
 	if (verbose) {
 		Rcout << endl << _("maximum-likelihood estimates of parameters:") << endl << endl;
 		Rcout << setw(20) << "         theta =" << setw(12) << thmle*reflect << "     ( " << _("x-coordinate of changepoint") << " )" << endl;
-		Rcout << setw(20) << "         alpha =" << setw(12) << alphamle << "     ( " << _("y-coordinate of changepoint") << " )" << endl;
+		Rcout << setw(20) << "         alpha =" << setw(12) << alphamle << "     ( ";
+		if( m1==n )  Rcout << _("y-coordinate of changepoint");  else  Rcout << _("coefficient of '1'-vector");  Rcout << " )" << endl;
 		Rcout << setw(20) << "          beta =" << setw(12) << betamle << "     ( " << _("slope of first line") << " )" << endl;
 		Rcout << setw(20) << "    beta-prime =" << setw(12) << betapmle << "     ( " << _("slope of second line") << " )" << endl;
 		Rcout << setw(20) << "      variance =" << setw(12) << vmle << endl << endl;

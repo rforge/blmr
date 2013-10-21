@@ -1,10 +1,10 @@
 //
-// during initialization, set y values
 
 #include "lmbr.h"
 
 
 void Clmbr::set_y( void )
+// during initialization, set y values
 {
 	int i;
 	for(i=0;i<n;i++) 

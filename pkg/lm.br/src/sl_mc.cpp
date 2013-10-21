@@ -13,7 +13,7 @@ double Clmbr::sl_mc(void)  const
 	Rcpp::Function Rflush("flush.console");
 
 	Rcout << endl << _("MC evaluation of conditional likelihood-ratio SL") << endl;
-    Rcout << _("for theta0= ") << th0print << _(",  target accuracy =  ") << acc << ":" << endl << endl;
+    Rcout << _("for ") << "theta0= " << th0print << ",  " << _("target accuracy =  ") << acc << ":" << endl << endl;
 	Rcout << setw(10) << "iteration" << setw(12) << "est. SL" << setw(15) << "est. acc." << endl;
 	Rflush();
 
@@ -70,8 +70,9 @@ double Clmbr::sl_mc2(void)  const
 	double th0print = th0;   if(model_in < 0) th0print = -th0;
 	Rcpp::Function Rflush("flush.console");
  
-    Rcout << endl << _( "MC evaluation of conditional likelihood-ratio SL for (th0,a0)= (" ) << th0print 
-		<< "," << alpha0 << _( "),  target accuracy = " ) << acc << ":" << endl << endl;
+    Rcout << endl << _( "MC evaluation of conditional likelihood-ratio SL") << endl;
+	Rcout << _("for ") << "(th0,a0)= (" << th0print << "," << alpha0 << "),  " 
+		<< _("target accuracy =  ") << acc << ":" << endl << endl;
 	Rcout << setw(10) << "iteration" << setw(14) << "est. SL" << setw(15) << "est. acc." << endl;
 	Rflush();
 

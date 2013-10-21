@@ -18,9 +18,10 @@ private:
 
 	MODEL Model;
 	int model_in, n, m, m1, ns, xrank;
-	bool variance_unknown, inverse;
+	bool variance_unknown, inverse, vectorS, matrixS;
+	bool cov_matrix_diagonal, trivial, sety_called;
 
-	bool vectorS, matrixS, cov_matrix_diagonal, th0ex, trivial;
+	bool th0ex;
 	int k1, k0, subints;
 	double s11, sx1, sxx, n1, se1sq, y1, yx, sysq, qysq, omega, c, th0, alpha0, z, w;
 	double prime_z, g0u1, g0u2, c1, c2, Lgamma, lambdasq, lambda, th0MC, th0a0;
@@ -55,9 +56,10 @@ private:
 
 //initializing functions
 	void initialize( void );
-	void set_Sigma( void );
 	void set_x(void);
-	void transform(void);
+	void set_Sigma( void );
+	void set_Q( void );
+	void pre_calc(void);
 	void set_y(void);
 	void set_theta0(double th_0, METHOD met =INIT);
 	void set_alpha0(double a_0, METHOD met =INIT);

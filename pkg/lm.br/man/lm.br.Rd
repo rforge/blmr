@@ -7,7 +7,7 @@
 
 \docType{package}
 
-\title{ Fit a Linear Model with a Breakpoint }
+\title{Fit a Linear Model with a Breakpoint}
 
 \description{
 Exact significance tests for a coefficient changepoint in
@@ -19,7 +19,7 @@ probabilities for the changepoint.
 
 \usage{
 lm.br( formula, type = "LL", data, subset, weights, inverse = FALSE,
-var.known = FALSE, offset, contrasts, na.action, ... )
+       var.known = FALSE, offset, contrasts, na.action, ... )
 }
 
 
@@ -76,7 +76,6 @@ of a postulate value outside of the x-values.  Thus,
 'sl( min(x1) - 1 )'  would give the exact significance level of 
 the null hypothesis "single line" versus the alternate hypothesis
 "broken line," in the LL model.
-
 }
 
 
@@ -91,9 +90,8 @@ and 'sl' significance levels for the changepoint's x-coordinate or
 Other functions are 'mle' to get maximum likelihood estimates
 and 'sety' to set new y-values.
 
-The returned list also contains the components of 
-an \code{\link{lm}} list including 'coefficients', 'fitted.values' 
-and 'residuals'.
+The returned list also contains the components of an 'lm' output 
+list including 'coefficients', 'fitted.values' and 'residuals'.
 }
 
 
