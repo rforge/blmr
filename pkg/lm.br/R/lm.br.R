@@ -420,7 +420,7 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
       cat( "Fit changepoint and coefficients:\n" )
       print.default( round(x$coef, 5) )
     }
-    else  cat( "'sety' called, use 'mle()' for parameter estimates\n" )
+    else  cat( "After a call to 'sety' use 'mle()' for parameter estimates.\n" )
   }
   else  cat( "No coefficients\n" )
   cat("\n")

@@ -23,7 +23,7 @@ The square-root of a vector 'W' is the vector 'rW' of the square-roots of the el
 }
 
 \note{
-This method changes the y-values for the accessor functions 'sl', 'ci', 'cr' and 'mle'.  But the output list of 'coefficients' and 'fitted.values' and so on retains its values from the original call.
+This method changes the y-values for the accessor functions 'sl', 'ci', 'cr' and 'mle'.  But the output list of 'coefficients', 'fitted.values' and so on retains its values from the original call.
 }
 
 
