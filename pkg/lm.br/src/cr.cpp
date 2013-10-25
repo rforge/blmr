@@ -21,42 +21,31 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 	Rcpp::Function  Rflush("flush.console");
 
 	bool  verbose_progress;
-	if( met==GEO )  verbose_progress = true;  else  verbose_progress = false;
-
-	double inc;
-	if( incr == -1 )  inc= xinc;  else  inc= incr;
+	if( met==GEO  && !trivial )  verbose_progress = true;  else  verbose_progress = false;
 
 
 // get theta-boundaries of confidence region(s)
+	
+	double inc;
+	if( incr == -1 )  inc= xinc;  else  inc= incr;
 
 	if(verbose_progress) { Rcout << "   " << _("getting theta-boundaries...   ");  Rflush(); }
 
 	double*  tmp = Calloc( 2*ns, double );
 
-
 	int numr;
 	if(met==GEO)  numr = ci(GEO2,inc,false,tmp);  else  numr = ci(AF2,inc,false,tmp);
 
-
 	double*  th_bds= Calloc( 2*numr, double );
-
 
 	int i;
 	for (i=0;i<2*numr;i++)  th_bds[i] = tmp[i];
 	Free( tmp );
 
-	const double  th_min= xs[0]-1,  th_max= xs[ns-1]+1;
-	if(th_bds[0]== -Inf)  th_bds[0]= th_min;
-	if(th_bds[2*numr-1]== +Inf)  th_bds[2*numr-1]= th_max;
-	for(i=0;i<2*numr;i++) {
-		if( fabs(th_bds[i]-xs[0]) < zero_eq )  th_bds[i]= xs[0];
-		if( fabs(th_bds[i]-xs[ns-1]) < zero_eq )  th_bds[i]= xs[ns-1];
-	}
-
 
 // get (theta,alpha)-boundaries of confidence region(s)
 // store boundary values in an  N x 3  array
-	
+
 	int  N=0;
 	double width= 0;						
 	for (i=0;i<numr;i++) width += th_bds[2*i+1] - th_bds[2*i];
@@ -67,7 +56,7 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 
 	const double thmle= mle(false);
 
-	if( trivial && !(isnan(thmle) && !isinf(thmle)) && thmle!=xs[0] )  {
+	if( trivial && !ISNAN(thmle) && thmle!=xs[0] )  {
 
 		const double amle= ahigh(AF,thmle);
 		*(bds+N*3+0) = thmle; *(bds+N*3+1) = amle; *(bds+N*3+2) = amle; N++;
@@ -75,8 +64,15 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 
 	}  else  {
 
-		double  th= 0;
+		const double  th_min= xs[0]-1,  th_max= xs[ns-1]+1;
+		if(th_bds[0]== -Inf)  th_bds[0]= th_min;
+		if(th_bds[2*numr-1]== +Inf)  th_bds[2*numr-1]= th_max;
+		for(i=0;i<2*numr;i++) {
+			if( fabs(th_bds[i]-xs[0]) < zero_eq )  th_bds[i]= xs[0];
+			if( fabs(th_bds[i]-xs[ns-1]) < zero_eq )  th_bds[i]= xs[ns-1];
+		}
 
+		double  th= 0;
 
 		int  width =0,  col =0;
 		double  min_th=0,  max_th=0;
@@ -89,7 +85,6 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 			width = tw[0];
 			col = 33;
 		}
-
 
 
 		for (i=0;i<numr;i++) {
@@ -184,7 +179,7 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 
 // confidence region ends at "thb" with an open end if  thb = x(n) + 1,
 // a vertical line if thb= x(n), a vertical line if  thb= x(1) in M1,
-// otherwise an alpha-MLE point
+// otherwise an 'alpha-MLE' point
 
 			if( thb == th_max ) {
 				*(bds+N*3+0) =thb; *(bds+N*3+1) =a_sl(met,thb,-1); *(bds+N*3+2) =a_sl(met,thb,1); N++; 
@@ -210,10 +205,11 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 
 	}
 
+
 	if(verbose_progress)  Rcout << endl << endl;
 
-	if(verbose)  { 
-		Rcout << " " << 100*(1-SL) << _("-percent joint confidence region for  (theta, alpha)  by method  ");
+	if(verbose)  {
+		Rcout << 100*(1-SL) << _("-percent joint confidence region for  (theta, alpha)  by ");
 		if(met==GEO)  Rcout << "CLR" << endl; else  Rcout << "AF" << endl;
 		Rcout << endl << setw(10) << "theta" << setw(16) << "min. alpha" << setw(15) 
 				<< "max. alpha" << endl << endl;
@@ -256,7 +252,7 @@ double Clmbr::a_sl(const METHOD met, const double th, const int high_low)
 		if( sl(th,ah,met,false) < SL )  stop( _("'a_sl' initial point below critical SL") );
 		const double incr = inc_y*high_low; 
 		double guess = a_af(th, high_low);
-		if ( isnan(guess) || (guess-ah)*high_low < zero_eq) guess = ah+incr;
+		if ( ISNAN(guess) || (guess-ah)*high_low < zero_eq) guess = ah+incr;
 		double guess2 = ah;
 		while ( sl(th,guess,met,false) > SL) { 
 			guess2 = guess;  

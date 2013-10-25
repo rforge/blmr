@@ -11,7 +11,7 @@ double Clmbr::sl(const double th_0, const METHOD met, const bool verbose)
 
 	if(trivial)  { 
 		const double  thmle= mle(false);
-		if(  (isnan(thmle) && !isinf(thmle))  ||  th_0==thmle  || 
+		if(  ISNAN(thmle)  ||  th_0==thmle  || 
 				(Model==M2 && thmle==xs[0] && th_0 <= thmle)  )   sL= 1.;  else  sL= 0.;
 
 	}  else  {
@@ -62,7 +62,7 @@ double Clmbr::sl(const double th_0, const double a0, const METHOD met, const boo
 
 	if(trivial) { 
 		const double  thmle= mle(false);
-		if( (isnan(thmle) && !isinf(thmle))  ||  ( thmle==xs[0] && thmle >= th_0 )  )  {
+		if( ISNAN(thmle)  ||  ( thmle==xs[0] && thmle >= th_0 )  )  {
 			const double  
 				slope =  ( (*py)[ is[1] ] - (*py)[ is[0] ] )/( xs[1]-xs[0]),  
 				intercept =  (*py)[ is[0] ]  - slope*xs[0],  

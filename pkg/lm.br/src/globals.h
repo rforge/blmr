@@ -10,12 +10,11 @@
 
 #include <iomanip>
 #include <algorithm>
-#include <limits>
 #include <math.h>
 #include <time.h>
 
 #include <R.h>
-#include <R_ext/Applic.h>		//  for 'Rdqags' and 'Rdqagi'
+#include <R_ext/Applic.h>		// for 'Rdqags' and 'Rdqagi'
 #include <R_ext/Lapack.h>
 
 #include <Rcpp.h>
@@ -32,19 +31,19 @@
 
 
 using TNT::Vector;
-using std::endl;
 using Rcpp::NumericVector;
 using Rcpp::NumericMatrix;
-using Rcpp::Rcout;
 using Rcpp::stop;
+using Rcpp::Rcout;
+using std::endl;
 
 
 enum  MODEL { M1, M2, M3 };
 enum  METHOD { GEO, GEO2, AF, AF2, MC, INIT };
 const double zero_eq = ldexp( 1., -40 );
-const double Inf = numeric_limits<double>::infinity();     
-const double NaN = numeric_limits<double>::quiet_NaN();
-
+const double Inf = R_PosInf;
+const double NaN = R_NaN;
+const double pi = M_PI;
 
 #endif
 

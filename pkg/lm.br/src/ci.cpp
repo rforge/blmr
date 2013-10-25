@@ -28,7 +28,7 @@ int Clmbr::ci(const METHOD met, const double incr, const bool verbose, double *c
 
 		numr= 1.;
 		const double thmle= mle(false);
-		if( isnan(thmle)  &&  !isinf(thmle) )  { bds[0]= -Inf; bds[1]= Inf; }  
+		if( ISNAN(thmle) )  { bds[0]= -Inf; bds[1]= Inf; }  
 			else  { if( Model==M2 && thmle==xs[0] )  { bds[0]= -Inf; bds[1]= thmle; }		// single line in Model 2
 				else  bds[0] = bds[1] = thmle; }
 

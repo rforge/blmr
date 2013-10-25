@@ -21,10 +21,10 @@ double Clmbr::rho(const double th, const int k)  const
 // check if th0 or th is on an end-interval
 		bool  th1= false, th2= false, th01= false, th02= false;
 		if( xs[ns-2] <= th && th < xs[ns-1] ) th2= true;  else  {
-			if( (Model==M1 && xs[0]<th && th<=xs[1]) || (Model==M2 && th<=xs[0]) || (Model==M3 && isinf(th)) ) th1= true;
+			if( (Model==M1 && xs[0]<th && th<=xs[1]) || (Model==M2 && th<=xs[0]) || (Model==M3 && (!R_FINITE(th) && !ISNAN(th))) ) th1= true;
 		}
 		if( xs[ns-2] <= th0 && th0 < xs[ns-1] ) th02= true;  else  {
-			if(  ( Model==M1 && xs[0]<th0 && th0<=xs[1] )  ||  ( Model==M2 && th0<=xs[0] ) || (Model==M3 && isinf(th0))  ) th01 = true;
+			if(  ( Model==M1 && xs[0]<th0 && th0<=xs[1] )  ||  ( Model==M2 && th0<=xs[0] ) || (Model==M3 && (!R_FINITE(th0) && !ISNAN(th0)))  ) th01 = true;
 		}
 
 		if( th==th0 || (th1 && th01) || (th2 && th02) )  return 1.;  else  {	//2
@@ -63,10 +63,10 @@ double Clmbr::rhosq(const double th, const int k)  const
 // check if th0 or th is on an end-interval
 		bool  th1= false, th2= false, th01= false, th02= false;
 		if( xs[ns-2] <= th && th < xs[ns-1] ) th2= true;  else  {
-			if( (Model==M1 && xs[0]<th && th<=xs[1]) || (Model==M2 && th<=xs[0]) || (Model==M3 && isinf(th)) ) th1= true;
+			if( (Model==M1 && xs[0]<th && th<=xs[1]) || (Model==M2 && th<=xs[0]) || (Model==M3 && (!R_FINITE(th) && !ISNAN(th))) ) th1= true;
 		}
 		if( xs[ns-2] <= th0 && th0 < xs[ns-1] ) th02= true;  else  {
-			if(  ( Model==M1 && xs[0]<th0 && th0<=xs[1] )  ||  ( Model==M2 && th0<=xs[0] ) || (Model==M3 && isinf(th0))  ) th01 = true;
+			if(  ( Model==M1 && xs[0]<th0 && th0<=xs[1] )  ||  ( Model==M2 && th0<=xs[0] ) || (Model==M3 && (!R_FINITE(th0) && !ISNAN(th0)))  ) th01 = true;
 		}
 
 		if( th==th0 || (th1 && th01) || (th2 && th02) )  return 1.;  else  {	//2
@@ -100,7 +100,7 @@ double Clmbr::drho(const double th, const int k)  const
 {
 	if(th>=xs[ns-1])  return NaN;  else
 		if(Model==M1  &&  th<xs[0])  return NaN;  else  
-			if( isinf(th) )  return 0.;  else  {
+			if( !R_FINITE(th) && !ISNAN(th) )  return 0.;  else  {
 				const double fsq= ff(th,k);
 				double dro = (a0[k] - b0[k]*th)/sqrt(fsq)/fsq; 
 				if (th < th0)  dro = -dro;
@@ -114,7 +114,7 @@ double Clmbr::drhosq(const double th, const int k)  const
 {
 	if(th>=xs[ns-1])  return NaN;  else
 		if(Model==M1  &&  th<xs[0])  return NaN;  else  
-			if( isinf(th) )  return 0.;  else  {
+			if( !R_FINITE(th) && !ISNAN(th) )  return 0.;  else  {
 				const double  fsq = ff(th,k);
 				const double ab= a0[k] - b0[k]*th; 
 				return ab*ab/(fsq*fsq*fsq);

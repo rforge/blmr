@@ -152,10 +152,9 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
 #  loop to drop columns that are dependent at some changepoint value
 #  if x-matrix is dependent at  changepoint = 'th'  then  
 #  Q*f(th)=0  on lower rows,  where  f(th) = max( x1-th, 0 )
-
     x_dep <- TRUE
 
-    while( x_dep ) {
+    while( x_dep )  {
 
       obj <- new( Cpp_Clmbr, y_, x_, w_, model_num, 
             as.integer(inverse), as.integer(var.known) )
@@ -191,7 +190,7 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
 
 # output
     par <- obj$param()
-    if( is.nan( par[1] ) )  {  # case of perfect line
+    if( is.nan( par[1] ) )  {   # case of perfect line
       xb <- x
       if(xint) colnames(xb)[1] <- "  1-vector"
       for(i in 1:nx) if( is.na(z$coef[i+1]) ) xb[,i] <- 0

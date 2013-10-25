@@ -9,7 +9,7 @@ void  Clmbr::set_sy(double *const irsy, const METHOD met)
 {
 	int i;
 	for (i=0;i<n;i++)
-		if ( isinf(irsy[i]) || isnan(irsy[i]) )  stop( _("invalid value in 'rWy' vector") );
+		if ( !R_FINITE(irsy[i]) )  stop( _("invalid value in 'rWy' vector") );
 
 	double *  virsy= Calloc( n, double );
 	for (i=0;i<n;i++)  if( model_in > 0 )  virsy[i] = irsy[i];  else  virsy[i] = irsy[n-1-i];

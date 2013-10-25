@@ -11,7 +11,7 @@ void  Clmbr::set_SL( const double cSL )
 // traditionally called the alpha-value in statistics literature
 // precalculate numbers based on SL used in the 'a_af' subroutine in file 'cr.cpp'
 {
-	if ( isnan(cSL) || cSL<=0. || cSL>=1. )  stop( _("invalid 'SL' value") );
+	if ( ISNAN(cSL) || cSL<=0. || cSL>=1. )  stop( _("invalid 'SL' value") );
 
 	if (cSL != prev_SL) {
 
