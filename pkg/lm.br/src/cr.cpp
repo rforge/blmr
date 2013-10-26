@@ -6,7 +6,7 @@
 
 int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *const bounds)
 //
-//      Checks whether { (theta,alpha)  such that  sig. level  > SL}  is contiguous.
+//      Checks whether { (theta,alpha)  such that  sig. level  > 'SL' }  is contiguous.
 // Returns N = number of rows for the array 'bounds[N][3]' = (th, min_alpha, max_alpha) values.
 // If (met==GEO) using Knowles, Siegmund and Zhang's geometric formula to calculate  sig. levels;
 // if (met==AF) using Approximate-F method.
@@ -46,6 +46,14 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 // get (theta,alpha)-boundaries of confidence region(s)
 // store boundary values in an  N x 3  array
 
+	const double  th_min= xs[0]-1,  th_max= xs[ns-1]+1;
+	if(th_bds[0]== -Inf)  th_bds[0]= th_min;
+	if(th_bds[2*numr-1]== +Inf)  th_bds[2*numr-1]= th_max;
+	for(i=0;i<2*numr;i++) {
+		if( fabs(th_bds[i]-xs[0]) < zero_eq )  th_bds[i]= xs[0];
+		if( fabs(th_bds[i]-xs[ns-1]) < zero_eq )  th_bds[i]= xs[ns-1];
+	}
+
 	int  N=0;
 	double width= 0;						
 	for (i=0;i<numr;i++) width += th_bds[2*i+1] - th_bds[2*i];
@@ -63,14 +71,6 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 
 
 	}  else  {
-
-		const double  th_min= xs[0]-1,  th_max= xs[ns-1]+1;
-		if(th_bds[0]== -Inf)  th_bds[0]= th_min;
-		if(th_bds[2*numr-1]== +Inf)  th_bds[2*numr-1]= th_max;
-		for(i=0;i<2*numr;i++) {
-			if( fabs(th_bds[i]-xs[0]) < zero_eq )  th_bds[i]= xs[0];
-			if( fabs(th_bds[i]-xs[ns-1]) < zero_eq )  th_bds[i]= xs[ns-1];
-		}
 
 		double  th= 0;
 

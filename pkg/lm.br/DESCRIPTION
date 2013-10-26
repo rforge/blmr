@@ -18,7 +18,7 @@ Description: Exact significance tests for a changepoint in linear or multivariat
 License: GPL (>= 2)
 Depends: R(>= 3.0.1), methods, Rcpp (>= 0.10.4)
 LinkingTo: Rcpp
-Packaged: 2013-10-25 16:14:58 UTC; marc
+Packaged: 2013-10-26 00:05:33 UTC; marc
 Author: Marc Adams [aut, cre],
   authors of R function 'lm' [ctb] (general interface),
   authors of 'lm.gls' [ctb] (interface and R code for matrix weights),

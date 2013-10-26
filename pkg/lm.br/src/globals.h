@@ -2,20 +2,22 @@
 //  "includes" and global variable definitions for class Clmbr
 
 
-#if !defined  CLMBR_G_H__		//prevents compiler from repeating this code in other files
+#if !defined  CLMBR_G_H__		// prevents compiler from repeating this code in other files
 #define  CLMBR_G_H__
 
 
 #define R_NO_REMAP
 
-#include <iomanip>
-#include <algorithm>
-#include <math.h>
+#include <iomanip>				// for 'setw'
+#include <algorithm>			// for 'min', 'max'
+#include <math.h>				// for 'sqrt', 'log' 
 #include <time.h>
 
+extern "C" {
 #include <R.h>
 #include <R_ext/Applic.h>		// for 'Rdqags' and 'Rdqagi'
 #include <R_ext/Lapack.h>
+}
 
 #include <Rcpp.h>
 
@@ -44,6 +46,7 @@ const double zero_eq = ldexp( 1., -40 );
 const double Inf = R_PosInf;
 const double NaN = R_NaN;
 const double pi = M_PI;
+
 
 #endif
 
