@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: lm.br 2.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-10-24 08:43-0400\n"
+"POT-Creation-Date: 2013-10-25 20:08-0400\n"
 "PO-Revision-Date: 2013-09-20 20:09-0500\n"
 "Last-Translator: \n"
 "Language-Team: Marc Adams <lm.br.pkg@gmail.com>\n"
@@ -55,17 +55,17 @@ msgstr ""
 "'bisect' 'const' ne peut pas trouvé un point à l'intérieur des valeurs "
 "initiales"
 
-#: bisect.cpp:43
+#: bisect.cpp:44
 msgid ""
 "'bisect' const  failed to reach tolerance after maximum number of iterations"
 msgstr "'bisect' 'const' hors tolérance après nombre maximum d'itérations"
 
-#: bisect.cpp:59
+#: bisect.cpp:60
 msgid "'bisect_sl' cannot find interim point from starting values"
 msgstr ""
 "'bisect_sl' ne peut pas trouvé un point à l'intérieur des valeurs initiales"
 
-#: bisect.cpp:66
+#: bisect.cpp:68
 msgid ""
 "'bisect_sl' failed to reach tolerance after maximum number of iterations"
 msgstr "'bisect_sl' hors tolérance après nombre maximum d'itérations"

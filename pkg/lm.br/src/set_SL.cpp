@@ -9,7 +9,7 @@
 void  Clmbr::set_SL( const double cSL )
 // set the critical significance level to determine confidence intervals or regions
 // traditionally called the alpha-value in statistics literature
-// precalculate numbers based on SL used in the 'a_af' subroutine in file 'cr.cpp'
+// precalculate numbers used in the 'a_af' subroutine 
 {
 	if ( ISNAN(cSL) || cSL<=0. || cSL>=1. )  stop( _("invalid 'SL' value") );
 

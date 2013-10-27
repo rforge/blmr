@@ -416,10 +416,10 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
 # print coefficients unless 'sety' has been called
     par <- x$CppObj$param()
     if( !par[6] )  {
-      cat( "Fit changepoint and coefficients:\n" )
+      cat( "Changepoint and coefficients:\n" )
       print.default( round(x$coef, 5) )
     }
-    else  cat( "After a call to 'sety' use 'mle()' for parameter estimates.\n" )
+    else  cat( "After call to 'sety' use 'mle()' for parameter estimates.\n" )
   }
   else  cat( "No coefficients\n" )
   cat("\n")

@@ -6,11 +6,9 @@
 #define  CLMBR_G_H__
 
 
-#define R_NO_REMAP
-
 #include <iomanip>				// for 'setw'
 #include <algorithm>			// for 'min', 'max'
-#include <math.h>				// for 'sqrt', 'log' 
+#include <math.h>				// for 'sqrt', 'log', 'cos' 
 #include <time.h>
 
 extern "C" {

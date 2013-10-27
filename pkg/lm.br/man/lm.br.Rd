@@ -83,8 +83,8 @@ the null hypothesis "single line" versus the alternate hypothesis
 'lm.br' returns a list that includes a C++ object with accessor
 functions.
 
-Function 'ci' gets confidence intervals, 'cr' confidence regions,
-and 'sl' significance levels for the changepoint's x-coordinate or
+Function 'sl' gets significance levels, 'ci' confidence intervals, 
+and 'cr' confidence regions for the changepoint's x-coordinate or
 (x,y)-coordinates.
 
 Other functions are 'mle' to get maximum likelihood estimates
@@ -106,8 +106,8 @@ algebraic expressions of the model above.
 Knowles, M., Siegmund, D. and Zhang, H.P. (1991)  Confidence regions 
 in semilinear regression,  _Biometrika_, *78*, 15-31. 
 
-Siegmund, D. and Zhang, H.P. (1994),  "Confidence regions in
-broken line regression,"  in  _Change-point Problems_,  IMS
+Siegmund, D. and Zhang, H.P. (1994),  Confidence regions in
+broken line regression,  in  _Change-point Problems_,  IMS
 Lecture Notes -- Monograph Series, vol. 23,  eds. E. Carlstein, H.
 Muller and D. Siegmund,  Hayward, CA: Institute of Mathematical
 Statistics,  pp. 292-316.
@@ -116,7 +116,7 @@ Statistics,  pp. 292-316.
 \keyword{ package }
 
 \seealso{
-\code{\link{ci}}, \code{\link{cr}}, \code{\link{sl}}, 
+\code{\link{sl}}, \code{\link{ci}}, \code{\link{cr}}, 
 \code{\link{mle}}, \code{\link{sety}}
 
 vignette( "\href{../doc/lm.br.pdf}{lm.br}" )
