@@ -4,7 +4,7 @@
 
 
 
-void  Clmbr::set_theta0( const double th_0, const METHOD met )
+void  Clmbr::set_theta0( double th_0,  METHOD met )
 // precalculate numbers and vectors that depend on theta0, including 'w' and 'z'
 {
 	if ( ISNAN(th_0) )  stop( _("invalid 'theta0' value") );

@@ -4,7 +4,7 @@
 
 
 
-int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *const bounds)
+int Clmbr::cr( METHOD met, double incr, bool verbose, double * bounds)
 //
 //      Checks whether { (theta,alpha)  such that  sig. level  > 'SL' }  is contiguous.
 // Returns N = number of rows for the array 'bounds[N][3]' = (th, min_alpha, max_alpha) values.
@@ -239,7 +239,7 @@ int Clmbr::cr(const METHOD met, const double incr, const bool verbose, double *c
 
 
 
-double Clmbr::a_sl(const METHOD met, const double th, const int high_low)
+double Clmbr::a_sl( METHOD met, double th, int high_low)
 // return alpha high or low value for a given SL value and a given theta0
 // if high_low > 0 return high value, if high_low < 0 return low value
 // if met=GEO use AF alpha as first guess, then grid search + bisection
@@ -265,7 +265,7 @@ double Clmbr::a_sl(const METHOD met, const double th, const int high_low)
 
 
 
-double Clmbr::a_af(const double th, const int high_low)
+double Clmbr::a_af( double th, int high_low )
 // return alpha high or low value for a given SL and given theta0 by AF
 // alpha-boundaries by AF are roots of a quadratic
 // if 'high_low' > 0 return high value, if 'high_low' < 0 return low value
@@ -309,7 +309,7 @@ double Clmbr::a_af(const double th, const int high_low)
 
 
 
-double Clmbr::ahigh(const METHOD met, const double th)
+double Clmbr::ahigh( METHOD met, double th )
 // return 'alpha' value that gives the highest significance level for a given theta
 {
 	if(trivial) {
@@ -384,7 +384,7 @@ double Clmbr::ahigh(const METHOD met, const double th)
 
 
 
-double Clmbr::sl_a(const double alpha, const int k)
+double Clmbr::sl_a( double alpha, int k )
 // wrapper for use in the bisection routine
 // return sl_geo2(th0,alpha)
 // assume th0 preset and use default accuracy

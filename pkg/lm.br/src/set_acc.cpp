@@ -6,7 +6,7 @@
 
 
 
-void  Clmbr::set_acc( const double acc )
+void  Clmbr::set_acc( double acc )
 // set accuracy and scale parameters
 {
 	if ( ISNAN(acc) || acc<=0 || acc>=1 )  stop( _("invalid 'acc' value") );

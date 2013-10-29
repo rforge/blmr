@@ -6,7 +6,7 @@
 
 
 
-void  Clmbr::set_SL( const double cSL )
+void  Clmbr::set_SL( double cSL )
 // set the critical significance level to determine confidence intervals or regions
 // traditionally called the alpha-value in statistics literature
 // precalculate numbers used in the 'a_af' subroutine 

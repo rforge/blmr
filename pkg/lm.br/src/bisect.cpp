@@ -9,7 +9,7 @@ const int  bis_it_limit= 50;	// maximum number of iterations in bisection routin
 
 
 
-double Clmbr::bisect(const double a, const double b, double (Clmbr::*fn)(double,int), const int k, const double value, const double crit)
+double Clmbr::bisect( double a, double b, double (Clmbr::*fn)(double,int), int k, double value, double crit)
 // find  x  such that  value < fn(x) < value + crit   if  crit > 0 ,   or   value - crit < fn(x) < value   if   crit < 0
 {
 	double  x1= a, x2= b, f1 = (this->*fn)(x1,k) - value,  f2 = (this->*fn)(x2,k) - value;
@@ -28,7 +28,7 @@ double Clmbr::bisect(const double a, const double b, double (Clmbr::*fn)(double,
 
 
 
-double Clmbr::bisect(const double a, const double b, double (Clmbr::*fn)(double,int) const, const int k, const double value, const double crit)  const
+double Clmbr::bisect( double a, double b, double (Clmbr::*fn)(double,int) const, int k, double value, double crit)  const
 // "const" version of above routine
 {
 	double  x1= a, x2= b, f1 = (this->*fn)(x1,k) - value,  f2 = (this->*fn)(x2,k) - value;
@@ -49,7 +49,7 @@ double Clmbr::bisect(const double a, const double b, double (Clmbr::*fn)(double,
 
 
 
-double Clmbr::bisect_sl(const double a, const double b, const METHOD met, double crit)
+double Clmbr::bisect_sl( double a, double b, METHOD met, double crit)
 // use bisection to find x such that   SL < sl(x) < SL + crit   if  crit > 0 ,
 // or    SL - crit < sl(x) < SL   if  crit < 0 ,   used in 'ci' routine
 {

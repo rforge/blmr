@@ -4,7 +4,7 @@
 
 
 
-double Clmbr::rho(const double th)  const
+double Clmbr::rho( double th)  const
 {
 	int k=0;
 	while (xs[k]<th && k<ns) k++;
@@ -13,7 +13,7 @@ double Clmbr::rho(const double th)  const
 
 
 
-double Clmbr::rho(const double th, const int k)  const
+double Clmbr::rho( double th,  int k )  const
 // compute the rho function,  accurately 
 {
 	if( th>=xs[ns-1] || (Model==M1  &&  th<xs[0])  )  return NaN;  else  {	//1
@@ -55,7 +55,7 @@ double Clmbr::rho(const double th, const int k)  const
 
 
 
-double Clmbr::rhosq(const double th, const int k)  const
+double Clmbr::rhosq( double th,  int k )  const
 // compute  rho squared,  accurately 
 {
 	if( th>=xs[ns-1] || (Model==M1  &&  th<xs[0])  )  return NaN;  else  {	//1
@@ -96,7 +96,7 @@ double Clmbr::rhosq(const double th, const int k)  const
 
 
 
-double Clmbr::drho(const double th, const int k)  const
+double Clmbr::drho( double th,  int k )  const
 {
 	if(th>=xs[ns-1])  return NaN;  else
 		if(Model==M1  &&  th<xs[0])  return NaN;  else  
@@ -110,7 +110,7 @@ double Clmbr::drho(const double th, const int k)  const
 
 
 
-double Clmbr::drhosq(const double th, const int k)  const
+double Clmbr::drhosq( double th,  int k )  const
 {
 	if(th>=xs[ns-1])  return NaN;  else
 		if(Model==M1  &&  th<xs[0])  return NaN;  else  
@@ -123,7 +123,7 @@ double Clmbr::drhosq(const double th, const int k)  const
 
 
 
-double Clmbr::dgsq(const double th, const int k)  const
+double Clmbr::dgsq( double th,  int k )  const
 // norm of derivative of gamma, squared
 {
 	if(th>=xs[ns-1])  return NaN;  else
@@ -136,8 +136,8 @@ double Clmbr::dgsq(const double th, const int k)  const
 
 
 
-double Clmbr::rho_inv(const double s, const int k, const int hi_lo)  const
-//      Returns 'th' such that rho(th) = s  and 'th' is in (x[k-1], x[k]);
+double Clmbr::rho_inv( double s,  int k,  int hi_lo )  const
+//   Returns 'th' such that rho(th) = s  and 'th' is in (x[k-1], x[k]);
 // 'rho_inv' gives the same result for s and for -s, so it checks that  sign( rho(th) ) = sign(s); 
 // result 'th' is a quadratic root, so if both roots are in the data interval then 
 // it returns the lower value if 'hi_lo' < 0 and the greater value if 'hi_lo' > 0 .

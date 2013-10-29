@@ -9,7 +9,7 @@
 
 
 
-double Clmbr::amu_by_Omega(const double th, const int k)  const
+double Clmbr::amu_by_Omega( double th,  int k)  const
 {
 	if ( k==k0 || fabs(th-th0) < zero_eq )  return Inf;
 
@@ -32,7 +32,7 @@ double Clmbr::amu_by_Omega(const double th, const int k)  const
 
 
 
-double Clmbr::Emupr(const double th, const int k)  const
+double Clmbr::Emupr( double th,  int k)  const
 // calculate (E-mu+)*pr, in Knowles,Siegmund,Zhang's geometric-expectation formula for variance unknown
 // as a function of theta
 {
@@ -58,7 +58,7 @@ double Clmbr::Emupr(const double th, const int k)  const
 
 
 
-double  Clmbr::Emupr_vk(const double th, const int k)  const
+double  Clmbr::Emupr_vk( double th,  int k)  const
 // calculate (E-mu+)*pr, the integrand in geometric-expectation formula for variance known
 // as a function of theta
 {

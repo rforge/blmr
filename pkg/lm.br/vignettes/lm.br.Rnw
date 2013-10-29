@@ -87,7 +87,7 @@ nonlinear regression, but it is not exact.  The AF method
 estimates the distribution of a likelihood-ratio statistic by its
 asymptotic $\chi^{2}$ distribution, with partial conditioning on a
 sufficient statistic for the variance.  See 
-\citet[ch.24]{draper+smith:1998}.
+\citet[sec. 24.6]{draper+smith:1998}.
 
 \section{Examples}
 \subsection{Simulation Tests}

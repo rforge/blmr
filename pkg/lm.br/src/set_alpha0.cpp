@@ -6,7 +6,7 @@
 
 
 
-void  Clmbr::set_alpha0(const double a_0, const METHOD met)
+void  Clmbr::set_alpha0( double a_0,  METHOD met )
 // precalculate numbers and vectors based on alpha0, used in routines
 {
 	if ( !R_FINITE(a_0) )  stop( _("invalid 'alpha0' value") );
@@ -90,3 +90,4 @@ void  Clmbr::set_alpha0(const double a_0, const METHOD met)
 
 	return;
 }
+

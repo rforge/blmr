@@ -5,7 +5,7 @@
 
 
 
-double Clmbr::F(const int k, const double arg)  const
+double Clmbr::F( int k, double arg )  const
 // calculate the F() function defined in K,S&Z eq.(14)
 {
 
@@ -24,7 +24,7 @@ double Clmbr::F(const int k, const double arg)  const
 
 
 
-double Clmbr::get_C(const int k)  const
+double Clmbr::get_C( int k )  const
 {
 	int i = 0;
 	double d = 1.;
@@ -45,7 +45,7 @@ double Clmbr::get_C(const int k)  const
 
 
 
-double Clmbr::fk(const int k, const double arg)  const
+double Clmbr::fk( int k, double arg )  const
 // calculate the f() function defined in K,S&Z eq.(13)
 {
 	double gv = 0.;
@@ -56,7 +56,7 @@ double Clmbr::fk(const int k, const double arg)  const
 
 
 
-double Clmbr::sF(const int k, const double arg)  const
+double Clmbr::sF( int k, double arg )  const
 // calculate the sF() "script F" function defined as integral of Fk(s) from s= -Inf to s= x,
 // where Fk() is the F(k,x) function defined in K,S&Z (1991) eq.(14)
 {

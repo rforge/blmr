@@ -11,8 +11,8 @@
 
 
 
-void  Clmbr::slR( const int met,  const double acc,
-	const double theta_0 ) 
+void  Clmbr::slR(  int met,  double acc,
+	double theta_0 ) 
 { 
 	METHOD MET;
 	if(met==1)  MET=GEO;  else  {
@@ -37,8 +37,8 @@ void  Clmbr::slR( const int met,  const double acc,
 
 
 
-void  Clmbr::slR( const int met,  const double acc,
-	const double theta_0,  const double alpha_0 ) 
+void  Clmbr::slR( int met,  double acc,
+	double theta_0,  double alpha_0 ) 
 { 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -71,8 +71,8 @@ void  Clmbr::slR( const int met,  const double acc,
 
 
 
-double  Clmbr::slR( const int met,  const int verboseR,  const int valueR,
-	const double acc,  const double theta_0 ) 
+double  Clmbr::slR( int met,  int verboseR,  int valueR,
+	double acc,  double theta_0 ) 
 { 
 	METHOD MET;
 	if(met==1)  MET=GEO;  else  {
@@ -105,8 +105,8 @@ double  Clmbr::slR( const int met,  const int verboseR,  const int valueR,
 
 
 
-double  Clmbr::slR( const int met,  const int verboseR,  const int valueR,
-	const double acc,  const double theta_0,  const double alpha_0 ) 
+double  Clmbr::slR( int met,  int verboseR,  int valueR,
+	double acc,  double theta_0,  double alpha_0 ) 
 { 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -145,7 +145,7 @@ double  Clmbr::slR( const int met,  const int verboseR,  const int valueR,
 
 
 
-void  Clmbr::ciR(const double CL, const int met) 
+void  Clmbr::ciR( double CL,  int met) 
 { 
 	if(CL <=0. || CL >=1.)  stop( CLmsg );
 
@@ -167,7 +167,7 @@ void  Clmbr::ciR(const double CL, const int met)
 
 
 
-void  Clmbr::crR(const double CL, const int met, const double incr) 
+void  Clmbr::crR( double CL,  int met,  double incr) 
 { 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -195,8 +195,8 @@ void  Clmbr::crR(const double CL, const int met, const double incr)
 
 
 
-NumericMatrix  Clmbr::crR(const double CL, const int met, 
-	const double incr, const int verboseR ) 
+NumericMatrix  Clmbr::crR( double CL,  int met, 
+	 double incr,  int verboseR ) 
 { 
 	if(Model==M3)  {
 		Rcout << model_msg << endl << endl;
@@ -274,7 +274,7 @@ NumericVector  Clmbr::PARAM( void )  const
 
 
 
-void  Clmbr::SET_rWy(const NumericVector rWy)  
+void  Clmbr::SET_rWy( NumericVector rWy )  
 {
 	const int yn =rWy.size();
 	if(yn!=n) stop( _("'rWy' vector has wrong dimension") );

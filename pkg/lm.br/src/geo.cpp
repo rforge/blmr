@@ -3,7 +3,7 @@
 
 #include "lmbr.h"
 
-void  igeo( double *const x,  const int n,  void *const ex );
+void  igeo( double * x,  const int n,  void *const ex );
 
 
 //  the 'Rdqag' numeric integration routines sometimes return error code '5' for 
@@ -13,7 +13,7 @@ void  igeo( double *const x,  const int n,  void *const ex );
 
 
 
-double Clmbr::geo(const double th2, double *const perr)  const
+double Clmbr::geo( double th2, double * perr)  const
 // calculate probability that  gam*v > w  on the interval (th0, th2) or (th2, th0)
 // given  gam0*v = z ,  using KSZ's geometric formula, 
 {
@@ -32,7 +32,7 @@ double Clmbr::geo(const double th2, double *const perr)  const
 
 
 
-double Clmbr::geo_vu_D(const double th2, double *const err)  const
+double Clmbr::geo_vu_D( double th2, double * err)  const
 // for case variance unknown,  weights matrix diagonal
 {
 	if ( fabs(th0-th2) < zero_eq )  return 0.;
@@ -157,7 +157,7 @@ double Clmbr::geo_vu_D(const double th2, double *const err)  const
 
 
 
-double Clmbr::geo_vu_ND(const double th2, double *const err)  const
+double Clmbr::geo_vu_ND( double th2, double * err)  const
 // case variance unknown,  weights matrix non-diagonal
 {
 	if ( fabs(th0-th2) < zero_eq )  return 0.;
@@ -223,7 +223,7 @@ double Clmbr::geo_vu_ND(const double th2, double *const err)  const
 
 
 
-double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, const int hilo, double *const err)  const
+double Clmbr::geo_vu_NDab( int k,  double th_a,  double th_b,  int hilo, double * err)  const
 //get integral on rho-monotonic interval (a,b)  where  a  is nearer  'theta0'
 {
 	if (err!=0)  *err = 0.;
@@ -348,7 +348,7 @@ double Clmbr::geo_vu_NDab(const int k, const double th_a, const double th_b, con
 
 
 
-double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
+double  Clmbr::geo_vk_D(  double th2,  double * err )  const
 // for case variance known,  cov matrix diagonal
 {
 	if ( fabs(th0-th2) < zero_eq )  return 0.;
@@ -467,7 +467,7 @@ double  Clmbr::geo_vk_D( const double th2,  double *const err )  const
 
 
 
-double Clmbr::geo_vk_ND(const double th2, double *const err)  const
+double Clmbr::geo_vk_ND( double th2, double * err)  const
 // case variance unknown,  cov matrix non-diagonal
 {
 	if ( fabs(th0-th2) < zero_eq )  return 0.;
@@ -529,7 +529,7 @@ double Clmbr::geo_vk_ND(const double th2, double *const err)  const
 
 
 
-double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, const int hilo, double *const err )  const 
+double Clmbr::geo_vk_NDab(  int k,  double th_a,  double th_b,  int hilo, double * err )  const 
 //      Get integral on rho-monotonic interval  ( tha, thb )  where  tha  is nearer  theta0.
 //  Integrand negligible for  abs(mu)/Omega > 7,  which has one or no maxima on  rho > z/w  and 
 //  one or no maxima on  rho < z/w.
@@ -643,7 +643,7 @@ double Clmbr::geo_vk_NDab( const int k, const double th_a, const double th_b, co
 
 
 
-void  igeo(double *const x, const int n, void *const ex)
+void  igeo(double * x, const int n, void *const ex)
 // integrand for Rdqags and Rdqagi
 {
 	const Clmbr  **const  ppObj  = static_cast< const Clmbr **const > ( ex );

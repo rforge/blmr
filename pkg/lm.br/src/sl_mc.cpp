@@ -164,7 +164,7 @@ double Clmbr::sl_mc2(void)  const
 
 
 
-bool Clmbr::m_ge_w(const double wsq, const Vector<double> &s)  const
+bool Clmbr::m_ge_w( double wsq, const Vector<double> &s)  const
 // Check whether  max(<gam(theta).s>^2)  >=  wsq  for some 'theta'.  Use pre-calculated  M*"stump of 1"  vectors 
 // for the dot products of 'gamma' with 's',  by  gamma*u = gamma*(M-transpose*s) = (M*gamma)*s .  
 {

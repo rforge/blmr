@@ -4,7 +4,7 @@
 
 
 
-double  Clmbr::mle( const bool verbose,  double *const  max_gqysq,  double *const  par  )  const
+double  Clmbr::mle(  bool verbose,  double *  max_gqysq,  double *  par  )  const
 // find theta_mle for maximum value of (gamma(theta)*qy)^2
 // calculate  alphamle, betamle, betapmle, vmle
 {

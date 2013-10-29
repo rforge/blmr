@@ -4,7 +4,7 @@
 
 
 
-void  Clmbr::set_sy(double *const irsy, const METHOD met)
+void  Clmbr::set_sy( double * irsy,  METHOD met )
 // re-calculate numbers and vectors based on  rW*y = irS*y  values 
 {
 	int i;

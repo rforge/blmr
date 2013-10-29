@@ -5,7 +5,7 @@
 
 
 
-double Clmbr::sl(const double th_0, const METHOD met, const bool verbose)
+double Clmbr::sl( double th_0,  METHOD met,  bool verbose )
 {
 	double  sL,  err = 0.;
 
@@ -56,7 +56,7 @@ double Clmbr::sl(const double th_0, const METHOD met, const bool verbose)
 
 
 
-double Clmbr::sl(const double th_0, const double a0, const METHOD met, const bool verbose)
+double Clmbr::sl( double th_0,  double a0,  METHOD met,  bool verbose )
 {
 	double  sL,  err = 0.;
 
