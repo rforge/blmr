@@ -99,9 +99,9 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
     rownames(xb) <- rownames(x)
     colnames(xb) <-  if( xint )
       { if( x1c < nx )  
-          c("1-vector", bnm, bpnm, dn[(x1c+1):nx])  
+          c("alpha", bnm, bpnm, dn[(x1c+1):nx])  
         else  
-          c("1-vector", bnm, bpnm) 
+          c("alpha", bnm, bpnm) 
       }
       else
       { if( x1c < nx )  
@@ -192,7 +192,7 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
     par <- obj$param()
     if( is.nan( par[1] ) )  {   # case of perfect line
       xb <- x
-      if(xint) colnames(xb)[1] <- "  1-vector"
+      if(xint) colnames(xb)[1] <- "  alpha"
       for(i in 1:nx) if( is.na(z$coef[i+1]) ) xb[,i] <- 0
     }  
     else  {
@@ -299,18 +299,22 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
     }
 
 
-    z$sl <- function( theta0, alpha0 =NULL,  method ="clr", 
-            accuracy =0.001, verbose =NULL )  {
+    z$sl <- function( theta0, alpha0 =NULL,  method ="clr",
+              accuracy =0.001, output ="T" )  {
 # overload by if-else statements
       if( !is.null(alpha0) && !is.numeric(alpha0) )  {
         if( is.numeric(method) ) {
-          if( is.null(verbose) )
-            if( accuracy==0 | accuracy==1 ) verbose <- accuracy
+          if( !missing(accuracy) )  {
+            if( is.character(accuracy) )  output <- accuracy
+              else  stop( "'output' must be \"T\", \"V\" or \"B\"" )
+          }
           accuracy <- method
         }
         method <- alpha0
+        alpha0 <- NULL
       }
       method <- toupper(method)
+      output <- toupper(output)
       met <- integer(1)
       if( method=="CLR" )  met <- 1  else  {
         if( method=="AF" )  met <- 2  else  {
@@ -318,20 +322,42 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
             stop( "'method' must be \"CLR\", \"AF\" or \"MC\"" )
         }
       }
-      value <- logical(1)
-      if( is.null(verbose) )  value <- FALSE  else  value <- TRUE
-      if( is.null(alpha0) | !is.numeric(alpha0) )  {
-        if( is.null(verbose) )
+      value <- verbose <- logical(1)
+      if( output=="T" )  {
+        value <- FALSE
+        verbose <- TRUE  
+      } else {
+        if( output=="V" )  {
+          value <- TRUE
+          verbose <- FALSE
+        } else {
+          if( output=="B" )
+            value <- verbose <- TRUE
+          else  stop( "'output' must be \"T\", \"V\" or \"B\"" )
+        }
+      }
+      if(value) {
+#  parameter passing from C++ to R sometimes fails, which needs to be fixed
+#  this while-loop is a band-aid patch for now
+        loop <- 1
+        result <- NULL
+        while( ! is.double(result)  &&  loop < 10 )  {
+          loop <- loop + 1
+          result <- if( is.null(alpha0) )
+              (z$CppObj)$sl( met, as.integer(verbose),
+                as.integer(value), accuracy, theta0 )
+            else
+              (z$CppObj)$sl( met, as.integer(verbose),
+                as.integer(value), accuracy, theta0, alpha0 )
+          verbose <- FALSE
+        }
+        if(!is.double(result)  && loop==10)  stop( "'sl' C++ did not return a value" )
+        return( result )
+      }  else  {
+        if( is.null(alpha0) | !is.numeric(alpha0) )
           (z$CppObj)$sl( met, accuracy, theta0 )
         else
-          (z$CppObj)$sl( met, as.integer(verbose), as.integer(value),
-            accuracy, theta0 )
-      } else {
-        if( is.null(verbose) )
           (z$CppObj)$sl( met, accuracy, theta0, alpha0 )
-        else
-          (z$CppObj)$sl( met, as.integer(verbose), as.integer(value),
-            accuracy, theta0, alpha0 )
       }
     }
 
@@ -419,7 +445,7 @@ print.lm.br  <-  function ( x, digits = max(3L, getOption("digits") - 3L), ... )
       cat( "Changepoint and coefficients:\n" )
       print.default( round(x$coef, 5) )
     }
-    else  cat( "After call to 'sety' use 'mle()' for parameter estimates.\n" )
+    else  cat( "Use 'mle()' for parameter estimates after a call to 'sety'.\n" )
   }
   else  cat( "No coefficients\n" )
   cat("\n")
