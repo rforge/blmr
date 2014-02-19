@@ -259,9 +259,9 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
       if(missing(output) && .Device=="null device")  output <- "T"
       output <- toupper(output)
       if( output=="T" )
-        (z$CppObj)$cr( CL, met, incr )
+        (z$CppObj)$cr3( CL, met, incr )
       else  {
-        bounds <- (z$CppObj)$cr( CL, met, incr, as.integer(FALSE) )
+        bounds <- (z$CppObj)$cr4( CL, met, incr, as.integer(FALSE) )
         if( output=="V" )
           return( bounds )
         else  {
@@ -337,27 +337,19 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
         }
       }
       if(value) {
-#  parameter passing from C++ to R sometimes fails, which needs to be fixed
-#  this while-loop is a band-aid patch for now
-        loop <- 1
-        result <- NULL
-        while( ! is.double(result)  &&  loop < 10 )  {
-          loop <- loop + 1
-          result <- if( is.null(alpha0) )
-              (z$CppObj)$sl( met, as.integer(verbose),
-                as.integer(value), accuracy, theta0 )
-            else
-              (z$CppObj)$sl( met, as.integer(verbose),
-                as.integer(value), accuracy, theta0, alpha0 )
-          verbose <- FALSE
-        }
-        if(!is.double(result)  && loop==10)  stop( "'sl' C++ did not return a value" )
+        result <- double(1)
+        result <- if( is.null(alpha0) )
+            (z$CppObj)$sl5( met, as.integer(verbose),
+              as.integer(value), accuracy, theta0 )
+          else
+            (z$CppObj)$sl6( met, as.integer(verbose),
+              as.integer(value), accuracy, theta0, alpha0 )
         return( result )
       }  else  {
         if( is.null(alpha0) | !is.numeric(alpha0) )
-          (z$CppObj)$sl( met, accuracy, theta0 )
+          (z$CppObj)$sl3( met, accuracy, theta0 )
         else
-          (z$CppObj)$sl( met, accuracy, theta0, alpha0 )
+          (z$CppObj)$sl4( met, accuracy, theta0, alpha0 )
       }
     }
 
