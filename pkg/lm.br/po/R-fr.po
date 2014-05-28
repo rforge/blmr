@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: R 2.15.2\n"
 "Report-Msgid-Bugs-To: bugs.r-project.org\n"
-"POT-Creation-Date: 2013-10-16 10:48\n"
+"POT-Creation-Date: 2014-02-27 08:40\n"
 "PO-Revision-Date: 2013-09-20 20:12-0500\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,9 +39,11 @@ msgstr "'incr' doit être positif"
 msgid "'output' must be \"G\", \"T\" or \"V\""
 msgstr "'output' doit être \"G\", \"T\" ou \"V\""
 
+msgid "'output' must be \"T\", \"V\" or \"B\""
+msgstr "'output' doit être \"T\", \"V\" ou \"B\""
+
 msgid "'method' must be \"CLR\", \"AF\" or \"MC\""
 msgstr "'method' doit être \"CLR\", \"AF\" ou \"MC\""
 
 msgid "'rWy' must be a numeric vector"
 msgstr "'rWy' doit être un vecteur numérique"
-

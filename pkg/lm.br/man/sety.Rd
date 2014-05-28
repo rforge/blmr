@@ -13,17 +13,15 @@
 }
 
 \arguments{
-\item{rWy}{vector of 'y' values, pre-multiplied by the square-root of 'weights'}
+\item{rWy}{vector of 'y' values, pre-multiplied by the square-root of 'weights'.}
 }
 
 \details{
-The pre-multiplied vector as input is more convenient during simulation tests.  The 'rWy' vector is simply the y-vector if the model is without 'weights'.  'rWy' is the inverse square-root if 'inverse' was TRUE in the 'lm.br' call. 
-
-The square-root of a vector 'W' is the vector 'rW' of the square-roots of the elements of 'W'.  The square-root of a matrix 'W' is the matrix 'rW' such that rW*rW = W (a stricter definition than  rW*transpose(rW) = W).
+The 'rWy' vector is simply the y-vector if the model does not specify weights.  The square-root of a vector 'W' is the vector 'rW' of the square-roots of the elements of 'W'.  The square-root of a matrix 'W' here is the matrix 'rW' such that rW*rW = W (a stricter definition than  rW*transpose(rW) = W).  'rW' is the inverse square-root if 'inverse' was TRUE in the 'lm.br' call.  
 }
 
 \note{
-This method changes the y-values for the accessor functions 'sl', 'ci', 'cr' and 'mle'.  But the output list of 'coefficients', 'fitted.values' and so on retains its values from the original call.
+The pre-multiplied vector is more convenient as input during simulation tests.  'sety' changes the y-values for the accessor functions 'sl', 'ci', 'cr' and 'mle'.  But the output list of 'coefficients', 'fitted.values' and so on, retains its values from the original call.
 }
 
 
