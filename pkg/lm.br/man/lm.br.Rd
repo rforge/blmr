@@ -53,8 +53,9 @@ changepoint.  Three versions are
 LT   y = alpha + B * min( x-theta, 0 ) + e
 
 TL   y = alpha + Bp* max( x-theta, 0 ) + e}
-where  e ~ Normal( 0 , var * inv(weights) ).  All parameters are
-unknown except for 'weights'.  The LT and TL models
+where  e ~ Normal( 0 , var * inv(weights) ).  Parameters 'theta', 
+'alpha', 'B' (Beta), 'Bp' (Beta-prime), 'var' are
+unknown, but 'weights' is known.  The LT and TL models
 omit 'alpha' if the formula is without intercept, such as 'y~x+0'.
 
 The same models apply for a multivariate formula such as  'y ~

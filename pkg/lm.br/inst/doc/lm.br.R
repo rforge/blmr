@@ -1,7 +1,7 @@
 ### R code from vignette source 'lm.br.Rnw'
 
 ###################################################
-### code chunk number 1: lm.br.Rnw:154-182
+### code chunk number 1: lm.br.Rnw:158-186
 ###################################################
 library(lm.br)
 log_odds <- c( -1.194, -2.023, -2.285, -1.815, -1.673, -1.444, -1.237, -1.228 )
@@ -19,7 +19,7 @@ dd <- lm.br( log_odds ~ year, w = VarCov, inv = TRUE, var.known = TRUE )
 bounds <- dd$cr( CL=0.90, out='v')
 n <- length(dd$x1)
 nbd <- nrow(bounds)
-title <- "90% confidence region for changepoint by CLR"
+title <- "Exact 90% confidence region for a changepoint"
 x <- y <- matrix( NA, max(n,nbd), 4 )
 x[1:n,1] <- dd$x1
 y[1:n,1] <- dd$y
@@ -34,7 +34,7 @@ matplot( x, y,
 
 
 ###################################################
-### code chunk number 2: lm.br.Rnw:194-210
+### code chunk number 2: lm.br.Rnw:198-214
 ###################################################
 log_odds <-  c( -1.194, -2.023, -2.285, -1.815, -1.673, 
   -1.444, -1.237, -1.228 )
@@ -55,7 +55,7 @@ dd$ci( method = "AF" )
 
 
 ###################################################
-### code chunk number 3: lm.br.Rnw:235-236
+### code chunk number 3: lm.br.Rnw:239-240
 ###################################################
 lm.br( mpg ~ wt + hp, data = mtcars )
 
