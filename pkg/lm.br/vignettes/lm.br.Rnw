@@ -143,7 +143,7 @@ $\pm$0.05\%.
 \subsection{Broken Line Regression}
 As an example, a broken-line model could fit drinking-and-driving survey 
 results.
-Yearly surveys, taken in different months some years, were adjusted by a seasonal index based on monthly
+Yearly surveys, taken in different months over the years, were adjusted by a seasonal index based on monthly
 surveys for a similar question \citep{tirf:1998-2007,camh:2003}.
 The annual surveys asked respondents if in the past 30 days they had 
 driven within two hours after one drink, while the monthly
@@ -172,7 +172,7 @@ dd <- lm.br( log_odds ~ year, w = VarCov, inv = TRUE, var.known = TRUE )
 bounds <- dd$cr( CL=0.90, out='v')
 n <- length(dd$x1)
 nbd <- nrow(bounds)
-title <- "Exact 90% confidence region for a changepoint"
+title <- "Exact 90% confidence region for changepoint"
 x <- y <- matrix( NA, max(n,nbd), 4 )
 x[1:n,1] <- dd$x1
 y[1:n,1] <- dd$y
@@ -241,7 +241,7 @@ lm.br( mpg ~ wt + hp, data = mtcars )
 @
 
 \texttt{lm.br} applies a canonical transform for multivariate regression 
-\citep{siegmund+zhang:1994}.  One way to see how that method works is formulaic.  The composite likelihood-ratio statistic uses optimal values for unknown parameters.  A canonical model lets the optimal coefficients of linear terms reduce their correspondent errors to zero always.  Thus they have no effect on inference, so the algebra can omit them.  This elimination reduces a multivariate model to a univariate model.  See
+\citep{siegmund+zhang:1994}.  One way to see how that method works is formulaic.  The composite likelihood-ratio statistic uses optimal values for unknown parameters.  A canonical model lets these optimal coefficients of linear terms reduce their correspondent errors to zero always.  Thus they have no effect on inference, so the algebra can omit them.  This elimination reduces a multivariate model to a univariate model.  See
 \citet[ch. 6]{hoffman+kunze:1971}, \citet[sec. 7.1]{lehmann:2005}.
 
 \section{Remarks}

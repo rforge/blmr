@@ -1,10 +1,10 @@
 #
 #  This R-script tests inferences by 'lm.br' to confirm its exact accuracy.  
 #
-#  'testrun' generates random models of all types covered by 'lm.br'.  Then
-#  'simtest' generates random observations according to each model.  The
-#  inferences that 'lm.br' makes from these observations are compared with 
-#  the "unknown", underlying, true model.  
+#  'testrun' generates arbitrary models of all types supported by 'lm.br'.
+#  Then 'simtest' generates random observations according to each model.
+#  The inferences that 'lm.br' makes from these observations are compared 
+#  with the underlying, "unknown," true model.  
 #
 #  A complete run takes 10-20 hours, depending on your computer system.
 #
@@ -12,15 +12,17 @@
 
 
 testrun  <-  function( )  {
-# loop to generate random models of different types
+# loop to generate arbitrary models of different types
 # and then call function 'simtest'
 
   cat("\n\nStarting tests of the R package 'lm.br':\n")
-  cat("This script generates random models of all supported types.\n")
-  cat("For each random model, it checks coverage frequencies and tests\n")
+  cat("This script generates arbitrary models of all supported types.\n")
+  cat("For each arbitrary model, it checks coverage frequencies and tests\n")
   cat("functions 'sl', 'ci', 'cr'.  A complete run takes 10-20 hours.\n\n\n")
 
-# 'track' = TRUE  keeps an ongoing log of input in local disk files
+# setting 'track' = TRUE  keeps an ongoing log of input in local
+# disk files, which is useful for debugging if the program hangs
+
   track <- FALSE
 
   if( track )  {
@@ -31,7 +33,7 @@ testrun  <-  function( )  {
 
   set.seed(1234)
 
-## test 2 random models for each type of model
+## test 2 arbitrary models for each type of model
   testspertype <- 2
   totaltests <- 5*2*3*2*testspertype
   tstart <- Sys.time()
@@ -124,10 +126,10 @@ testrun  <-  function( )  {
       x3coef <- round( (runif(1)-0.5)*5, 4 )
     }
 
-    alpha <- 0.;
+    alpha <- 0.
 
     if (nmodel==1) { beta <- -1. }
-    if (nmodel==2 || nmodel==3) { beta<-0 }
+    if (nmodel==2 || nmodel==3) { beta <- 0 }
 
     betap <- 2. - runif(1)*2.5;
     betap <- round(betap,4)
@@ -174,12 +176,14 @@ testrun  <-  function( )  {
       }  
     }  
 
+#todo:    offst <- runif(n,-5,5) 
+
     if(nmodel==1)  model <- 'LL'
     if(nmodel==2 || nmodel==3)  model <- 'TL'
     if(nmodel==-2 || nmodel==-3)  model <- 'LT'
     if(abs(nmodel)==3)  xint <- FALSE  else  xint <- TRUE
 
-#  echo call to 'simtest'
+# echo call to 'simtest'
     cat("\n  model ", model, ",")
     if(!xint)  cat("  'alpha' known =0,")
     if(vk)  cat("  'var' known =1,")
@@ -258,9 +262,9 @@ simtest <- function( x, W, model, xint, x2coef, x3coef, vk,
   theta, alpha, B, Bp, var, N =10000, track, rWyname, rWy2name  )
 #
 #  This function generates sets of random observations according 
-#  to the input model.  The inferences that 'lm.br' makes from these 
-#  observations are compared with the true model. 
-#  Tests coverage frequency of 95% confidence intervals and regions. 
+#  to the input model.  Then it compares the inferences that 'lm.br' 
+#  makes from these observations with the true model. 
+#    It tests coverage frequency of 95% confidence intervals and regions. 
 #  Also, on one set of random data, compares 'sl' by CLR-MC and CLR 
 #  and tests 'ci' and 'cr'.
 #
@@ -289,13 +293,14 @@ simtest <- function( x, W, model, xint, x2coef, x3coef, vk,
 
 
 # construct an 'lm.br' object with arbitrary 'y' values
+# then loop with new sets of 'y' values each time
   y <- x1
   mod  <-  if( xint ) 
       lm.br( y ~ x, model, w = W, var.k = vk )
     else
       lm.br( y ~ x+0, model, w = W, var.k = vk )
 
-  cat("\n Monte Carlo simulation test of conf. interval",
+  cat("\n Monte Carlo simulation test of confidence interval",
        "for 'theta':\n" )
   cat("     no. of     coverage frequency of the", 
     "0.95-confidence interval by\n" )
@@ -345,7 +350,7 @@ simtest <- function( x, W, model, xint, x2coef, x3coef, vk,
       as.integer(100*cicov)) 
     )
 
-  cat("\n Monte Carlo simulation test of conf. region",
+  cat("\n Monte Carlo simulation test of confidence region",
         "for '(theta,alpha)':\n")
   cat("     no. of     coverage frequency of the", 
     "0.95-confidence region by\n")
@@ -399,7 +404,9 @@ simtest <- function( x, W, model, xint, x2coef, x3coef, vk,
 
 
 
-# use final random 'rWy' data 
+# use final set of random 'rWy' data to compare 'sl' by
+# CLR-MC and CLR, and test 'ci' and 'cr'
+
   cat("\ntesting 'sl', 'ci' and 'cr' with  'rWy' = \n")
   cat( "  ", rWy )
   cat("\n\n")
@@ -452,6 +459,8 @@ simtest <- function( x, W, model, xint, x2coef, x3coef, vk,
   cat("\n")
 }
 
+
+# this command initiates the whole testscript
 
 testrun()
 

@@ -15,9 +15,11 @@
 
 
 
-lm.br  <- function( formula, type ="LL", data, subset, na.action,
-  weights, inverse =FALSE, var.known =FALSE, offset,
-  contrasts =NULL, ... )  {
+lm.br  <- function( formula, type ="LL", data, subset,
+  weights, inverse =FALSE, var.known =FALSE, na.action,
+  contrasts =NULL, offset, ... )  {
+
+## process input
 
   call <- match.call()
   mf <- match.call(expand.dots = FALSE)
@@ -85,8 +87,8 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
 
 
 # 'xb' is the 'x' input matrix, but with two vectors for 'x1'
-#  before and after changepoint,  and zeroes for columns
-#  that were linearly dependent
+#  before and after changepoint,  and with zeroes for columns
+#  that were found to be linearly dependent
     nx <- ncol(x)
     nxb <- ncol(x)+1
     xb <- matrix( 0, nrow(x), nxb )
@@ -111,7 +113,7 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
       }
 
 
-#  construct C++ object
+#  construct the C++ object:
 #  re-order for 'x1' non-decreasing,  drop rows with  w = 0,  
 #  drop columns that are not independent
     x_ <- x[ order(x1), , drop = FALSE]
@@ -149,9 +151,9 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
     }
 
 
-#  loop to drop columns that are dependent at some changepoint value
-#  if x-matrix is dependent at  changepoint = 'th'  then  
-#  Q*f(th)=0  on lower rows,  where  f(th) = max( x1-th, 0 )
+#  Loop to drop columns that are dependent at some changepoint value.
+#  If x-matrix is dependent at  changepoint = 'th'  then  
+#  Q*f(th)=0  on lower rows,  where  f(th) = max( x1-th, 0 ).
     x_dep <- TRUE
 
     while( x_dep )  {
@@ -361,7 +363,7 @@ lm.br  <- function( formula, type ="LL", data, subset, na.action,
       if( NCOL(rWy) > 1 | !is.numeric(rWy) )  
         stop( "'rWy' must be a numeric vector" )
       rWy <- drop(rWy)
-      if( !is.null(z$offset) )  rWy <- rWy - z$rWoffset
+      if( !is.null(z$offset) )  rWy <- rWy - z$offset
       rWysorted <- rWy[ order(z$x1) ]
       if( is.vector(z$weights) )  if( any(z$weights==0) )  {
         wsorted <- z$weights[ order(z$x1) ]

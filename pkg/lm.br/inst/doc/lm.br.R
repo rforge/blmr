@@ -19,7 +19,7 @@ dd <- lm.br( log_odds ~ year, w = VarCov, inv = TRUE, var.known = TRUE )
 bounds <- dd$cr( CL=0.90, out='v')
 n <- length(dd$x1)
 nbd <- nrow(bounds)
-title <- "Exact 90% confidence region for a changepoint"
+title <- "Exact 90% confidence region for changepoint"
 x <- y <- matrix( NA, max(n,nbd), 4 )
 x[1:n,1] <- dd$x1
 y[1:n,1] <- dd$y

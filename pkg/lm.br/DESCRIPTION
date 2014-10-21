@@ -18,7 +18,7 @@ License: GPL (>= 2)
 Depends: R(>= 3.0.1), Rcpp (>= 0.10.4)
 Imports: methods
 LinkingTo: Rcpp
-Packaged: 2014-09-18 12:54:04 UTC; marc
+Packaged: 2014-10-21 11:58:29 UTC; marc
 Author: Marc Adams [aut, cre],
   authors of R function 'lm' [ctb] (general interface),
   authors of 'lm.gls' [ctb] (interface and R code for covariate weights),

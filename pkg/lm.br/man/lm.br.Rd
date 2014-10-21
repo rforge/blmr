@@ -18,8 +18,8 @@ probabilities for the changepoint.
 
 
 \usage{
-lm.br( formula, type ="LL", data, subset, na.action, weights,
-       inverse =FALSE, var.known =FALSE, offset, contrasts, ... )
+lm.br(formula, type ="LL", data, subset, weights, inverse =FALSE,
+      var.known =FALSE, na.action, contrasts, offset, ...)
 }
 
 
@@ -31,15 +31,15 @@ line-threshold or threshold-line, defined below.}
   \item{data}{an optional data-frame that assigns values in
 \code{formula}.}
   \item{subset}{expression saying which subset of the data to use.}
-  \item{na.action}{a function to filter missing data.}
   \item{weights}{vector or positive-definite matrix.}
   \item{inverse}{if TRUE then 'weights' specifies the inverse of the
 weights vector or matrix, as for a covariance matrix.}
   \item{var.known}{is the variance known?}
-  \item{offset}{a constant vector to be subtracted from the
-responses vector.}
+  \item{na.action}{a function to filter missing data.}
   \item{contrasts}{an optional list, see 'contrasts.arg' in
 \code{\link{model.matrix.default}}.}
+  \item{offset}{a constant vector to be subtracted from the
+responses vector.}
   \item{\dots}{ other arguments to \code{\link{lm.fit}} or
 \code{\link{lm.wfit}}.}
 }
@@ -87,7 +87,7 @@ list including 'coefficients', 'fitted.values' and 'residuals'.
 
 
 \note{
-If variance is known, then 'var' = 1  and 'weights'  is the inverse of the variances
+If variance is known, then  'var' = 1  and  'weights'  is the inverse of the variances
 vector or variance-covariance matrix.
 }
 
@@ -114,17 +114,17 @@ vignette( "\href{../doc/lm.br.pdf}{lm.br}" )
 #  Smith & Cook (1980), "Straight Lines with a Change-point: A Bayesian
 #  Analysis of some Renal Transplant Data", Appl Stat, *29*, 180-189,  
 #  reciprocal of blood creatinine L/micromol  vs  day after transplant:
-crea <- c( 37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4 )
+creatinine <- c( 37.3, 47.1, 51.5, 67.6, 75.9, 73.3, 69.4, 61.5, 31.8, 19.4 )
 day <- c( 1., 2., 3., 4., 5., 6., 7., 8., 9., 10. )
-sc <- lm.br( crea ~ day )
+sc <- lm.br( creatinine ~ day )
 sc $ mle()
 sc $ ci()
 sc $ cr( .90, 'af' )
 sc $ sl( day[1] - 1.5 )      # test for the presence of a changepoint
 
 
-#  Chiu et al. (2006), "Bent-cable regression theory and applications",
-#  J Am Stat Assoc, *101*, 542-553,  a 'TL' example, data from figure 1,
+#  A 'TL' example, data from figure 1 in Chiu et al. (2006), "Bent-cable
+#  regression theory and applications", J Am Stat Assoc, *101*, 542-553,
 #  log(salmon abundance) vs year:
 salmon <- c( 2.50, 2.93, 2.94, 2.83, 2.43, 2.84, 3.06, 2.97, 2.94, 2.65,
   2.92, 2.71, 2.93, 2.60, 2.12, 2.08, 1.81, 2.45, 1.71, 0.55, 1.30 )
@@ -138,9 +138,9 @@ chiu $ ci()
 lm.br( mpg ~ wt + hp, data = mtcars )
 
 
-#  An example with variance known, in the Normal approximations of binomial
+#  An example with variance known, for the Normal approximations of binomial
 #  random variables using formula 2.28 of Cox and Snell (1989).
-#   Ex. 3.4 of J Freeman (2010) "Inference for binomial changepoint data" in
+#    Ex. 3.4 of J Freeman (2010) "Inference for binomial changepoint data" in
 # _Advances in Data Analysis_, ed. C Skiadas, Boston: Birkhauser, 345-352:
 group <- 1 : 20
 trials <- c( 15, 82, 82, 77, 38, 81, 12, 97, 33, 75,
@@ -149,7 +149,7 @@ successes <- c( 8, 44, 47, 39, 24, 38, 3, 51, 16, 43,
   47, 27, 33, 64, 41, 18, 61, 32, 33, 24 )
 log_odds <- log( (successes - 0.5)/(trials - successes - 0.5) )
 variances <- (trials-1)/( successes*(trials-successes) )
-lm.br( log_odds ~ group, 'TL', w= variances, inv= TRUE, var.known= TRUE )
+lm.br( log_odds ~ group, 'TL', w= variances, var.known= TRUE, inv= TRUE )
 
 
 #  An example that shows different confidence regions from inference by
@@ -158,6 +158,6 @@ y <- c( 1.55, 3.2, 6.3, 4.8, 4.3, 4.0, 3.5, 1.8 )
 x <- 1:8
 eg <- lm.br( y ~ x )
 \donttest{eg$cr()}
-eg$cr( m = 'af' )
+eg$cr( method = 'af' )
 }
 
