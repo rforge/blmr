@@ -36,7 +36,7 @@ The 'accuracy' error-limit does not include the slight over-estimate that is inh
 }
 
 \value{
-'sl' returns a numeric value if 'output' is "V" or "B".  'sl' prints-out the result but does not return a value if 'output' is "T".
+'sl' prints-out the result but does not return a value if 'output' is "T".  'sl' returns a numeric value if 'output' is "V" or "B".
 }
 
 \examples{

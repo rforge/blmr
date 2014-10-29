@@ -20,11 +20,11 @@
 }
 
 \details{
-This subroutine scans to determine the postulate values of (theta,alpha) that have significance level greater than 1-CL.  It scans first along the (theta, alpha-MLE) ridge to determine the 'theta' limit-boundaries.
+This subroutine scans to determine the postulate values of (theta, alpha) that have significance level greater than 1-CL.  It scans first along the (theta, alpha-MLE) ridge to determine the 'theta' boundary limits.
 }
 
 \value{
-If 'output' is "V" then 'cr' returns an N x 3 matrix of boundary points  ( theta, min-alpha, max-alpha ).  Otherwise, 'cr' graphs or prints-out the confidence region but does not return a value.
+If 'output' is "G" or "T" then 'cr' graphs or prints-out the confidence region but does not return a value.  If 'output' is "V" then 'cr' returns an N x 3 matrix of boundary points  ( theta, min-alpha, max-alpha ).
 }
 
 
