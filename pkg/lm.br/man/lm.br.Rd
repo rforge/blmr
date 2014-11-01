@@ -130,7 +130,7 @@ chiu <- lm.br( salmon ~ year, 'tl' )
 chiu $ ci()
 
 
-#  A multivariate example, using one of R's included datasets, "mtcars",
+#  A multivariate example, using one of R's included datasets,
 #  automobile miles-per-gallon  versus  weight and horsepower.
 lm.br( mpg ~ wt + hp, data = mtcars )
 
@@ -155,6 +155,6 @@ y <- c( 1.55, 3.2, 6.3, 4.8, 4.3, 4.0, 3.5, 1.8 )
 x <- 1:8
 eg <- lm.br( y ~ x )
 \donttest{eg$cr()}
-eg$cr( method = 'af' )
+eg$cr( method = 'aF' )
 }
 
