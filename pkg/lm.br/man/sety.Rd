@@ -29,9 +29,9 @@ The pre-multiplied vector is more convenient as input during simulation tests.  
 #  A simulation test
 x <- c( 1.0, 1.1, 1.3, 1.7, 2.4, 3.9, 5.7, 7.6, 8.4, 8.6 )
 y <- x
-theta <- 3
 LLmodel <- lm.br( y ~ x )    
 countCLR <- countAF <- 0
+theta <- 3
 \donttest{for( i in 1:10000 )  {
   y <- 0 + (-1.)*pmin(x-theta,0) + (0.5)*pmax(x-theta,0) + rnorm(10)
   LLmodel$sety( y )
