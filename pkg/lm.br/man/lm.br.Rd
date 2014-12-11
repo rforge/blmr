@@ -66,7 +66,7 @@ TL   y = alpha + Bp * max(x - theta, 0) + e}
   likelihood-ratio statistic, conditional on sufficient statistics 
   for the other parameters.
 
-  Test for the presence of a changepoint by the significance level
+  The test for the presence of a changepoint is by the significance level
   of a postulate value outside the range of x-values.  Thus, in the 
   LL model 'sl( min(x1) - 1 )'  would give the exact significance 
   level of the null hypothesis "single line" versus the alternate 
@@ -84,6 +84,7 @@ The returned object also lists 'coefficients', 'fitted.values' and 'residuals', 
 
 
 \note{
+Data can include more than one 'y' value for the same 'x' value.  
 If variance is known, then  'var' = 1  and  'weights'  is the inverse of the variances
 vector or variance-covariance matrix.
 }
@@ -116,8 +117,8 @@ day <- 1:10
 sc <- lm.br( creatinine ~ day )
 sc $ mle()
 sc $ ci()
-sc $ cr( .90, 'af' )
 sc $ sl( day[1] - 1.5 )      # test for the presence of a changepoint
+plot( sc$residuals )
 
 
 #  A 'TL' example, data from figure 1 in Chiu et al. (2006), "Bent-cable

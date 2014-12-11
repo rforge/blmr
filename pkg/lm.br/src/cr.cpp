@@ -230,7 +230,14 @@ int Clmbr::cr( METHOD met, double incr, bool verbose, double * bounds)
 	}
 
 
-	if(bounds!=0)  for(i=0;i<N;i++)  for(int j=0;j<3;j++)  *(bounds+j*N + i) = *(bds+i*3+j);
+	if(bounds!=0)  {
+		for(i=0;i<N;i++)  if( model_in > 0 ) {
+			for(int j=0;j<3;j++)  *(bounds+j*N + i) = *(bds+i*3+j);
+		} else {
+			*(bounds + i) = -*(bds+(N-1-i)*3+0);
+			for(int j=1;j<3;j++)  *(bounds+j*N + i) = *(bds+(N-1-i)*3+j);
+		}
+	}
 
 	Free( th_bds );  Free( bds );
 	return N;

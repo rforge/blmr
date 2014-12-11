@@ -14,7 +14,7 @@
     if( method=="AF" )  met <- 2  else
       stop( "'method' must be \"CLR\" or \"AF\"" )
   }
-  if(missing(output) && .Device=="null device")  output <- "T"
+#  if(missing(output) && .Device=="null device")  output <- "T"
   output <- toupper(output)
   if( output=="T" )
     (z$CppObj)$cr3( CL, met, incr )

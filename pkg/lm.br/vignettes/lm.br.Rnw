@@ -46,7 +46,7 @@ denoting $a_{-}=min(a,0)$ and $a_{+}=max(a,0)$, where
 $e \sim N(0,\sigma^{2}\Sigma)$.  Parameters $\theta$, $\alpha$, $\beta$, 
 $\beta{}'$, $\sigma$ are unknown but $\Sigma$ is known.  
 Model (2) is a threshold model, while model (3) would apply for 
-a known threshold level.  Inferences about a parameter use
+a known threshold level.  Inference about a parameter uses
 the assumed model and resulting distribution of a test statistic.\\
 
 A test statistic $D$
@@ -91,7 +91,7 @@ nonlinear regression.  The AF method
 estimates the distribution of a likelihood-ratio statistic by its
 asymptotic $\chi^{2}$ distribution with partial conditioning on a
 sufficient statistic for the variance.  See \citet[sec. 24.6]{draper+smith:1998}.
-Simulations and examples demonstrate all the theory.
+Simulations and examples cover all the theory.
 
 \section{Simulation Tests}
 
