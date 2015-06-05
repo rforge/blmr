@@ -36,7 +36,7 @@ print.lm.br  <-
     }
     else  cat( "Use 'mle()' for parameter estimates after a call to 'sety'\n" )
 
-    cat( "\nSignificance Level of H:\"no changepoint\" vs",
+    cat( "\nSignificance Level of H0:\"no changepoint\" vs",
       "H1:\"one changepoint\"\n" )
     cat("  ")
     mx1 <- max( x$x1 )

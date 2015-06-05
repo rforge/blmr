@@ -2,4 +2,5 @@ useDynLib( lm.br )
 exportPattern( "^[[:alpha:]]+" )
 import( methods, Rcpp )
 export( lm.br )
+S3method( print, lm.br )
 

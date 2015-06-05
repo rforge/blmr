@@ -38,6 +38,8 @@ testrun  <-  function( )  {
   cat("Test no., sl(theta), sl(theta,'AF'),  sl(theta,alpha), sl(theta,alpha,'AF') \n\n" , file= cfqs)
   close( cfqs )
 
+# results are reproducible by setting the seed for the pseudo-random number generator
+# omit this statement for fresh results each run
   set.seed(1234)
 
 ## how many arbitrary models for each type of model
@@ -196,7 +198,7 @@ testrun  <-  function( )  {
     if(!xint)  cat("  'alpha' known =0,")
     if(vk)  cat("  'var' known =1,")
     cat("\n  ")
-    if(mvx) cat("multivariate, ")
+    if(mvx) cat("multiple, ")
     if(wtype==1) cat("no weights")
     if(wtype==2) cat("vector weights")
     if(wtype==3) cat("matrix weights")
