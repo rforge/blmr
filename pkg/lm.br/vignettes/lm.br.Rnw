@@ -80,7 +80,7 @@ a formula, which \texttt{lm.br} implements, to rapidly evaluate these tests.\\
 \texttt{lm.br} extends this theory.  Their method derives an
 exact significance test for $(\theta, \alpha)$ in model (1).  The
 theory adapts to the case  $\sigma$  known, which is useful for 
-the Normal approximations of binary random variables.  And these
+the Normal approximations of binary random variables \citep[for.2.28]{cox+snell:1989}.  And these
 tests simplify for a postulate changepoint value
 outside the range of  $x$-values, 
 giving exact significance levels for the hypothesis of a single 
@@ -91,7 +91,7 @@ nonlinear regression.  The AF method
 estimates the distribution of a likelihood-ratio statistic by its
 asymptotic $\chi^{2}$ distribution with partial conditioning on a
 sufficient statistic for the variance.  See \citet[sec. 24.6]{draper+smith:1998}.
-Simulations and examples cover all the theory.
+Simulations and examples cover all the above theory.
 
 \section{Simulation Tests}
 
@@ -143,7 +143,7 @@ $\pm$0.05\%.
 
 \section{Examples}
 \subsection{Broken Line Regression}
-As an example, a broken-line model could fit drinking-and-driving survey 
+A broken-line model could fit drinking-and-driving survey 
 results.
 Yearly surveys, taken in different months over the years, were adjusted by a seasonal index based on monthly
 surveys for a similar question \citep{tirf:1998-2007,camh:2003}.
@@ -152,7 +152,7 @@ driven within two hours after one drink, while the monthly
 surveys asked if in the past 30 days they had driven within one
 hour after two drinks.  Figure \ref{fig:cr} shows the survey results without
 and with seasonal adjustment, and the exact 90\% confidence region
-for the changepoint if the adjustment were valid.
+for a changepoint if the adjustment were valid.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -194,7 +194,7 @@ region for a changepoint $(\theta,\alpha)$ by CLR.}
 \end{figure}
 
 
-The data input, and commands to get confidence intervals, are
+Data input, and commands to get confidence intervals for the changepoint, are
 
 <<>>=
 log_odds <-  c( -1.194, -2.023, -2.285, -1.815, -1.673, 

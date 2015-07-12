@@ -53,24 +53,26 @@ responses vector.}
 LT   y = alpha + B * min(x - theta, 0) + e
 
 TL   y = alpha + Bp * max(x - theta, 0) + e}
-  where  e ~ Normal( 0, var * inv(weights) ).  The LT and TL models
+  where  e ~ Normal( 0, var * inv(weights) ).  The LT and TL versions
   omit 'alpha' if the formula is without intercept, such as 'y~x+0'.  
+  Parameters 'theta', 'alpha', 'B', 'Bp', 'var' are unknown, but 
+  'weights' is known.
+  
   The same models apply for a multiple-regression formula such as 'y ~ x1 +
   x2 + ... + xn'  where 'alpha' becomes the coefficient of the
   "1"-vector and 'theta' the changepoint for the coefficient of the 
   first predictor term, 'x1'.
-
-  Parameters 'theta', 'alpha', 'B', 'Bp', 'var' are unknown, but 
-  'weights' is known.  Exact inferences about the changepoint  
-  'theta'  or '(theta,alpha)'  are based on the distribution of its 
-  likelihood-ratio statistic, conditional on sufficient statistics 
-  for the other parameters.  This method is called conditional likelihood-ratio (CLR) for short.
 
   The test for the presence of a changepoint is by
   a postulate value outside the range of 'x'-values.  Thus, in the 
   LL model 'sl( min(x1) - 1 )'  would give the exact significance 
   level of the null hypothesis "single line" versus the alternate 
   hypothesis "broken line."
+
+  Exact inferences about the changepoint  
+  'theta'  or '(theta,alpha)'  are based on the distribution of its 
+  likelihood-ratio statistic, conditional on sufficient statistics 
+  for the other parameters.  This method is called conditional likelihood-ratio (CLR) for short.
 }
 
 
@@ -84,7 +86,7 @@ The returned object also lists 'coefficients', 'fitted.values' and 'residuals', 
 
 
 \note{
-Data can include more than one 'y' value for the same 'x' value.  A 'weights' matrix must be positive-definite.  
+Data can include more than one 'y' value for the same 'x' value.  The 'weights' matrix must be positive-definite.  
 If variance is known, then  'var' = 1  and  'weights'  is the inverse of the variances
 vector or variance-covariance matrix.
 }
@@ -131,13 +133,13 @@ chiu <- lm.br( salmon ~ year, 'tl' )
 chiu $ ci()
 
 
-#  A multiple regression example, using an R base dataset,
+#  A multiple regression example, using an R dataset,
 #  automobile miles-per-gallon  versus  weight and horsepower.
 lm.br( mpg ~ wt + hp,  data = mtcars )
 
 
-#  An example with variance known, in the Normal approximations of binomial
-#  random variables, using formula 2.28 of Cox and Snell (1989).
+#  An example with variance known, for the Normal approximations of binomial
+#  random variables using formula 2.28 of Cox and Snell (1989).
 #    Ex. 3.4 of Freeman (2010) "Inference for binomial changepoint data" in
 # _Advances in Data Analysis_, ed. C Skiadas, Boston: Birkhauser, 345-352.
 trials <- c( 15, 82, 82, 77, 38, 81, 12, 97, 33, 75,
