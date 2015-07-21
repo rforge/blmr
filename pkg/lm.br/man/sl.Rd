@@ -28,7 +28,7 @@ The default method "CLR" evaluates this probability using a geometric-expectatio
 
 Method "MC" evaluates the probability expression directly by Monte Carlo simulation, which avoids the over-estimate of the "CLR" method.
 
-Method "AF" estimates the distribution of the likelihood-ratio statistic by the related F-distribution (or chi-squared if variance known) that would be exact for a linear model.  This method is not exact, but it is common for non-linear regression.
+Method "AF" estimates the distribution of the likelihood-ratio statistic by the related F-distribution (or chi-squared if variance is known) that would be exact for a linear model.  This method is not exact, but it is common for non-linear regression.
 }
 
 \note{
